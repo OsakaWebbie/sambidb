@@ -66,11 +66,12 @@ while ($song = mysql_fetch_object($result)) {
 ?>
 </script>
 <style>
-  div.adjustments { margin:0 0 1em 0; border:1px solid black; padding:5px;line-height:1.3em; }
+  div.adjustments { margin:0 0 1em 0; border:1px solid black; padding:5px 0;line-height:1.3em; }
   div.adjustments fieldset legend { font-weight:bold; font-style:italic; }
   div.adjustments h3 { margin-top:0; }
   div.adjustments div.indented { margin-left:1em; }
   div.adjustments div.indentedmore { margin-left:3em; }
+  
   #layout ul, #layout ul li ul { list-style-type: none; margin: 0; padding: 0; }
   #layout ul li { margin: 3px 0 3px 0; padding: 4px; white-space:nowrap; background:#E0E0E0; }
   #layout ul li.empty { background:#f0c0c0; border-color:#906060; }
@@ -80,6 +81,7 @@ while ($song = mysql_fetch_object($result)) {
   #layout ul li img, #layout ul li ul li img { margin:0 0 0 1em; }
   #layout ul li.colbreak, #layout ul li ul li.colbreak { border-top: 3px black solid; }
   #layout img.print, #layout img.chords { margin:0 0.5em 0 0; }
+  .ui-accordion .ui-accordion-content { padding: 0.5em !important; }
 </style>
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 <script type="text/JavaScript" src="js/jquery.min.js"></script>
@@ -131,8 +133,32 @@ $(document).ready(function(){
   }
 <? } //end handling of multilingual song consolidation ?>
   
+  $(".accordion").accordion({
+    collapsible: true,
+    active: false
+  });
+
   $("#layout ul").sortable({
     placeholder: "ui-state-highlight"
+  });
+  
+  $("#formatname").change(function(e) {
+    // Get options based on newly selected format, and change as needed on page
+    $.getJSON("ajax_db_row.php", {
+        table:'pw_pdfformat',
+        key:'FormatName',
+        keyquoted:1,
+        value:$(this).val()
+      }).done(function(r) {
+      $('#title-num'+r.data.TitleNumbering).click();
+      $('#title-key').prop('checked',(r.data.TitleWithKey=="1"));
+      $('#title-key').change();
+      $('#instr'+r.data.Instruction).click();
+      $('#copyright-'+r.data.Credit).click();
+      if (r.data.Chords=="1") $('#allchords').click(); else $('#nochords').click();
+      $('#romaji-'+r.data.Romaji).click();
+      $('#usecolor').prop('checked',(r.data.UseColor=="1"));
+    });
   });
   
 // ACTIONS RELATED TO SONG TITLES
@@ -154,39 +180,38 @@ $(document).ready(function(){
         $(this).children("div.left").children("span.title").html(songs[thisid].title + " (" + songs[thisid].origtitle + ")");
         //$("#ttype").val(linkid.substr(6));
         break;
-      case "title-key":
-        $(this).children("div.left").children("span.songkey").html(songs[thisid].songkey.length ? (" ["+songs[thisid].songkey+"]") : "");
-        //$("#tkey").val("key");
-        break;
-      case "title-nokey":
-        $(this).children("div.left").children("span.songkey").html("");
-        //$("#tkey").val("");
-        break;
       case "title-numnone":
         $(this).children("div.left").children("span.songnum").html("");
         break;
       case "title-numcircle":
         $(this).children("div.left").children("span.songnum").html("(#) ");
         break;
-      case "title-numsimple":
+      case "title-numbasic":
         $(this).children("div.left").children("span.songnum").html("#. ");
       }
     });
   });
+  $('#title-key').change(function(e) {
+    $("#layout ul li.song").each(function() {
+      thisid = this.className.match(/s([0-9]+)/)[1];
+      $(this).children("div.left").children("span.songkey").html( $('#title-key').is(':checked') && songs[thisid].songkey.length ? (" ["+songs[thisid].songkey+"]") : "");
+    });
+  });
+    
   
 // ACTIONS RELATED TO ADDING/REMOVING INSTRUCTIONS
   $("a[id^='instr']").click(function(e) {
     linkid = this.id;
     e.preventDefault();
     $("#layout ul li ul li.instr").remove();
-    if (linkid != "instr-none") {
+    if (linkid != "instrnone") {
       $("#layout ul li.song").each(function() {
         thisid = this.className.match(/s([0-9]+)/)[1];
-          if (songs[thisid][linkid].length) {
-            $(this).children("ul").prepend('<li class="s'+thisid+'i ui-state-default instr" title="'+songs[thisid][linkid]+
-            '"><div class="left"><img src="graphics/print.gif" class="print" title="Turn printing on or off">Instructions ('+
-            songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="Remove"></div><div class="clear"></div></li>');
-          }
+        if (songs[thisid][linkid].length) {
+          $(this).children("ul").prepend('<li class="s'+thisid+'i ui-state-default instr" title="'+songs[thisid][linkid]+
+          '"><div class="left"><img src="graphics/print.gif" class="print" title="Turn printing on or off">Instructions ('+
+          songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="Remove"></div><div class="clear"></div></li>');
+        }
       });
     }
     $("#ilong").val(linkid=='instrlong'?'1':'0');
@@ -302,71 +327,71 @@ header2(1);
   <input type="hidden" id="copy2" name="copy2" value="0">
   <input type="hidden" id="ilong" name="ilong" value="0">
   <table border="0" cellspacing="0" cellpadding="5"><tr><td style="vertical-align:top">
-    <div class="adjustments">
-      <h3>Layout Options</h3>
-      <fieldset>
-        <legend>Title Line Settings</legend>
-        <strong>Multilingual Song Titles:</strong><br>
-        <div class="indented"><label><input type="radio" id="title-main" name="ttype" value="main"  checked>Actual Title (first if group)</label></div>
-        <div class="indented"><label><input type="radio" id="title-orig" name="ttype" value="orig">Original Title</label></div>
-        <div class="indented"><label><input type="radio" id="title-paren" name="ttype" value="paren">"Actual (Original)"</label></div>
-        <strong>Numbering:</strong><br>
-        <div class="indented"><label><input type="radio" id="title-numnone" name="tnum" value="" checked>None</label>&nbsp;
-        <label><input type="radio" id="title-numsimple" name="tnum" value="basic">"1."</label>&nbsp;
-        <label><input type="radio" id="title-numcircle" name="tnum" value="circle">"①"</label></div>
-        <label><input type="checkbox" id="title-key" name="tkey">Append "[Song Key]"</label>
-      </fieldset>
-      <fieldset>
-        <legend>Extra Elements</legend>
-        <strong>Instructions:</strong><br>
-        <div class="indented"><a id="instrshort" href="javascript:void(0)">Short (omit "[text in brackets]")</a></div>
-        <div class="indented"><a id="instrlong" href="javascript:void(0)">Long (include "[text]")</a></div>
-        <div class="indented"><a id="instr-none" href="javascript:void(0)">Remove</a></div>
-        <br>
-        <strong>Credits:</strong><br>
-        <div class="indented">Before lyrics: <a id="copyright-before" href="javascript:void(0)">One line</a> |
-        <a id="copyright-before-twoline" href="javascript:void(0)">Two lines</a></div>
-        <div class="indented">After lyrics: <a id="copyright-after" href="javascript:void(0)">One line</a> |
-        <a id="copyright-after-twoline" href="javascript:void(0)">Two lines</a></div>
-        <div class="indented"><a id="copyright-none" href="javascript:void(0)">Remove Credits</a></div>
-        <br>
-        <strong>Chords:</strong> <a id="nochords" href="javascript:void(0)">Disable all</a> |
-        <a id="allchords" href="javascript:void(0)">Enable all</a><br>
-        <br>
-        <a id="allprint" href="javascript:void(0)">Re-enable all printing</a><br>
-        <br>
-        <strong>Romaji</strong> (lines prefaced with "[r]")<strong>:</strong><br>
-        <div class="indented"><label><input type="radio" id="romaji-chordless" name="romaji" value="chordless" checked>Show all lines, but omit</div>
-        <div class="indentedmore">chords on romaji</label></div>
-        <div class="indented"><label><input type="radio" id="romaji-hide" name="romaji" value="hide">Hide romaji</label></div>
-        <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only">Show <u>only</u> romaji</div>
-        <div class="indentedmore">(in stanzas that have some)</label></div>
-        <div class="indented"><label><input type="radio" id="romaji-show" name="romaji" value="show">Show all content</label></div>
-      </fieldset>
-    </div>
-
-    <div class="adjustments">
-      <h3>PDF Settings</h3>
-      Layout: <select id="formatname" name="formatname" size="1">
-        <option value="">Select...</option>
+    <strong>Layout:</strong> <select id="formatname" name="formatname" size="1">
+      <option value="">Select...</option>
 <?
-$sql = "SELECT FormatName FROM pw_pdfformat ORDER BY FormatName";
+$sql = "SELECT FormatName FROM pw_pdfformat ORDER BY ListOrder";
 if (!$result = mysql_query($sql)) die("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
 while ($row = mysql_fetch_object($result)) {
-  echo  "        <option value=\"".$row->FormatName."\">".$row->FormatName."</option>\n";
+  echo  "      <option value=\"".$row->FormatName."\">".$row->FormatName."</option>\n";
 }
 ?>
-      </select><br>&nbsp;<br>
-      Override paper size (optional): <select name="papersize" size="1">
-      <option value="" selected>Default</option>
-      <option value="a4">A4</option>
-      <option value="b5">B5</option>
-      <option value="a5">A5</option>
-      </select><br>&nbsp;<br>
-      <input type="checkbox" name="nobreakstanzas" value="yes" checked> Avoid breaks within stanzas<br>&nbsp;<br>
-      <input type="checkbox" name="color" value="yes" checked> Use Color<br>&nbsp;<br>
+    </select><br>&nbsp;<br>
+    <div class="accordion">
+      <h3 style="padding-left:25px">Layout Options</h3>
+      <div class="adjustments">
+        <fieldset>
+          <legend>Title Line Settings</legend>
+          <div style="display:none"><strong>Multilingual Song Titles:</strong><br>
+          <div class="indented"><label><input type="radio" id="title-main" name="ttype" value="main"  checked>Actual Title (first if group)</label></div>
+          <div class="indented"><label><input type="radio" id="title-orig" name="ttype" value="orig">Original Title</label></div>
+          <div class="indented"><label><input type="radio" id="title-paren" name="ttype" value="paren">"Actual (Original)"</label></div></div>
+          <strong>Numbering:</strong><br>
+          <div class="indented"><label><input type="radio" id="title-numnone" name="tnum" value="none" checked>None</label>&nbsp;
+          <label><input type="radio" id="title-numbasic" name="tnum" value="basic">"1."</label>&nbsp;
+          <label><input type="radio" id="title-numcircle" name="tnum" value="circle">"①"</label></div>
+          <label><input type="checkbox" id="title-key" name="tkey">Append "[Song Key]"</label>
+        </fieldset>
+        <fieldset>
+          <legend>Extra Elements</legend>
+          <strong>Instructions:</strong><br>
+          <div class="indented"><a id="instrshort" href="javascript:void(0)">Short (omit "[text in brackets]")</a></div>
+          <div class="indented"><a id="instrlong" href="javascript:void(0)">Long (include "[text]")</a></div>
+          <div class="indented"><a id="instr-none" href="javascript:void(0)">Remove</a></div>
+          <br>
+          <strong>Credits:</strong><br>
+          <div class="indented">Before lyrics: <a id="copyright-before" href="javascript:void(0)">One line</a> |
+          <a id="copyright-before-twoline" href="javascript:void(0)">Two lines</a></div>
+          <div class="indented">After lyrics: <a id="copyright-after" href="javascript:void(0)">One line</a> |
+          <a id="copyright-after-twoline" href="javascript:void(0)">Two lines</a></div>
+          <div class="indented"><a id="copyright-none" href="javascript:void(0)">Remove Credits</a></div>
+          <br>
+          <strong>Chords:</strong> <a id="nochords" href="javascript:void(0)">Disable all</a> |
+          <a id="allchords" href="javascript:void(0)">Enable all</a><br>
+          <br>
+          <a id="allprint" href="javascript:void(0)">Re-enable all printing</a><br>
+          <br>
+          <strong>Romaji</strong> (lines prefaced with "[r]")<strong>:</strong><br>
+          <div class="indented"><label><input type="radio" id="romaji-chordless" name="romaji" value="chordless" checked>Show all lines, but omit</div>
+          <div class="indentedmore">chords on romaji</label></div>
+          <div class="indented"><label><input type="radio" id="romaji-hide" name="romaji" value="hide">Hide romaji</label></div>
+          <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only">Show <u>only</u> romaji</div>
+          <div class="indentedmore">(in stanzas that have some)</label></div>
+          <div class="indented"><label><input type="radio" id="romaji-showall" name="romaji" value="showall">Show all content</label></div>
+        </fieldset>
+        <fieldset>
+          <legend>PDF Settings</legend>
+          Override paper size (optional): <select name="papersize" size="1">
+          <option value="" selected>Default</option>
+          <option value="a4">A4</option>
+          <option value="b5">B5</option>
+          <option value="a5">A5</option>
+          </select><br>&nbsp;<br>
+          <label><input type="checkbox" id="usecolor" name="color" value="yes" checked> Use Color</label>
+        </fieldset>
+      </div>
     </div>
-    <input type="submit" name="submit" value="Generate PDF" border="0">
+    <input type="submit" name="submit" value="Generate PDF" style="text-size:150%; font-weight:bold; padding:5px; margin-top: 20px;">
   </td>
   <td style="vertical-align:top">
     <div id="layout">

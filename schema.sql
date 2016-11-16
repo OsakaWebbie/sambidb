@@ -162,6 +162,13 @@ CREATE TABLE `pw_pdfformat` (
   `CreditStyle` varchar(100) NOT NULL default '' COMMENT 'LaTeX commands',
   `CreditHanging` varchar(10) NOT NULL default '2em' COMMENT 'Amount of hanging indent - include unit',
   `BetweenSongs` varchar(100) NOT NULL default '' COMMENT 'LaTeX commands',
+  `TitleNumbering` varchar(10) NOT NULL default 'circle' COMMENT 'Whether to number the songs: "basic", "circle", or "none"',
+  `TitleWithKey` tinyint(1) NOT NULL default '0' COMMENT 'Whether to append song key to title',
+  `Instruction` varchar(10) NOT NULL default 'none' COMMENT 'Whether to include song instruction line:"long", "short", or "none"',
+  `Credit` varchar(10) NOT NULL default 'none' COMMENT 'Composer and copyright: "before", "before-twoline", "after", "after-twoline", or "none"',
+  `Chords` tinyint(1) NOT NULL default '1' COMMENT 'Chords enabled by default?',
+  `Romaji` varchar(10) NOT NULL default 'chordless' COMMENT 'Default display of romaji: "chordless", "hide", "only", "showall"',
+  `UseColor` tinyint(1) NOT NULL default '1' COMMENT 'Whether to use color in PDF by default',
   PRIMARY KEY  (`FormatName`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Layout settings for TeX-generated PDF';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -235,4 +242,4 @@ CREATE TABLE `pw_usage` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-14 17:24:18
+-- Dump completed on 2016-11-16 17:57:50
