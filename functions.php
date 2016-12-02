@@ -228,10 +228,6 @@ function chordsToRuby($unfmt){
     $insideword = FALSE;
   }
   $fmt .= $nonruby;
-  //other stuff that we can do to the whole thing at once with regexp
-  $fmt = str_replace("  ","&nbsp;&nbsp;",$fmt);
-  $fmt = str_replace("> ",">&nbsp;",$fmt);
-  $fmt = str_replace(" <","&nbsp;<",$fmt);
   return $fmt;
 }
 
