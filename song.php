@@ -66,11 +66,13 @@ header1("Song: ".$song->Title);
   margin-bottom: 0;
   text-indent: -30px;
   padding-left: 30px;
+  white-space: pre-wrap;
 }
 .chordlyrics {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   margin: 6px 0 0 0;
+  white-space: pre-wrap;
   *margin-top: 0;  /* IE spreads out too much */
   text-indent: -30px;
   padding-left: 30px;
@@ -309,80 +311,4 @@ if (!$result = mysql_query($sql)) {
 }
 
 print_footer();
-
-function parsechords($unfmt){
-  $ruby = "<ruby>";
-  $fmt = "";
-  $insideword = FALSE;
-  $oldrb = $oldrt = "";
-  //Note: Strtok ignores empty sections, so I put the * on the front to make sure it stops at the first chord
-  $nonruby = substr(strtok("*".$unfmt,"["),1);  //lyrics text preceding the next <ruby> tag
-  while ($rbpair = strtok("[")) {  //keep walking through the rest of the line
-    list($rt, $rb) = explode("]", $rbpair);
-    if ($rb=="") $rb="&nbsp;";
-    //if ASCII and no spaces on either side of the chord, then treat as inside a word (needs nowrap span)
-    if (!$insideword && mb_strlen($rb)==strlen($rb) && mb_substr($rb,0,1)!=" ") {
-      if ($nonruby && mb_substr($nonruby,mb_strlen($nonruby)-1)!=" ") {
-        $nonruby = substr_replace($nonruby,"<span nowrap>",(strrpos(" ",$nonruby)?strrpos(" ",$nonruby):0),0);
-        $insideword = TRUE;
-      } elseif ($oldrb && mb_substr($oldrb,mb_strlen($oldrb)-1)!=" ") {
-        $fmt .= "<span nowrap>";
-        $insideword = TRUE;
-        //if the chords are extra long (and it's not the end of the line), add a hyphen
-        if (($rbcounter+1 < $rblimit) && ($rb!="&nbsp;")) $oldrb .= "-";
-      }
-    }
-    //add old stuff with markup to formatted string (non-breaking space is to spread chords out - margin-right not honored in FF extension)
-    if ($oldrb) $fmt .= $ruby."<rb>$oldrb</rb><rt><span class='chord'>$oldrt&nbsp;</span></rt></ruby>";
-    if ($insideword && (mb_substr($oldrb,mb_strlen($oldrb))==" " || mb_strpos($nonruby," ")==" ")) {  //found a space, so let it wrap
-      $fmt .= "</span>";
-      $insideword = FALSE;
-    }
-    $fmt .= $nonruby;
-    //if inside a word, only ASCII, and no spaces, we can't finish the nowrap, so we don't need to do the fancy calculation
-    if ($insideword && strlen($rb)==mb_strlen($rb) && strpos($rb," ")===FALSE) {
-      $oldrb = $rb;
-      $nonruby = "";
-    } else {
-      // figure out about how much of the lyrics piece should be inside <ruby>, to prevent overlap but still allow wrapping
-      $rblimit = strlen($rt);
-      $rbcounter = 0.0;
-      for ($index=0; $index < mb_strlen($rb); $index++)  {
-        $thischar = mb_substr($rb, $index, 1);
-        if (strlen($this_char) > 1) {  //multi-byte character
-          $rbcounter += 1.0;  //adjust this value to balance between allowing wrapping and avoiding unneeded spacing
-          if ($rbcounter >= $rblimit) {
-            break;
-          }
-        } else {  //single-byte character
-          $rbcounter += 0.4;  //adjust this value to balance between allowing wrapping and avoiding unneeded spacing
-          if ($rbcounter >= $rblimit && $thischar == " ") {
-            break;
-          }
-        }
-      } //end of for loop that determines end of <rb>
-      if ($insideword && $thischar==" ") {  //keep the space out of the nowrap
-        $oldrb = mb_substr($rb,0,$index);
-        $nonruby = mb_substr($rb,$index);
-      } else {
-        $oldrb = mb_substr($rb,0,$index+1);
-        $nonruby = mb_substr($rb,$index+1);
-      }
-    }
-    $oldrt = $rt;
-  }  //end of while loop that goes through each ruby group in the line
-  //add final stuff left over (same as code inside for loop)
-  if ($oldrb) $fmt .= "<ruby><rb>$oldrb</rb><rt><span class='chord'>$oldrt&nbsp;</span></rt></ruby>";
-  if ($insideword && (mb_substr($oldrb,mb_strlen($oldrb))==" " || mb_strpos($nonruby," ")==" ")) {  //found a space, so let it wrap
-    $fmt .= "</span>";
-    $insideword = FALSE;
-  }
-  $fmt .= $nonruby;
-  //other stuff that we can do to the whole thing at once with regexp
-  $fmt = str_replace("  ","&nbsp;&nbsp;",$fmt);
-  $fmt = str_replace("> ",">&nbsp;",$fmt);
-  $fmt = str_replace(" <","&nbsp;<",$fmt);
-  return $fmt;
-}
-
 ?>
