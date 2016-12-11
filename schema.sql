@@ -43,7 +43,7 @@ CREATE TABLE `pw_event` (
   `Remarks` text,
   PRIMARY KEY  (`EventID`),
   KEY `Event` (`Event`,`Active`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Events where songs are sung';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Events where songs are sung';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `pw_keyword` (
   `Keyword` varchar(60) default NULL,
   PRIMARY KEY  (`KeywordID`),
   KEY `Keyword` (`Keyword`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `pw_pdfformat` (
   `TitleNumbering` varchar(10) NOT NULL default 'circle' COMMENT 'Whether to number the songs: "basic", "circle", or "none"',
   `TitleWithKey` tinyint(1) NOT NULL default '0' COMMENT 'Whether to append song key to title',
   `Instruction` varchar(10) NOT NULL default 'none' COMMENT 'Whether to include song instruction line:"long", "short", or "none"',
-  `Credit` varchar(10) NOT NULL default 'none' COMMENT 'Composer and copyright: "before", "before-twoline", "after", "after-twoline", or "none"',
+  `Credit` varchar(20) NOT NULL default 'none' COMMENT 'Composer and copyright: "before", "before-twoline", "after", "after-twoline", or "none"',
   `Chords` tinyint(1) NOT NULL default '1' COMMENT 'Chords enabled by default?',
   `Romaji` varchar(10) NOT NULL default 'chordless' COMMENT 'Default display of romaji: "chordless", "hide", "only", "showall"',
   `UseColor` tinyint(1) NOT NULL default '1' COMMENT 'Whether to use color in PDF by default',
@@ -200,7 +200,7 @@ CREATE TABLE `pw_song` (
   KEY `Tagged` (`Tagged`),
   KEY `OrigTitle` (`OrigTitle`),
   KEY `Lyrics` (`Lyrics`(50))
-) ENGINE=MyISAM AUTO_INCREMENT=712 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,4 +242,4 @@ CREATE TABLE `pw_usage` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-16 17:57:50
+-- Dump completed
