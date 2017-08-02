@@ -1,0 +1,62 @@
+/* here we would put some basic stuff */
+
+body,p,div,span,td,input,textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+body {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+#navbar {
+  text-align: center;
+  vertical-align: middle;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  line-height: 1.6em;
+  padding: 6px 0;
+}
+#navbar a {
+  vertical-align: middle;
+  color: white;
+  text-decoration: none;
+}
+
+div.left { float: left; }
+div.right { float: right; }
+div.clear { clear: both; line-height: 0; margin: 0; padding: 0; }
+#layouttable { text-align: left; }
+input.text {
+  background-color: FFFFFF;
+  border-color: 666666;
+  border-style: solid;
+  border-width: 1px;
+}
+.debug { display:none; }
+
+/* flexbox */
+.flex-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+.flexbox {
+  flex-grow: 1;
+  flex-basis: content;
+  margin: 5px 10px;
+}
+.align-left {
+  text-align: left;
+}
+.align-center {
+  text-align: center;
+}
+.align-right {
+  text-align: right;
+}
+.valign-middle {
+  vertical-align: middle;
+}

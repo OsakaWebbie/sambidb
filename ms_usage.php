@@ -1,8 +1,9 @@
 <?php
+error_reporting(E_ALL);
 include("functions.php");
 include("accesscontrol.php");
-print_header("","#F0E0FF",0);
-showfile("dates.js");
+header1('');
+header2(0,"#F0E0FF",1,0);
 
 if ($save_usage) {
   if ($event_select == "new") {  //need to insert the new event record first
@@ -79,106 +80,33 @@ if ($save_usage) {
 }
 ?>
 
-<script type=text/javascript>
-
-//indexes for arrays (just to keep sane)
-var eid = 0;
-var event = 1;
-var rem = 2;
-
-<?
-//get data from pw_event table and build master array
-
-$sql = "SELECT * FROM pw_event ORDER BY Event";
-if (!$result = mysql_query($sql)) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
-  exit;
-}
-echo "var ar = new Array();\n";
-$ar_index = 0;
-while ($row = mysql_fetch_object($result)) {
-  echo "ar[$ar_index] = new Array();\n";
-  echo "ar[$ar_index][eid] = \"$row->EventID\";\n";
-  echo "ar[$ar_index][event] = \"".escape_quotes($row->Event)."\";\n";
-  echo "ar[$ar_index][rem] = \"".escape_quotes($row->Remarks)."\";\n";
-  $ar_index++;
+<div align="center">
+  <h2 style="color:#663399">Choose the event and pick the date:</h2>
+  <form action="<? echo $PHP_SELF; ?>" method="post" name="useform" target="_self">
+    <input type="hidden" name="sid_list" value="<? echo $sid_list; ?>">
+    <div class="flex-container">
+      <div class="flexbox align-left">
+        <h3>Event:</h3>
+<?php
+$sql = 'SELECT * FROM pw_event ORDER BY '.(isset($_SESSION['pw_default_event'])?'IF (EventID='.$_SESSION['pw_default_event'].',0,1), ':'').'Event';
+$result = sqlquery_checked($sql);
+while ($row = mysqli_fetch_object($result)) {
+  echo '        <label'.($row->Remarks!==''?' title="'.escape_quotes($row->Remarks).'"':'').'><input type="radio" name="event_id" value="'.$row->EventID.'"'.
+      ((isset($_SESSION['pw_default_event']) && $row->EventID==$_SESSION['pw_default_event'])?' checked':'').'> '.
+      escape_quotes($row->Event)."</label><br>\n";
 }
 ?>
-
-function load_events() {
-  for (var list_index = document.useform.event_list.length-1; list_index > 0; list_index--) {
-    document.useform.event_list.options[list_index] = null;
-  }
-  list_index = 1;
-  for (var array_index = 0; array_index < ar.length; array_index++) {
-    document.useform.event_list.options[list_index] = new Option(ar[array_index][event], array_index);
-    list_index++;
-  }
-  document.useform.event_list.options[list_index] = new Option("New Event -->", "new");
-  document.useform.use_date.value = Today();
-}
-window.onload=load_events;
-
-function fill_fields() {
-  var uf = document.useform;
-  var el = uf.event_list;
-  if (el.options[el.selectedIndex].value == "") {
-    uf.event.disabled = true;
-    uf.remarks.disabled = true;
-    uf.event_id.value = "";
-    uf.event.value = "";
-    uf.remarks.value = "";
-    uf.event_list.disabled = false;
-  } else if (el.options[el.selectedIndex].value == "new") {
-    uf.event_list.disabled = true;
-    uf.event_id.value = "";
-    uf.event.value = "";
-    uf.remarks.value = "";
-    uf.event.disabled = false;
-    uf.remarks.disabled = false;
-    uf.event.focus();
-  } else {
-    uf.event_id.value = ar[el.options[el.selectedIndex].value][eid];
-    uf.event.value = ar[el.options[el.selectedIndex].value][event];
-    uf.remarks.value = ar[el.options[el.selectedIndex].value][rem];
-  }
-}
-
-function validate() {
-//If new event, check for invalid entries
-  if (document.useform.event_select.value == "new") {
-    if (document.useform.event.value == "") {
-      alert("You need to specify a name for the new event.");
-      document.useform.event.focus();
-      return false;
-    }
-  }
-  return true;
-}
-</SCRIPT>
-
-  <div align="center">
-    <font color="#663399" size=4><b>Choose existing event and enter date,
-        or fill in information for a new event:</b></font>
-    <form action="<? echo $PHP_SELF; ?>" method="post" name="useform" target="_self">
-      <input type="hidden" name="sid_list" value="<? echo $sid_list; ?>" border="0">
-      <input type="hidden" name="event_id" value="" border="0">
-      <table border="1" cellspacing="0" cellpadding="4">
-        <tr>
-          <td nowrap>Event: <select name="event_list" size="1" onchange="fill_fields();">
-              <option value="" selected>Select an event...</option>
-            </select><br>
-          <td nowrap>
-            <p>Event: <input type="text" name="event" disabled size="45" maxlength="50" border="0"><br>
-              <textarea name="remarks" disabled rows="3" cols="45"></textarea></p>
-          </td>
-          <td align="center" nowrap>Date Used:<br><input type="text" name="use_date" value="" size="12"
-          maxlength="10" border="0"><a href="#" onClick="call_calendar(document.useform.use_date);">
-          <img id=usecal src=calendarbutton.gif border=0 width=20 height=20></a><br>&nbsp;<br>
-          <input type="submit" name="save_usage" value="Save Data" border="0"></td>
-        </tr>
-      </table>
-    </form>
-  </div>
-    <? print_footer();
-?>
+      </div>
+      <div class="flexbox">
+        <h3>Date Used: <input type="text" name="use_date" id="use_date" value="" size="12" maxlength="10"></h3>
+        <input type="submit" name="save_usage" value="Save Data" border="0">
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+$( function() {
+  $( "#use_date" ).datepicker({ dateFormat: "yy-mm-dd"});
+} );
+</script>
+<? print_footer(); ?>

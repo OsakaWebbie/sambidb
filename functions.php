@@ -2,9 +2,9 @@
 error_reporting(E_ERROR);
 
 // Newer version in two parts - this first part takes title
-function header1($title) {
+function header1($title='') {
 ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?=$_SESSION['pw_charset']?>">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
@@ -27,53 +27,50 @@ function header1($title) {
 <meta name="theme-color" content="#ffffff">
 <link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico">
 <title><?=$title?></title>
-<style>
-body,p,div,span,td,input,textarea {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-}
-div.left { float:left; }
-div.right { float:right; }
-div.clear { clear:both; line-height:0; margin:0; padding:0; }
-#layouttable { text-align:left; }
-input.text {
-  background-color: FFFFFF;
-  border-color: 666666;
-  border-style: solid;
-  border-width: 1px;
-}
-.debug { display:none; }
--->
-</style>
 <?
 }
 
-function header2($nav,$color="#FFFFFF") {
+function header2($nav=0, $color="#FFFFFF", $jquery=0, $tablelayout=1) {
+  if ($jquery) {
+    echo '<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">'."\n";
+    echo '<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>'."\n";
+    echo '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>'."\n";
+    echo '<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>'."\n";
+  }
+  echo '<link rel="stylesheet" type="text/css" href="css/style.css">'."\n";
   echo "</head>\n";
-  echo "<body bgcolor=\"$color\"><div align=\"center\">\n";
+  echo '<body bgcolor="'.$color.'"><div align="center">'."\n";
   if ($nav) {
-    echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0 width=750>";
-    print_nav();
+    if ($tablelayout) echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0 width=750>";
+    print_nav($tablelayout);
   } else {
-    echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0>";
+    if ($tablelayout) echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0>";
   }
   echo "<tr><td>\n";
 }
 
-function print_nav() {
-  echo "<tr><td height=30 align=center valign=middle bgcolor=black><font face=arial size=2 color=white>";
-  echo "<a href=\"index.php\" target=\"_top\"><font color=white>Top (Search)</font></a>&nbsp;&nbsp;|&nbsp;";
+function print_nav($tablelayout=1) {
+  if ($tablelayout) {
+    echo '<tr><td id="navbar">';
+  } else {
+    echo '<div id="navbar">';
+  }
+  echo "<a href=\"index.php\" target=\"_top\">Top (Search)</a>&nbsp;&nbsp;|&nbsp;";
   if ($_SESSION['pw_admin'] > 0) {
-    echo "<a href=\"edit.php\" target=\"_top\"><font color=white>New Song</font></a>&nbsp;&nbsp;|&nbsp;";
+    echo "<a href=\"edit.php\" target=\"_top\">New Song</a>&nbsp;&nbsp;|&nbsp;";
   }
-  echo "<a href=\"multiselect.php\" target=\"_top\"><font color=white>Tagged Song Actions</font></a>&nbsp;&nbsp;|&nbsp;";
-  echo "<a href=\"event_use.php\" target=\"_top\"><font color=white>Song Use Chart</font></a>&nbsp;&nbsp;|&nbsp;";
-  echo "<a href=\"maintenance.php\" target=\"_top\"><font color=white>DB Maintenance</font></a>";
+  echo "<a href=\"multiselect.php\" target=\"_top\">Tagged Song Actions</a>&nbsp;&nbsp;|&nbsp;";
+  echo "<a href=\"event_use.php\" target=\"_top\">Song Use Chart</a>&nbsp;&nbsp;|&nbsp;";
+  echo "<a href=\"maintenance.php\" target=\"_top\">DB Maintenance</a>";
   if ($_SESSION['pw_admin'] == 2) {
-    echo "&nbsp;&nbsp;|&nbsp;<a href=\"sqlquery.php\" target=\"_top\"><font color=white>(Freeform SQL)</font></a>";
+    echo "&nbsp;&nbsp;|&nbsp;<a href=\"sqlquery.php\" target=\"_top\">(Freeform SQL)</a>";
   }
-  echo "&nbsp;&nbsp;|&nbsp;<a href=\"index.php?logout=1\" target=\"_top\"><font color=white>Log Out</font></a>";
-  echo "</font></td></tr>";
+  echo "&nbsp;&nbsp;|&nbsp;<a href=\"index.php?logout=1\" target=\"_top\">Log Out</a>";
+  if ($tablelayout) {
+    echo '</td></tr>';
+  } else {
+    echo '</div>';
+  }
 }
 
 // For the older pages
@@ -83,13 +80,23 @@ function print_header($title,$color,$nav) {
 }
 
 // Function print_footer: sends final html
-function print_footer() {
+function print_footer($tablelayout=1) {
   global $nav_bar;
-  echo "</td></tr>";
+  if ($tablelayout) echo "</td></tr>";
   if ($nav_bar) {
     print_nav();
   }
-  echo "</table></body></html>";
+  if ($tablelayout) echo "</table></body></html>";
+}
+
+// function sqlquery_checked: shorten the repeated checks for SQL errors
+function sqlquery_checked($sql) {
+  global $db;
+  $result = mysqli_query($db, $sql);
+  if ($result === false ){
+     die("<pre style=\"font-size:15px;\"><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
+  }
+  return $result;
 }
 
 // Function showfile: for "including" a non-PHP file (HTML, JS, etc.)
@@ -231,8 +238,32 @@ function chordsToRuby($unfmt){
   return $fmt;
 }
 
-// Call file to connect to database
-include("main_connect.php");
+// Connect to database
+//include("main_connect.php");
+$hostarray = explode(".",$_SERVER['HTTP_HOST']);
+//print_r($hostarray);
+//exit;
+if ($hostarray[0]!='l4jp') {  //contains subdomain (new style after move)
+  define('CLIENT',$hostarray[0]);
+  define('CLIENT_PATH','/var/www/sambidb/client/'.CLIENT);
+  // Get client login credentials and connect to client database
+  $configfile = CLIENT_PATH.'/sambidb.ini';
+} else {  //no subdomain (old style)
+  define('CLIENT','abide');
+  $configfile = 'sambidb.ini';
+}
+if (!is_readable($configfile)) die("No configuration file. Notify the developer.");
+$config = parse_ini_file($configfile);
+//print_r($configfile);
+//echo "<br>".CLIENT;
+//print_r($config);
+//exit;
+$db = mysqli_connect("localhost", "sambi_".CLIENT, $config['password'], "sambi_".CLIENT)
+    or die("Failed to connect to database. Notify the developer.");
+//connect the old way also until all are mysqli
+$maindb = mysql_connect("","sambi_".CLIENT,$config['password']) or die("Failed to connect");
+mysql_select_db("sambi_".CLIENT, $maindb);
+
 
 /* for certain versions of SQL, this next is needed, but others would give an error, */
 /* so error checking is commented out */
