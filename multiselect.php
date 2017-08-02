@@ -16,7 +16,9 @@ if (!$sid_list) {
   }
 }
 ?>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<?
+header2(1,'white',1,0);
+?>
 <style>
   #tagged { border:1px #999999 solid; margin:0; padding:3px; background-color:#EEEEEE; }
   #tagged li { list-style-type:none; border:1px #999999 solid; margin:1px; padding:2px 4px; white-space:nowrap; background-color:White; }
@@ -27,8 +29,6 @@ if (!$sid_list) {
   #tagged li span.songtitle { font-weight:bold; }
   #tagged li img { margin-left:5px; }
 </style>
-<script type="text/JavaScript" src="js/jquery.min.js"></script>
-<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
 
 <script type="text/JavaScript">
 $(document).ready(function(){
@@ -76,16 +76,14 @@ function make_list() {
   }
 }
 </script>
-<?
-header2(1);
-?>
 <h3>Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then choose an action from the buttons on the right.</h3>
 <form action="ms_usage.php" method="get" id="sform" target="actionframe">
   <input type="hidden" name="sid_list" id="sid_list" value="" border="0">
-  <table border="0" cellspacing="0" cellpadding="8"><tr>
-    <td valign="top" align="center">
-      <table border="0" cellspacing="0" cellpadding="5" bgcolor="white"><tr><td>
-        <ul id="tagged">
+  <div style="float:left">
+    <table border="0" cellspacing="0" cellpadding="5" bgcolor="white">
+      <tr>
+        <td>
+          <ul id="tagged">
 <?
 //get list of songs from database and create list
 if ($sid_list) {
@@ -106,21 +104,20 @@ while ($song = mysql_fetch_object($result)) {
   echo "</li>\n";
 }
 ?>
-        </ul>
-      </td></tr></table>
-    </td>
-    <td valign="top" align="center">
-      <div style="float:left; border:3px solid gray; text-align:center; margin:10px; padding:0 10px;">
-        <h3 style="border:0">Choose an Action:</h3>
-        <p><input type="submit" name="ms_usage" value="Record As Event Song Session"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></p>
-        <p><input type="submit" name="ms_pdf" value="Output Songs (PDF)"></p>
-        <p><input type="submit" name="ms_text" value="Output Songs (text)"></p>
-        <p><input type="submit" name="ms_keyword" value="Add a Keyword"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></p>
-        <p><input type="submit" name="ms_format" value="[Output Songs (old)]"></p>
-      </div>
-    </td></tr>
-  </table>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div style="float:left; border:3px solid gray; text-align:center; margin:10px; padding:0 10px;">
+    <h3>Choose an Action:</h3>
+    <p><input type="submit" name="ms_usage" value="Record As Event Song Session"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></p>
+    <p><input type="submit" name="ms_pdf" value="Output Songs (PDF)"></p>
+    <p><input type="submit" name="ms_text" value="Output Songs (text)"></p>
+    <p><input type="submit" name="ms_keyword" value="Add a Keyword"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></p>
+    <p><input type="submit" name="ms_format" value="[Output Songs (old)]"></p>
+  </div>
 </form>
-<iframe id= "actionframe" name="actionframe" style="width:100%;height:300px" src="blank.html">
+<iframe id= "actionframe" name="actionframe" style="width:90%;height:300px" src="blank.html">
 </iframe>
 <? print_footer();?>
