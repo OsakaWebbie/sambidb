@@ -2,25 +2,25 @@
 include("functions.php");
 include("accesscontrol.php");
 
-$select = "pw_song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,stripchord(LEFT(Lyrics,INSTR(Lyrics,'\n')-1)) AS FirstLine, ".
+$select = "song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,stripchord(LEFT(Lyrics,INSTR(Lyrics,'\n')-1)) AS FirstLine, ".
 "Audio, Lyrics REGEXP '\\\\[[^rR]' AS Chords";
-$from = "pw_song";
-/*if ($_SESSION['pw_inkeys'] or $kwid) {
-  if (ereg(",".$kwid.",", ",".$_SESSION['pw_inkeys'])) {  // The search keyword is already in the filter
-    $list = $_SESSION['pw_inkeys'];
-  } elseif ($_SESSION['pw_inkeys'] and $kwid) {  // Both are present and unique, so combine them in one list
-    $list = $_SESSION['pw_inkeys'].",".$kwid;
+$from = "song";
+/*if ($_SESSION['inkeys'] or $kwid) {
+  if (ereg(",".$kwid.",", ",".$_SESSION['inkeys'])) {  // The search keyword is already in the filter
+    $list = $_SESSION['inkeys'];
+  } elseif ($_SESSION['inkeys'] and $kwid) {  // Both are present and unique, so combine them in one list
+    $list = $_SESSION['inkeys'].",".$kwid;
   } else {  // We know one but not both is set
-    $list = $_SESSION['pw_inkeys'].$kwid;
+    $list = $_SESSION['inkeys'].$kwid;
   }
-  $where .= ($where?" AND ":"")."pw_song.SongID IN (SELECT SongID FROM pw_songkey WHERE KeywordID IN ($list))";
+  $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID IN ($list))";
 }*/
 if ($eid) {
   $select .= ",MAX(UseDate) AS Last";
-  $from .= " LEFT OUTER JOIN pw_usage ON pw_song.SongID=pw_usage.SongID AND pw_usage.EventID=$eid";
-  $groupby = "pw_song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,FirstLine,Audio,Chords";
+  $from .= " LEFT OUTER JOIN history ON song.SongID=history.SongID AND history.EventID=$eid";
+  $groupby = "song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,FirstLine,Audio,Chords";
 }
-$href = $PHP_SELF;
+$href = $_SERVER['PHP_SELF'];
 
 if ($title_search) {
   $text = "Songs whose title contains '".stripslashes($title_search)."' (ignoring punctuation)";
@@ -40,13 +40,13 @@ if ($title_search) {
   $where .= ($where?" AND ":"")."Tempo='".$tempo_search."'";
   $href .= "?tempo_search=".$tempo_search.($eid?"&eid=$eid":"")."&sort=";
 } elseif ($kwid) {
-  if (!$result = mysql_query("SELECT Keyword FROM pw_keyword WHERE KeywordID = $kwid")) {
-    echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+  if (!$result = mysqli_query($db,"SELECT Keyword FROM keyword WHERE KeywordID = $kwid")) {
+    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
     exit;
   }
-  $kw = mysql_fetch_object($result);
+  $kw = mysqli_fetch_object($result);
   $text = "Songs with Keyword '".$kw->Keyword."'";
-  $where .= ($where?" AND ":"")."pw_song.SongID IN (SELECT SongID FROM pw_songkey WHERE KeywordID=$kwid)";
+  $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID=$kwid)";
   $href .= "?kwid=".$kwid.($eid?"&eid=$eid":"")."&sort=";
 } elseif ($where_search) {
   $where_search = stripslashes($where_search);
@@ -62,11 +62,11 @@ if ($title_search) {
   $href .= ($eid?"?eid=$eid&":"?")."sort=";
 }
 /* FILTERS */
-if ($_SESSION['pw_inkeys'] AND !($kwid AND ereg(",".$kwid.",", ",".$_SESSION['pw_inkeys']))) { //only if keyword search doesn't overlap filter
-  $where .= ($where?" AND ":"")."pw_song.SongID IN (SELECT SongID FROM pw_songkey WHERE KeywordID IN (".$_SESSION['pw_inkeys']."))";
+if ($_SESSION['inkeys'] AND !($kwid AND strpos(",".$_SESSION['inkeys'].",",",".$kwid.",")!==FALSE)) { //only if keyword search doesn't overlap filter
+  $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID IN (".$_SESSION['inkeys']."))";
 }
-if ($_SESSION['pw_exkeys']) {
-  $where .= ($where?" AND ":"")."NOT pw_song.SongID IN (SELECT SongID FROM pw_songkey WHERE KeywordID IN (".$_SESSION['pw_exkeys']."))";
+if ($_SESSION['exkeys']) {
+  $where .= ($where?" AND ":"")."NOT song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID IN (".$_SESSION['exkeys']."))";
 }
 
 /* PUT IT ALL TOGETHER */
@@ -78,15 +78,15 @@ if ($sort and ($sort != "OrigTitle")) {
   $sql .= " ORDER BY OrigTitle";
 }
 
-if (!$result = mysql_query($sql)) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>$sql");
+if (!$result = mysqli_query($db,$sql)) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>$sql");
   exit;
 }
-if (mysql_num_rows($result) == 0) {
-  header("Location: index.php?text=".urlencode("Search resulted in no records.".(($_SESSION['pw_admin'] == 2)?"<br>".$sql:"")));
+if (mysqli_num_rows($result) == 0) {
+  header("Location: index.php?text=".urlencode("Search resulted in no records.".(($_SESSION['admin'] == 2)?"<br>".$sql:"")));
   exit;
-} elseif (mysql_num_rows($result) == 1) {
-  $kw_song = mysql_fetch_object($result);
+} elseif (mysqli_num_rows($result) == 1) {
+  $kw_song = mysqli_fetch_object($result);
   header("Location: song.php?sid=".$kw_song->SongID);
   exit;
 }
@@ -101,7 +101,7 @@ echo "    }\n";
 echo "  }\n";
 echo "}\n";
 echo "</script>\n";
-echo "<center><h2><font color=#A04040>".$text.": ".mysql_num_rows($result)." Records</font></h2>";
+echo "<center><h2><font color=#A04040>".$text.": ".mysqli_num_rows($result)." Records</font></h2>";
 
 echo "<form name=tagform action=\"do_tag.php\" method=post>\n";
 
@@ -111,11 +111,11 @@ echo "<input type=button value=\"   Check All   \" onclick=\"all_check('true');\
 echo "<input type=button value=\"  Uncheck All  \" onclick=\"all_check('false');\">\n";
 
 echo "</td><td align=center valign=middle>Include last date used for:<br>\n";
-if (!$events = mysql_query("SELECT * FROM pw_event WHERE Active=1 ORDER BY Event")) {
-  echo ("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+if (!$events = mysqli_query($db,"SELECT * FROM event WHERE Active=1 ORDER BY Event")) {
+  echo ("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
   exit;
 }
-while ($event = mysql_fetch_object($events)) {
+while ($event = mysqli_fetch_object($events)) {
   if ($event->EventID == $eid) {
     echo "<font color=#000000><b>".$event->Event." (currently displayed)</b></font><br>\n";
   } else {
@@ -158,7 +158,7 @@ else echo "<a href=\"".$href."FirstLine\"><font color=#A04040>First Line</font><
 echo "</b></td>\n";
 
 $sid_list = "";
-while ($row = mysql_fetch_object($result)) {
+while ($row = mysqli_fetch_object($result)) {
   echo "<tr><td nowrap><a href=\"song.php?sid=".$row->SongID."\">".$row->Title."</a>";
   if ($row->Audio == "1")  echo "&nbsp;<img src=\"graphics/audio.gif\" height=16 width=16>";
   if ($row->Chords)  echo "&nbsp;<img src=\"graphics/guitar.gif\" height=16 width=16>";
@@ -176,6 +176,6 @@ while ($row = mysql_fetch_object($result)) {
 }
 echo "<input type=hidden name=\"sid_list\" value=\"".substr($sid_list,1)."\">";
 echo "</tr></table></form></center>";
-if ($_SESSION['pw_userid']=="karen") echo "<p style=\"textsize:0.8em\">$sql</p>\n";
+if ($_SESSION['userid']=="karen") echo "<p style=\"textsize:0.8em\">$sql</p>\n";
 
 print_footer();

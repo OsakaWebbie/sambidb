@@ -12,15 +12,15 @@ echo "<style type=\"text/css\">p {margin-bottom: 0; margin-top: 0;}</style>";
 echo "</head><body>";
 
 //if ($copy_songs) {
-  $sid_array = split(",",$sid_list);
+  $sid_array = explode(",",$sid_list);
   $num_sids = count($sid_array);
   for ($i=0; $i<$num_sids; $i++) {
-    $sql = "SELECT Title, Lyrics, Composer, Copyright, Pattern FROM pw_song WHERE SongID=$sid_array[$i]";
-    if (!$result = mysql_query($sql)) {
-      echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+    $sql = "SELECT Title, Lyrics, Composer, Copyright, Pattern FROM song WHERE SongID=$sid_array[$i]";
+    if (!$result = mysqli_query($db,$sql)) {
+      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    $row = mysql_fetch_object($result);
+    $row = mysqli_fetch_object($result);
     echo $row->Title."<br>\n";
     echo $row->Pattern."<br>\n";
     $text = ereg_replace("  "," &nbsp;",$row->Lyrics);

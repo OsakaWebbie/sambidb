@@ -3,14 +3,14 @@ include("functions.php");
 include("accesscontrol.php");
 header1("Layout Prep for PDF");
 
-$sql = "SELECT * from pw_song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
-if (!$result = mysql_query($sql)) die("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br><pre>[$sql]</pre>");
+$sql = "SELECT * from song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
+if (!$result = mysqli_query($db,$sql)) die("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br><pre>[$sql]</pre>");
 
 ?>
 <script>
 var songs = {};
-<?
-while ($song = mysql_fetch_object($result)) {
+<?php
+while ($song = mysqli_fetch_object($result)) {
   echo "songs['".$song->SongID."']={title:'".htmlspecialchars($song->Title,ENT_QUOTES)."',".
   "origtitle:'".htmlspecialchars($song->OrigTitle,ENT_QUOTES)."',".
   "songkey:'".htmlspecialchars($song->SongKey,ENT_QUOTES)."',".
@@ -26,7 +26,7 @@ while ($song = mysql_fetch_object($result)) {
   }
   $snippets = array();  //truncate
   foreach ($stanzas as &$stanza) {
-    $snippets[] = mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars(mb_strcut(ereg_replace("\[[^\[]*\]","",$stanza),0,30),ENT_QUOTES));
+    $snippets[] = mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars(mb_strcut(preg_replace("#\[[^\[]*\]#","",$stanza),0,30),ENT_QUOTES));
     $stanza = trim(mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars($stanza,ENT_QUOTES)));
   }
   if ($_GET['pattern']=="pattern" && $song->Pattern!="") {
@@ -90,7 +90,7 @@ while ($song = mysql_fetch_object($result)) {
 
 <script type="text/JavaScript">
 $(document).ready(function(){
-<? if ($_GET['multilingual']) { //JS code to consolidate songs with same original title ?>
+<?php if ($_GET['multilingual']) { //JS code to consolidate songs with same original title ?>
   var mlsong = [];
   var origtitle = "";
   $("#layout ul li.song").each(function() {  //loop through songs, collecting info in mlsong array
@@ -131,7 +131,7 @@ $(document).ready(function(){
       }
     });
   }
-<? } //end handling of multilingual song consolidation ?>
+<?php } //end handling of multilingual song consolidation ?>
   
   $(".accordion").accordion({
     collapsible: true,
@@ -145,7 +145,7 @@ $(document).ready(function(){
   $("#formatname").change(function(e) {
     // Get options based on newly selected format, and change as needed on page
     $.getJSON("ajax_db_row.php", {
-        table:'pw_pdfformat',
+        table:'pdfformat',
         key:'FormatName',
         keyquoted:1,
         value:$(this).val()
@@ -311,7 +311,7 @@ $(document).ready(function(){
   })
 });
 </script>
-<?
+<?php
 header2(1);
 ?>
 <h3><font color="SteelBlue">Set options and arrange the songs and stanzas as you want.
@@ -322,17 +322,17 @@ header2(1);
 &nbsp;To force an item to the next page/column, double-click it (double-click again to turn it off).</font></h3>
 
 <form id="layoutform" action="pdfgenerate.php" method="get">
-  <input type="hidden" name="sid_list" value="<? echo $sid_list; ?>" border="0">
+  <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
   <input type="hidden" id="order" name="order" value="">
   <input type="hidden" id="copy2" name="copy2" value="0">
   <input type="hidden" id="ilong" name="ilong" value="0">
   <table border="0" cellspacing="0" cellpadding="5"><tr><td style="vertical-align:top">
     <strong>Layout:</strong> <select id="formatname" name="formatname" size="1">
       <option value="">Select...</option>
-<?
-$sql = "SELECT FormatName FROM pw_pdfformat ORDER BY ListOrder";
-if (!$result = mysql_query($sql)) die("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
-while ($row = mysql_fetch_object($result)) {
+<?php
+$sql = "SELECT FormatName FROM pdfformat ORDER BY ListOrder";
+if (!$result = mysqli_query($db,$sql)) die("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
+while ($row = mysqli_fetch_object($result)) {
   echo  "      <option value=\"".$row->FormatName."\">".$row->FormatName."</option>\n";
 }
 ?>
@@ -396,11 +396,11 @@ while ($row = mysql_fetch_object($result)) {
   <td style="vertical-align:top">
     <div id="layout">
       <ul>
-<?
+<?php
 echo $html;
 ?>
       </ul>
     </div>
   </td></tr></table>
 </form>
-<? print_footer(); ?>
+<?php print_footer(); ?>

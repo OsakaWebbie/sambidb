@@ -18,12 +18,12 @@ function show_event() {
   <form name="eform">
     <p>Event: <select size="1" name="event" onchange="show_event();">
       <option value="">Select an event...</option>
-<?
+<?php
 // Build option list from event table contents
-if (!$result = mysql_query("SELECT * FROM pw_event ORDER BY Active DESC, Event")) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+if (!$result = mysqli_query($db,"SELECT * FROM event ORDER BY Active DESC, Event")) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
-  while ($row = mysql_fetch_object($result)) {
+  while ($row = mysqli_fetch_object($result)) {
     echo "      <option value=$row->EventID>{$row->Event} (";
     echo ($row->Active ? "current" : "archive") . ")</option>\n";
   }
@@ -35,6 +35,6 @@ if (!$result = mysql_query("SELECT * FROM pw_event ORDER BY Active DESC, Event")
 </iframe>
 </center>
 
-<?
+<?php
 print_footer();
 ?>

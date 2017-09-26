@@ -3,31 +3,31 @@ include("functions.php");
 print_header("Tag Processing","#FFFFFF",0);
 
 //if ($_POST['eid'] && $_POST['ud']) {  // called from song_session.php
-//  $listquery = "SELECT pw_usage.SongID,pw_song.Tagged ".
-//  "FROM pw_usage LEFT JOIN pw_song ON pw_song.SongID=pw_usage.SongID ".
-//  "WHERE pw_usage.EventID={$_POST['eid']} AND pw_usage.UseDate='{$_POST['ud']}'";
+//  $listquery = "SELECT history.SongID,song.Tagged ".
+//  "FROM history LEFT JOIN song ON song.SongID=history.SongID ".
+//  "WHERE history.EventID={$_POST['eid']} AND history.UseDate='{$_POST['ud']}'";
 //} elseif (!$listquery) {  // not called by either list.php or song_session.php
 //  echo("<b>This file cannot be accessed directly.</b><br>");
 //  exit;
 //} else {
 //  $sql = stripslashes($_POST['listquery']);
 //}
-$sql = "SELECT SongID,Tagged FROM pw_song WHERE SongID IN (".$_POST['sid_list'].")";
-if (!$result = mysql_query($sql)) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+$sql = "SELECT SongID,Tagged FROM song WHERE SongID IN (".$_POST['sid_list'].")";
+if (!$result = mysqli_query($db,$sql)) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
   exit;
 }
 
-while ($row = mysql_fetch_object($result)) {
+while ($row = mysqli_fetch_object($result)) {
   $sid = $row->SongID;
   if ($_POST[$sid] and !$row->Tagged) {
-    if (!mysql_query("UPDATE pw_song SET Tagged=1 WHERE SongID=$sid")) {
-      echo("<b>SQL Error ".mysql_errno()." tagging song: ".mysql_error()."</b><br>");
+    if (!mysqli_query($db,"UPDATE song SET Tagged=1 WHERE SongID=$sid")) {
+      echo("<b>SQL Error ".mysqli_errno($db)." tagging song: ".mysqli_error($db)."</b><br>");
       exit;
     }
   } elseif (!$_POST[$sid] and $row->Tagged) {
-    if (!mysql_query("UPDATE pw_song SET Tagged=0 WHERE SongID=$sid")) {
-      echo("<b>SQL Error ".mysql_errno()." untagging song: ".mysql_error()."</b><br>");
+    if (!mysqli_query($db,"UPDATE song SET Tagged=0 WHERE SongID=$sid")) {
+      echo("<b>SQL Error ".mysqli_errno($db)." untagging song: ".mysqli_error($db)."</b><br>");
       exit;
     }
   }
