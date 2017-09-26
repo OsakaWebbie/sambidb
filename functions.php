@@ -6,7 +6,7 @@ function header1($title='') {
 ?>
 <!DOCTYPE html>
 <html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?=$_SESSION['pw_charset']?>">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
@@ -27,7 +27,7 @@ function header1($title='') {
 <meta name="theme-color" content="#ffffff">
 <link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico">
 <title><?=$title?></title>
-<?
+<?php
 }
 
 function header2($nav=0, $color="#FFFFFF", $jquery=0, $tablelayout=1) {
@@ -56,13 +56,14 @@ function print_nav($tablelayout=1) {
     echo '<div id="navbar">';
   }
   echo "<a href=\"index.php\" target=\"_top\">Top (Search)</a>&nbsp;&nbsp;|&nbsp;";
-  if ($_SESSION['pw_admin'] > 0) {
+  echo "<a href=\"list.php?tagged=1\">List Tagged</a>&nbsp;&nbsp;|&nbsp;";
+  if ($_SESSION['admin'] > 0) {
     echo "<a href=\"edit.php\" target=\"_top\">New Song</a>&nbsp;&nbsp;|&nbsp;";
   }
   echo "<a href=\"multiselect.php\" target=\"_top\">Tagged Song Actions</a>&nbsp;&nbsp;|&nbsp;";
   echo "<a href=\"event_use.php\" target=\"_top\">Song Use Chart</a>&nbsp;&nbsp;|&nbsp;";
   echo "<a href=\"maintenance.php\" target=\"_top\">DB Maintenance</a>";
-  if ($_SESSION['pw_admin'] == 2) {
+  if ($_SESSION['admin'] == 2) {
     echo "&nbsp;&nbsp;|&nbsp;<a href=\"sqlquery.php\" target=\"_top\">(Freeform SQL)</a>";
   }
   echo "&nbsp;&nbsp;|&nbsp;<a href=\"index.php?logout=1\" target=\"_top\">Log Out</a>";
@@ -94,25 +95,14 @@ function sqlquery_checked($sql) {
   global $db;
   $result = mysqli_query($db, $sql);
   if ($result === false ){
-     die("<pre style=\"font-size:15px;\"><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
+    die("<pre style=\"font-size:15px;\"><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
   }
   return $result;
 }
 
-// Function showfile: for "including" a non-PHP file (HTML, JS, etc.)
-function showfile($filename) {
-  if (!$file = fopen($filename,"r")) {
-    echo "<br><font color=red>Could not open file '$filename'!</font><br>";
-  } else {
-    fpassthru($file);
-  }
-}
-
 // Function db2table: prepares text from DB for display in table cell (or plain html text)
 function db2table($text) {
-//  $text = ereg_replace("\r\n|\n|\r","<br>",$text);
-//  $text = ereg_replace("<br> ","<br>&nbsp;",$text);
-  $text = ereg_replace(" ","&nbsp;",$text);
+  $text = str_replace(" ","&nbsp;",$text);
   return nl2br($text);
 }
 
@@ -122,40 +112,13 @@ function d2h($text) {
 
 // Function post2form: prepares text from DB for display in form
 function post2form($text) {
-//  $text = ereg_replace("\'","'",$text);
+//  $text = str_replace("\'","'",$text);
   return stripslashes($text);
 }
 
 function escape_quotes($text) {
-  $text = ereg_replace("\"","\\\"",$text);
+  $text = str_replace("\"","\\\"",$text);
   return $text;
-}
-
-// Function readable_name: returns name with furigana if Japanese, without if not
-function readable_name($name,$furigana) {
-  if (ereg("^[a-zA-Z]",$name)) {  //name is in English letters
-    return $name;
-  } else {
-    return $name." (".$furigana.")";
-  }
-}
-
-// Function readable_name_2line: returns name with furigana on next line if Japanese, without if not
-function readable_name_2line($name,$furigana) {
-  if (ereg("^[a-zA-Z]",$name)) {  //name is in English letters
-    return $name;
-  } else {
-    return $name."<br>(".$furigana.")";
-  }
-}
-
-// Function age: takes birthdate in the form YYYY-MM-DD as argument, returns age
-function age($birthdate) {
-  $ba = split("-",$birthdate);
-  $ta = split("-",date("Y-m-d",mktime(gmdate("H")+9)));
-  $age = $ta[0] - $ba[0];
-  if (($ba[1] > $ta[1]) || (($ba[1] == $ta[1]) && ($ba[2] > $ta[2]))) --$age;
-  return $age;
 }
 
 function url2link($text) {
@@ -172,6 +135,7 @@ function chordsToRuby($unfmt){
   $fmt = "";
   $insideword = FALSE;
   $oldrb = $oldrt = "";
+  $rbcounter = $rblimit = 0;
   //Note: Strtok ignores empty sections, so I put the * on the front to make sure it stops at the first chord
   $nonruby = substr(strtok("*".$unfmt,"["),1);  //lyrics text preceding the next <ruby> tag
   while ($rbpair = strtok("[")) {  //keep walking through the rest of the line
@@ -206,7 +170,7 @@ function chordsToRuby($unfmt){
       $rbcounter = 0.0;
       for ($index=0; $index < mb_strlen($rb); $index++)  {
         $thischar = mb_substr($rb, $index, 1);
-        if (strlen($this_char) > 1) {  //multi-byte character
+        if (strlen($thischar) > 1) {  //multi-byte character
           $rbcounter += 1.0;  //adjust this value to balance between allowing wrapping and avoiding unneeded spacing
           if ($rbcounter >= $rblimit) {
             break;
@@ -238,40 +202,18 @@ function chordsToRuby($unfmt){
   return $fmt;
 }
 
-// Connect to database
-//include("main_connect.php");
+// STUFF THAT GETS RUN RIGHT AWAY
+
 $hostarray = explode(".",$_SERVER['HTTP_HOST']);
-//print_r($hostarray);
-//exit;
-if ($hostarray[0]!='l4jp') {  //contains subdomain (new style after move)
-  define('CLIENT',$hostarray[0]);
-  define('CLIENT_PATH','/var/www/sambidb/client/'.CLIENT);
-  // Get client login credentials and connect to client database
-  $configfile = CLIENT_PATH.'/sambidb.ini';
-} else {  //no subdomain (old style)
-  define('CLIENT','abide');
-  $configfile = 'sambidb.ini';
-}
+define('CLIENT',$hostarray[0]);
+define('CLIENT_PATH',"/var/www/sambidb/client/".CLIENT);
+// Get client login credentials and connect to client database
+$configfile = CLIENT_PATH."/sambidb.ini";
 if (!is_readable($configfile)) die("No configuration file. Notify the developer.");
 $config = parse_ini_file($configfile);
-//print_r($configfile);
-//echo "<br>".CLIENT;
-//print_r($config);
-//exit;
 $db = mysqli_connect("localhost", "sambi_".CLIENT, $config['password'], "sambi_".CLIENT)
     or die("Failed to connect to database. Notify the developer.");
-//connect the old way also until all are mysqli
-$maindb = mysql_connect("","sambi_".CLIENT,$config['password']) or die("Failed to connect");
-mysql_select_db("sambi_".CLIENT, $maindb);
 
-
-/* for certain versions of SQL, this next is needed, but others would give an error, */
-/* so error checking is commented out */
-if (!$result = mysql_query("set names 'utf8'")) {
-//  echo "<b>SQL Error trying to set names to utf8: ".mysql_errno().": ".mysql_error()."</b>";
-//  exit;
-}
-/* Set internal character encoding to UTF-8 */
-mb_internal_encoding("UTF-8");
+mysqli_set_charset($db, "utf8mb4");
 
 ?>

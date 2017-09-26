@@ -5,11 +5,11 @@ include("accesscontrol.php");
 print_header("Action on Tagged Songs","#E0FFE0",1);
 
 if (!$sid_list) {
-  if (!$result = mysql_query("SELECT count(*) AS Num FROM pw_song WHERE Tagged=1")) {
-    echo("<b>SQL Error ".mysql_errno()." while counting tagged songs: ".mysql_error()."</b>");
+  if (!$result = mysqli_query($db,"SELECT count(*) AS Num FROM song WHERE Tagged=1")) {
+    echo("<b>SQL Error ".mysqli_errno($db)." while counting tagged songs: ".mysqli_error($db)."</b>");
     exit;
   }
-  $row = mysql_fetch_object($result);
+  $row = mysqli_fetch_object($result);
   if ($row->Num == 0) {
     echo "&nbsp;<br><b>There are no tagged songs.  Please use the tools on the Top(Search) page to
     select songs for tagging, then use this page to put them in order and/or take actions.</b><br>";
@@ -45,18 +45,18 @@ onsubmit="make_list();">
       <table border="0" cellspacing="0" cellpadding="5" bgcolor="white"><tr><td>
         <select name="tagged[]" size="16" multiple="multiple" id="tagged"
         onmousewheel="mousewheel(this);">
-<?
+<?php
 //get list of songs from database and fill select box
 if ($sid_list) {
-  $sql = "SELECT * FROM pw_song WHERE SongID In (".$sid_list.") ORDER BY FIND_IN_SET(SongID,'".$sid_list."')";
+  $sql = "SELECT * FROM song WHERE SongID In (".$sid_list.") ORDER BY FIND_IN_SET(SongID,'".$sid_list."')";
 } else {
-  $sql = "SELECT * FROM pw_song WHERE tagged=1 ORDER BY OrigTitle";
+  $sql = "SELECT * FROM song WHERE tagged=1 ORDER BY OrigTitle";
 }
-if (!$result = mysql_query($sql)) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b> ($sql)");
+if (!$result = mysqli_query($db,$sql)) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b> ($sql)");
   exit;
 }
-while ($song = mysql_fetch_object($result)) {
+while ($song = mysqli_fetch_object($result)) {
   $txt = "[".$song->SongKey."][".$song->Tempo."] ".$song->Title;
   if (ereg_replace("^[[:digit:]]{3}: ","",$song->Title) != $song->OrigTitle) $txt .= " (".$song->OrigTitle.")";
   echo "          <option value=\"$song->SongID\">$txt</option>\n";
@@ -77,10 +77,10 @@ while ($song = mysql_fetch_object($result)) {
         border="0" onclick="document.sform.action='ms_text.php';"></td></tr>
         <tr><td align="center"><input type="submit" name="ms_format" value="Output Songs (PDF)"
         border="0" onclick="document.sform.action='ms_pdf.php';"></td></tr>
-        <tr><td align="center"><input type="submit" name="ms_usage" value="Record As Event Song Session"
-        border="0" onclick="document.sform.action='ms_usage.php';"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></td></tr>
+        <tr><td align="center"><input type="submit" name="ms_history" value="Record As Event Song Session"
+        border="0" onclick="document.sform.action='ms_history.php';"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></td></tr>
         <tr><td align="center"><input type="submit" name="ms_keyword" value="Add a Keyword"
-        border="0" onclick="document.sform.action='ms_keyword.php';"<? if ($_SESSION['pw_admin']==0) echo " disabled"; ?>></td></tr>
+        border="0" onclick="document.sform.action='ms_keyword.php';"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></td></tr>
         <tr><td align="center"><input type="submit" name="ms_format" value="[Output Songs (old)]"
         border="0" onclick="document.sform.action='ms_format.php';"></td></tr>
       </table>
@@ -88,6 +88,6 @@ while ($song = mysql_fetch_object($result)) {
     </td></tr>
   </table>
 </form>
-  <? print_footer();
+  <?php print_footer();
 ?>
 </body>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 /*
-if (!isset($_SESSION['pw_userid'])) exit("no session");
+if (!isset($_SESSION['userid'])) exit("no session");
 if (isset($_GET['songid'])) {
   $file = "path/to/file.mp3";
   $size = filesize($file);
@@ -16,10 +16,10 @@ if (isset($_GET['songid'])) {
 
 
 $okplaces = array ("song.php", "edit.php");
-//$comp1 = $_SESSION['pw_urlpath']."song.php";
-//$comp2 = $_SESSION['pw_urlpath']."edit.php";
+//$comp1 = $_SESSION['urlpath']."song.php";
+//$comp2 = $_SESSION['urlpath']."edit.php";
 
-if (!isset($_SESSION['pw_userid'])) exit("no session");
+if (!isset($_SESSION['userid'])) exit("no session");
 
 //$referer = parse_url($_SERVER['HTTP_REFERER']);
 //$referer = pathinfo($referer['path']);

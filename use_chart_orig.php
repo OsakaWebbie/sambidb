@@ -16,33 +16,33 @@ function song_session(eventid,usedate) {
 }
 </script>
 
-<?
+<?php
 if (!$eid) {
   exit("No event selected.");
 }
 //get the description of the event
-$sql = "SELECT Remarks from pw_event WHERE EventID = $eid";
-if (!$result = mysql_query($sql)) {
-  exit("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
+$sql = "SELECT Remarks from event WHERE EventID = $eid";
+if (!$result = mysqli_query($db,$sql)) {
+  exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
 }
-$row = mysql_fetch_row ($result);
+$row = mysqli_fetch_row ($result);
 if ($row[0] != "") echo "<b>Event Description:</b> ".$row[0]."<br>&nbsp;<br>\n";
 
 //get the list of songs used (row headings for table)
-$sql = "SELECT DISTINCT pw_usage.SongID,Title from pw_usage LEFT JOIN pw_song ".
-    "ON pw_usage.SongID=pw_song.SongID WHERE EventID = $eid ORDER BY Title";
-if (!$result = mysql_query($sql)) {
-  exit("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
+$sql = "SELECT DISTINCT history.SongID,Title from history LEFT JOIN song ".
+    "ON history.SongID=song.SongID WHERE EventID = $eid ORDER BY Title";
+if (!$result = mysqli_query($db,$sql)) {
+  exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
 }
-while ($parray[] = mysql_fetch_row ($result));
+while ($parray[] = mysqli_fetch_row ($result));
 $num_songs = count($parray)-1;
 
 //get the list of dates (column headings for table)
-$sql = "SELECT DISTINCT UseDate from pw_usage WHERE EventID = $eid ORDER BY UseDate";
-if (!$result = mysql_query($sql)) {
-  exit("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
+$sql = "SELECT DISTINCT UseDate from history WHERE EventID = $eid ORDER BY UseDate";
+if (!$result = mysqli_query($db,$sql)) {
+  exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
 }
-while ($darray[] = mysql_fetch_row ($result)); 
+while ($darray[] = mysqli_fetch_row ($result));
 $num_dates = count($darray)-1;
 
 echo "<table border=1 cellspacing=0 cellpadding=2>";
@@ -59,11 +59,11 @@ for ($r=0; $r<$num_songs; $r++) {
     echo "</tr><tr>";
   }
   //query for this song's use data and correlate to dates
-  $sql = "SELECT UseDate from pw_usage WHERE EventID=$eid and SongID={$parray[$r][0]} ORDER BY UseDate";
-  if (!$result = mysql_query($sql)) {
-    exit("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
+  $sql = "SELECT UseDate from history WHERE EventID=$eid and SongID={$parray[$r][0]} ORDER BY UseDate";
+  if (!$result = mysqli_query($db,$sql)) {
+    exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
   }
-  $row = mysql_fetch_row ($result);
+  $row = mysqli_fetch_row ($result);
   $done = 0;
   for ($c=0; $c<$num_dates; $c++) {
     if ($c % 10 == 0) {  // repeat song names every 10 columns
@@ -72,7 +72,7 @@ for ($r=0; $r<$num_songs; $r++) {
     }
     if (($done == 0) && ($row[0] == $darray[$c][0])) {
       echo "<td align=center bgcolor=#8080FF>*</td>";
-      if (!$row = mysql_fetch_row ($result)) $done = 1;
+      if (!$row = mysqli_fetch_row ($result)) $done = 1;
     } else {
       echo "<td>&nbsp;</td>";
     }

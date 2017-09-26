@@ -3,7 +3,7 @@ include("functions.php");
 include("accesscontrol.php");
 
 if ($xml) {
-  echo "<?xml version=\"1.0\" encoding=\"".$_SESSION['pw_charset']."\" ?>\n<songlist>\n";
+  echo "<?xml version=\"1.0\" encoding=\"".$_SESSION['charset']."\" ?>\n<songlist>\n";
 } else {
   echo "<html><head>";
   echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=".$_SESSION['charset']."\">\n";
@@ -11,15 +11,15 @@ if ($xml) {
   echo "</head><body>";
 }
 
-$sid_array = split(",",$sid_list);
+$sid_array = explode(",",$sid_list);
 $num_sids = count($sid_array);
 for ($sid_index=0; $sid_index<$num_sids; $sid_index++) {
-  $sql = "SELECT * FROM pw_song WHERE SongID=$sid_array[$sid_index]";
-  if (!$result = mysql_query($sql)) {
-    echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+  $sql = "SELECT * FROM song WHERE SongID=$sid_array[$sid_index]";
+  if (!$result = mysqli_query($db,$sql)) {
+    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
     exit;
   }
-  $row = mysql_fetch_object($result);
+  $row = mysqli_fetch_object($result);
   if ($xml) {
     echo "<song>\n";
   }

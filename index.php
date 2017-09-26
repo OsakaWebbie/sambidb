@@ -2,30 +2,30 @@
 include("functions.php");
 include("accesscontrol.php");
 
-if ($cleartags) {
-  if (!$result = mysql_query("UPDATE pw_song SET Tagged=0 WHERE Tagged=1")) {
-    echo("<b>SQL Error ".mysql_errno()." while untagging all songs: ".mysql_error()."</b>");
+if (isset($_GET['cleartags'])) {
+  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=0 WHERE Tagged=1")) {
+    echo("<b>SQL Error ".mysqli_errno($db)." while untagging all songs: ".mysqli_error($db)."</b>");
     exit;
   }
   $num_tagged = 0;
 } else {
-  if (!$result = mysql_query("SELECT count(*) AS Num FROM pw_song WHERE Tagged=1")) {
-    echo("<b>SQL Error ".mysql_errno()." while counting tagged songs: ".mysql_error()."</b>");
+  if (!$result = mysqli_query($db,"SELECT count(*) AS Num FROM song WHERE Tagged=1")) {
+    echo("<b>SQL Error ".mysqli_errno($db)." while counting tagged songs: ".mysqli_error($db)."</b>");
     exit;
   }
-  $row = mysql_fetch_object($result);
+  $row = mysqli_fetch_object($result);
   $num_tagged = $row->Num;
 }
 
 print_header("Praise & Worship DB Menu Page","#F0FFF0",1); ?>
 <center>
   <h1><font color=#40A040>Praise & Worship Database</font></h1>
-  <font color=#308030><b><i>Welcome, <? echo $_SESSION['pw_username']; ?>!</i></b>
-<? if ($_SESSION['pw_admin'] == 0)  echo "<br><font size=-2>Your user status is \"read-only\", so you cannot edit the data.  If you need editing privileges, contact the system administrator.</font>";
+  <font color=#308030><b><i>Welcome, <?php echo $_SESSION['username']; ?>!</i></b>
+<?php if ($_SESSION['admin'] == 0)  echo "<br><font size=-2>Your user status is \"read-only\", so you cannot edit the data.  If you need editing privileges, contact the system administrator.</font>";
 ?>
 </font><br />&nbsp;<br />
 <font color=A03030 size=-1><b>Note: This database is only a tool for convenience; existence of copyrighted material (lyrics, recordings, etc.) in it does not give you permission to use that material in ways that violate the copyright.  Users of the material bear their own responsibility for how they use the information stored here.</font><br />&nbsp;<br />
-  <? if ($text) echo "<h3><font color=red>$text</font></h3>"; ?>
+  <?php if (isset($text)) echo "<h3 style='color:red'>$text</h3>"; ?>
   <table border=0 cellspacing=0 cellpadding=0><tr><td>
   <table border=1 cellspacing=0 cellpadding=5 bordercolor=#80A080>
     <tr>
@@ -56,13 +56,13 @@ print_header("Praise & Worship DB Menu Page","#F0FFF0",1); ?>
       <td>
         <form name="lform" action="list.php" method=GET>
           <p>Keyword: <select size="1" name="kwid" onchange="document.forms.lform.submit();">
-              <? // Build option list from pw_keyword table contents
-if (!$result = mysql_query("SELECT * FROM pw_keyword ORDER BY Keyword")) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+              <?php // Build option list from keyword table contents
+if (!$result = mysqli_query($db,"SELECT * FROM keyword ORDER BY Keyword")) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
   echo "      <option value=\"\">Select a keyword...</option>";
-  while ($row = mysql_fetch_object($result)) {
-    if (!ereg(",".$row->KeywordID.",", ",".$_SESSION['pw_inkeys'].",") && !ereg(",".$row->KeywordID.",", ",".$_SESSION['pw_exkeys'].",")) {
+  while ($row = mysqli_fetch_object($result)) {
+    if (strpos(",".$_SESSION['inkeys'].",",",".$row->KeywordID.",")===FALSE && strpos(",".$_SESSION['exkeys'].",",",".$row->KeywordID.",")===FALSE) {
       echo "      <option value=$row->KeywordID>$row->Keyword</option>";
     }
     $keyword[$row->KeywordID] = $row->Keyword;
@@ -88,8 +88,8 @@ if (!$result = mysql_query("SELECT * FROM pw_keyword ORDER BY Keyword")) {
   </table>
   </table>
   <br>
-<?
-if ($_SESSION['pw_admin'] == 2) {
+<?php
+if ($_SESSION['admin'] == 2) {
   echo "  <table border=1 cellspacing=0 cellpadding=5 bordercolor=#80A080>\n";
   echo "    <tr>\n      <td align=center>        <form name=\"wform\" action=\"list.php\" method=GET>\n";
   echo "          <p>Freeform SQL: SELECT this stuff FROM wherever WHERE...<br>\n";
@@ -109,21 +109,21 @@ if ($num_tagged > 0) {
 }
 
 echo "<hr><table border=0 cellspacing=0 cellpadding=0><tr><td valign=middle>\n";
-if (!$_SESSION['pw_inkeys'] & !$_SESSION['pw_exkeys']) {
+if (!$_SESSION['inkeys'] & !$_SESSION['exkeys']) {
   echo "<b><i>You are not currently filtering data<br>(you are seeing all records).<i><b>";
 } else {
   echo "<b><i>You are currently filtering to see only songs whose keywords...<br>";
-  if ($_SESSION['pw_inkeys']) {
+  if ($_SESSION['inkeys']) {
     $txt = "";
-    $key_array=split(",",$_SESSION['pw_inkeys']);
+    $key_array=split(",",$_SESSION['inkeys']);
     while (list($dummy,$kwid) = each($key_array)) {
       $txt .= ", ".$keyword[$kwid];
     }
     echo "<font color=green>Include: ".substr($txt,2)."</font><br>\n";
   }
-  if ($_SESSION['pw_exkeys']) {
+  if ($_SESSION['exkeys']) {
     $txt = "";
-    $key_array=split(",",$_SESSION['pw_exkeys']);
+    $key_array=split(",",$_SESSION['exkeys']);
     while (list($dummy,$kwid) = each($key_array)) {
       $txt .= ", ".$keyword[$kwid];
     }

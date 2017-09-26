@@ -16,48 +16,48 @@ if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
 
 if ($sid) {
   //echo "Editing an existing record.<br>"; //debugging only
-  $sql = "UPDATE pw_song SET Title='".mysql_real_escape_string(str_replace("\n"," ",$title))."',".
-  "OrigTitle='".mysql_real_escape_string(str_replace("\n"," ",trim($origtitle)))."',".
-  "Composer='".mysql_real_escape_string(str_replace("\n"," ",trim($composer)))."',".
-  "Copyright='".mysql_real_escape_string(str_replace("\n"," ",trim($copyright)))."',".
-  "SongKey='$songkey',Tempo='$tempo',Source='".mysql_real_escape_string(trim($source))."',".
-  "Lyrics='".mysql_real_escape_string(trim($lyrics))."',".
-  "Pattern='".mysql_real_escape_string(str_replace("\n"," ",trim($pattern)))."',".
-  "Instruction='".mysql_real_escape_string(trim($instruction))."',".
-  "AudioComment='".mysql_real_escape_string(str_replace("\n"," ",trim($audiocomment)))."'".
+  $sql = "UPDATE song SET Title='".mysqli_real_escape_string($db,str_replace("\n"," ",$title))."',".
+  "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($origtitle)))."',".
+  "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($composer)))."',".
+  "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($copyright)))."',".
+  "SongKey='$songkey',Tempo='$tempo',Source='".mysqli_real_escape_string($db,trim($source))."',".
+  "Lyrics='".mysqli_real_escape_string($db,trim($lyrics))."',".
+  "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($pattern)))."',".
+  "Instruction='".mysqli_real_escape_string($db,trim($instruction))."',".
+  "AudioComment='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($audiocomment)))."'".
   " WHERE SongID=$sid LIMIT 1";
   //echo "SQL is:<pre>$sql</pre><br>"; //debugging only
-  if (!$result = mysql_query($sql)) {
-    echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+  if (!$result = mysqli_query($db,$sql)) {
+    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
     exit;
   }
-  if (mysql_affected_rows() > 0) {
-    echo "The pw_song record was updated<br>";
+  if (mysqli_affected_rows($db) > 0) {
+    echo "The song record was updated<br>";
   }
 } else {
   //echo "Creating a new record.<br>"; //debugging only
-  $sql = "INSERT INTO pw_song (Title,OrigTitle,Composer,Copyright,SongKey,".
+  $sql = "INSERT INTO song (Title,OrigTitle,Composer,Copyright,SongKey,".
   "Tempo,Source,Lyrics,Pattern,Instruction,AudioComment) VALUES (".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($title)))."',".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($origtitle)))."',".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($composer)))."',".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($copyright)))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($title)))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($origtitle)))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($composer)))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($copyright)))."',".
   "'$songkey','$tempo',".
-  "'".mysql_real_escape_string(trim($source))."',".
-  "'".mysql_real_escape_string(trim($lyrics))."',".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($pattern)))."',".
-  "'".mysql_real_escape_string(trim($instruction))."',".
-  "'".mysql_real_escape_string(str_replace("\n"," ",trim($audiocomment)))."')";
+  "'".mysqli_real_escape_string($db,trim($source))."',".
+  "'".mysqli_real_escape_string($db,trim($lyrics))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($pattern)))."',".
+  "'".mysqli_real_escape_string($db,trim($instruction))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($audiocomment)))."')";
   //echo "SQL is:<pre>$sql</pre><br>"; //debugging only
-  if (!$result = mysql_query($sql)) {
-    echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+  if (!$result = mysqli_query($db,$sql)) {
+    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
     exit;
   }
-  if (mysql_affected_rows() > 0) {
-    $sid = mysql_insert_id();
-    echo "The pw_song record was inserted.<br>";
+  if (mysqli_affected_rows($db) > 0) {
+    $sid = mysqli_insert_id($db);
+    echo "The song record was inserted.<br>";
   } else {
-    echo "No pw_song record was inserted for some reason.<br>";
+    echo "No song record was inserted for some reason.<br>";
   }
 }
 //echo "Moving on to the code for a possible upload. SID = $sid<br>"; //debugging only
@@ -65,9 +65,9 @@ if (is_uploaded_file($_FILES['audiofile']['tmp_name'])) {
   //echo "There is a temp file called ".$_FILES['audiofile']['tmp_name'].".<br>"; //debugging only
   if (move_uploaded_file($_FILES['audiofile']['tmp_name'], "audio/s".$sid.".mp3")) {
     echo "File is valid, and was successfully uploaded.<br>";
-    $sql = "UPDATE pw_song SET Audio=1 WHERE SongID=$sid LIMIT 1";
-    if (!$result = mysql_query($sql)) {
-      echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+    $sql = "UPDATE song SET Audio=1 WHERE SongID=$sid LIMIT 1";
+    if (!$result = mysqli_query($db,$sql)) {
+      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
   } else {

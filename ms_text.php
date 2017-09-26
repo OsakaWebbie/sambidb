@@ -4,10 +4,10 @@ include("accesscontrol.php");
 print_header("","#FFF0E0",0);
 ?>
     <form action="text.php" method="get" name="optionsform" target="_blank">
-      <input type="hidden" name="sid_list" value="<? echo $sid_list; ?>" border="0">
+      <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
       <table width="639" border="0" cellspacing="0" cellpadding="5">
         <tr><td nowrap>
-<?
+<?php
 for ($i=1; $i<7; $i++) {
   echo "        Field $i:<select name=\"field$i\" size=\"1\">\n";
   echo "        <option value=\"\"> </option>\n";
@@ -39,5 +39,5 @@ for ($i=1; $i<7; $i++) {
         </tr>
       </table>
     </form>
-<? print_footer();
+<?php print_footer();
 ?>

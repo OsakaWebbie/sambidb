@@ -5,13 +5,13 @@ print_header("","#E8FFE0",0);
 
 if ($save_kw) {
   if ($kwid == "new") {  //need to insert the new keyword record first
-    $sql = "INSERT INTO pw_keyword (Keyword) VALUES ('$keyword')";
-    if (!$result = mysql_query($sql)) {
-      echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+    $sql = "INSERT INTO keyword (Keyword) VALUES ('$keyword')";
+    if (!$result = mysqli_query($db,$sql)) {
+      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    if (mysql_affected_rows() > 0) {
-      $kwid = mysql_insert_id();
+    if (mysqli_affected_rows($db) > 0) {
+      $kwid = mysqli_insert_id($db);
       echo "<h3><font color=\"#449933\">New keyword successfully added.</font></h3>";
     } else {
       echo "No keyword record was inserted for some reason.<br>";
@@ -19,22 +19,22 @@ if ($save_kw) {
     }
   }
 
-  $sid_array = split(",",$sid_list);
+  $sid_array = explode(",",$sid_list);
   $num_sids = count($sid_array);
   $num_previous = 0;
   for ($i=0; $i<$num_sids; $i++) {
-    $sql = "SELECT * FROM pw_songkey WHERE SongID=".$sid_array[$i]." AND KeywordID=$kwid";
-    if (!$result = mysql_query($sql)) {
-      echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+    $sql = "SELECT * FROM songkey WHERE SongID=".$sid_array[$i]." AND KeywordID=$kwid";
+    if (!$result = mysqli_query($db,$sql)) {
+      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    if (mysql_num_rows($result) == 1) {
+    if (mysqli_num_rows($result) == 1) {
       $num_previous++;
     } else {
-      $sql = "INSERT INTO pw_songkey (SongID,KeywordID) VALUES (".
+      $sql = "INSERT INTO songkey (SongID,KeywordID) VALUES (".
            $sid_array[$i].",$kwid)";
-      if (!$result = mysql_query($sql)) {
-        echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
+      if (!$result = mysqli_query($db,$sql)) {
+        echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
         exit;
       }
     }
@@ -65,21 +65,21 @@ function validate() {
   <div align="center">
     <font color="#449933" size=4><b>Choose existing keyword,
         or choose New and fill in new keyword name:</b></font>
-    <form action="<? echo $PHP_SELF; ?>" method="post" name="kwform" target="_self" onsubmit="return validate();">
-      <input type="hidden" name="sid_list" value="<? echo $sid_list; ?>" border="0">
+    <form action="<?php echo $PHP_SELF; ?>" method="post" name="kwform" target="_self" onsubmit="return validate();">
+      <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
       <table border="1" cellspacing="0" cellpadding="4">
         <tr>
           <td nowrap>Keyword:
             <select name="kwid" size="1">
               <option value="" selected>Select a keyword...</option>
               <option value="new">New Keyword (input name)</option>
-<?
-$sql = "SELECT * FROM pw_keyword ORDER BY Keyword";
-if (!$result = mysql_query($sql)) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)<br>");
+<?php
+$sql = "SELECT * FROM keyword ORDER BY Keyword";
+if (!$result = mysqli_query($db,$sql)) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
   exit;
 }
-while ($row = mysql_fetch_object($result)) {
+while ($row = mysqli_fetch_object($result)) {
   echo "              <option value=\"".$row->KeywordID."\">$row->Keyword</option>\n";
 }
 ?>
@@ -93,5 +93,5 @@ while ($row = mysql_fetch_object($result)) {
       </table>
     </form>
   </div>
-<? print_footer();
+<?php print_footer();
 ?>

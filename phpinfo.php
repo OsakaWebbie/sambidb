@@ -1,7 +1,7 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-if ($_SESSION['pw_userid']=="karen") {
+if ($_SESSION['userid']=="karen") {
   phpinfo();
 }
 ?>

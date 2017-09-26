@@ -10,33 +10,33 @@ if (!$_GET['sid'] && !$_POST['sid']) {
 
 //Song to be tagged or untagged
 if (isset($_GET['tag'])) {
-  if (!$result = mysql_query("UPDATE pw_song SET Tagged=1 WHERE SongID={$_GET['sid']}")) {
-    echo("<b>SQL Error ".mysql_errno()." while tagging song: ".mysql_error()."</b>");
+  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=1 WHERE SongID={$_GET['sid']}")) {
+    echo("<b>SQL Error ".mysqli_errno($db)." while tagging song: ".mysqli_error($db)."</b>");
     exit;
   }
 } elseif (isset($_GET['untag'])) {
-  if (!$result = mysql_query("UPDATE pw_song SET Tagged=0 WHERE SongID={$_GET['sid']}")) {
-    echo("<b>SQL Error ".mysql_errno()." while untagging song: ".mysql_error()."</b>");
+  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=0 WHERE SongID={$_GET['sid']}")) {
+    echo("<b>SQL Error ".mysqli_errno($db)." while untagging song: ".mysqli_error($db)."</b>");
     exit;
   }
 }
 
 //Keyword changes
 if ($newkeyword) {
-  if (!$result = mysql_query("SELECT k.KeywordID, k.Keyword, s.SongID ".
-      "FROM pw_keyword k LEFT JOIN pw_songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_POST['sid']} ".
+  if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
+      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_POST['sid']} ".
       "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
-    echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
   } else {
-    while ($row = mysql_fetch_object($result)) {
+    while ($row = mysqli_fetch_object($result)) {
       $keyid = $row->KeywordID;
       if ($row->SongID && !($_POST[$keyid])) {
-        if (!mysql_query("DELETE from pw_songkey WHERE KeywordID=$keyid and SongID={$_POST['sid']}")) {
-          echo("<b>SQL Error ".mysql_errno()." during DELETE FROM pw_songkey: ".mysql_error()."</b>");
+        if (!mysqli_query($db,"DELETE from songkey WHERE KeywordID=$keyid and SongID={$_POST['sid']}")) {
+          echo("<b>SQL Error ".mysqli_errno($db)." during DELETE FROM songkey: ".mysqli_error($db)."</b>");
         }
       } elseif (!$row->SongID && ($_POST[$keyid])) {
-        if (!mysql_query("INSERT INTO pw_songkey(KeywordID,SongID) VALUES($keyid,{$_POST['sid']})")) {
-          echo("<b>SQL Error ".mysql_errno()." during INSERT INTO pw_songkey: ".mysql_error()."</b>");
+        if (!mysqli_query($db,"INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,{$_POST['sid']})")) {
+          echo("<b>SQL Error ".mysqli_errno($db)." during INSERT INTO songkey: ".mysqli_error($db)."</b>");
         }
       }
     }
@@ -45,15 +45,15 @@ if ($newkeyword) {
   exit;
 }
 
-if (!$result = mysql_query("SELECT * FROM pw_song WHERE SongID={$_GET['sid']}")) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+if (!$result = mysqli_query($db,"SELECT * FROM song WHERE SongID={$_GET['sid']}")) {
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
   exit;
 }
-if (mysql_num_rows($result) == 0) {
+if (mysqli_num_rows($result) == 0) {
   echo("<b>Failed to find a record for SongID {$_GET['sid']}.</b>");
   exit;
 }
-$song = mysql_fetch_object($result);
+$song = mysqli_fetch_object($result);
 $haschords = preg_match('/\[[^rR]/u',$song->Lyrics);
 $hasromaji = preg_match('/\[r\]/iu',$song->Lyrics);
 header1("Song: ".$song->Title);
@@ -82,7 +82,6 @@ header1("Song: ".$song->Title);
 }
 .chordlyrics ruby {
   ruby-align: start;
-  *ruby-align: left; /* For IE */
 }
 .chordlyrics rt span {
   font-size: 13px;
@@ -98,7 +97,7 @@ header1("Song: ".$song->Title);
   margin-top: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
-<?
+<?php
 if ($_GET['chords']) {
   echo ".chordshidden { display:none; }\n";
 } else {
@@ -111,7 +110,7 @@ if (!$_GET['romaji']) {
 form#keywordform { padding:0; margin:0; }
 div#keywordsection { border:2px solid gray; padding:5px; text-align:center; }
 div.checkboxes { border-top:2px solid gray; padding:5px; margin-top:3px; text-align:left; } 
-label.keyword { float:left; margin-right:2em; }
+label.keyword { margin-right:2em; }
 label.keyword span { white-space:nowrap; }
 </style>
 
@@ -123,11 +122,11 @@ $(document).ready(function(){
       e.preventDefault();
       var audioPlayer = new Audio();
       audioPlayer.controls="controls";
-      audioPlayer.src="sendaudio.php?sid=<? echo $_GET['sid']; ?>";
+      audioPlayer.src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>";
       audioPlayer.autoplay="true";
       document.getElementById("audioarea").appendChild(audioPlayer);
     } else {
-      html = '<embed src="sendaudio.php?sid=<? echo $_GET['sid']; ?>" controls="console" height="20"'; 
+      html = '<embed src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>" controls="console" height="20"';
       html += ' vspace="0" hspace="0" border="0" align="top" autoplay=true';
       html += ' pluginspage="http://www.apple.com/quicktime/download/?video/quicktime"></embed>\n';
       $("#audioarea").html(html);
@@ -163,7 +162,7 @@ function play_audio(url) {
   }
 }
 </script>
-<?
+<?php
 header2(1);
 ?>
 <table width="735" border="0" cellpadding="0" cellspacing="0"><tr><td>
@@ -177,7 +176,7 @@ header2(1);
   </td></tr></table>
 </td></tr><tr><td>
   <table border="0" cellspacing="0" cellpadding="5"><tr><td valign="top">
-<? if ($haschords || $hasromaji) {
+<?php if ($haschords || $hasromaji) {
   echo '    <div style="font-weight:bold">Show:';
   if ($haschords) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showchords" '.($_GET['chords']?' checked':'').'>Chords</label>';
   if ($hasromaji) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showromaji" '.($_GET['romaji']?' checked':'').'>Romaji</label>';
@@ -185,8 +184,8 @@ header2(1);
 }
 ?>
     <div style="border: 2px solid #000080; width:350px; padding:5px;">
-<? 
-$lines = split("\r\n|\n\r\|\n|\r", $song->Lyrics);
+<?php
+$lines = preg_split("/\r\n|\n\r\|\n|\r/", $song->Lyrics);
 $lyrics = "";
 foreach ($lines as $line) {
   $romajiclass = preg_match('/\[r\]/iu',$line) ? ' romaji' : '';
@@ -205,7 +204,7 @@ foreach ($lines as $line) {
 ?>
     </div>  
   
-<?
+<?php
 /*} else {  //no chords
   echo "<font color=#0000C0><b>Lyrics:</b></font>";
   if (preg_match('/\[[^rR]/u',$song->Lyrics)) {
@@ -248,7 +247,7 @@ if ($song->Audio) {
     echo "<br>\n    <b>Comment about audio recording:</b> ".$song->AudioComment."\n";
   }
 }
-if ($_SESSION['pw_admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">Edit This Record</a></h2>";
+if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">Edit This Record</a></h2>";
 
 echo "  </td></tr></table>\n";
 
@@ -256,28 +255,28 @@ echo "  </td></tr></table>\n";
 
 echo "<form id=\"keywordsform\" action=\"song.php\" method=\"POST\"><div id=\"keywordsection\">";
 echo "<h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>Keywords</i></b>";
-if ($_SESSION['pw_admin'] > 0) {
+if ($_SESSION['admin'] > 0) {
   echo "&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value=\"Save Keyword Changes\" name=newkeyword>";
 }
 echo "<input type=hidden name=sid value={$_GET['sid']}></h3>";
 
-if (!$result = mysql_query("SELECT k.KeywordID, k.Keyword, s.SongID ".
-    "FROM pw_keyword k LEFT JOIN pw_songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_GET['sid']} ".
+if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
+    "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_GET['sid']} ".
     "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
-  echo("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b>");
+  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
   echo "<div class=\"checkboxes\">\n";
-  while ($row = mysql_fetch_object($result)) {
+  while ($row = mysqli_fetch_object($result)) {
     if (!($row->SongID)) {
-      if ($_SESSION['pw_admin'] > 0) {
+      if ($_SESSION['admin'] > 0) {
         echo "<div class=\"clear\"></div></div><div class=\"checkboxes\">\n<label class=\"keyword\"><span><input type=checkbox name=$row->KeywordID>$row->Keyword</span></label>\n";
       }
       break;
     }
     echo "<label class=\"keyword\"><span><input type=checkbox name=\"".$row->KeywordID."\" checked>".$row->Keyword."</span></label>\n";
   }
-  if ($_SESSION['pw_admin'] > 0) {
-    while ($row = mysql_fetch_object($result)) {
+  if ($_SESSION['admin'] > 0) {
+    while ($row = mysqli_fetch_object($result)) {
       echo "<label class=\"keyword\"><span><input type=checkbox name=\"".$row->KeywordID."\">".$row->Keyword."</span></label>\n";
     }
   }
@@ -288,17 +287,17 @@ echo "</td></tr></table></form>";
 // ********** USAGE **********
 
 $sql = "SELECT e.Event, min(u.UseDate) AS first, max(u.UseDate) AS last,".
-    " COUNT(u.UseDate) AS times, e.Remarks FROM pw_event e, pw_usage u WHERE e.EventID = u.EventID".
+    " COUNT(u.UseDate) AS times, e.Remarks FROM event e, history u WHERE e.EventID = u.EventID".
     " AND u.SongID = ".$_GET['sid']." GROUP BY e.Event ORDER BY last";
-if (!$result = mysql_query($sql)) {
-  echo ("<b>SQL Error ".mysql_errno().": ".mysql_error()."</b><br>($sql)");
-} elseif (mysql_num_rows($result) == 0) {
-  echo ("<p>No usage records.<br>&nbsp;</p>");
+if (!$result = mysqli_query($db,$sql)) {
+  echo ("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
+} elseif (mysqli_num_rows($result) == 0) {
+  echo ("<p>No history records.<br>&nbsp;</p>");
 } else {
   echo "<table width=735 border=2 cellpadding=5 cellspacing=0 bordercolor=#0000C0 bgcolor=#F0F0FF>";
   echo "<tr><td align=center><h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>Usage History</i></b></h3>";
   echo ("<table width=730 border=1 cellspacing=0 cellpadding=2 bgcolor=#FFFFFF>");
-  while ($row = mysql_fetch_object($result)) {
+  while ($row = mysqli_fetch_object($result)) {
     echo ("<tr><td nowrap>".$row->Event."</td><td nowrap>");
     if ($row->first == $row->last) {
       echo ($row->first);
