@@ -2,12 +2,17 @@
 session_start();
 //if (!isset($_SESSION['userid'])) exit("Session timed out. Please refresh the previous page to log in again.");
 
+// The only bit from functions.php that I need here
+$hostarray = explode(".",$_SERVER['HTTP_HOST']);
+define('CLIENT',$hostarray[0]);
+define('CLIENT_PATH',"/var/www/sambidb/client/".CLIENT);
+
 if (isset($_GET['playsid'])) {
 //echo "Playsid is set<br>";
   if (!isset($_SESSION['audio_ok'])) exit("You can't call this directly in order to download this audio!");
 //echo "audio_ok is set correctly<br>";
   unset($_SESSION['audio_ok']);
-  $file = "audio/s".$_GET['playsid'].".mp3";
+  $file = CLIENT_PATH."/audio/s".$_GET['playsid'].".mp3";
   if (!file_exists($file)) exit;
 //echo "audio file exists<br>";
 //exit;

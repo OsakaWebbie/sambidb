@@ -115,7 +115,7 @@ if (!$_SESSION['inkeys'] & !$_SESSION['exkeys']) {
   echo "<b><i>You are currently filtering to see only songs whose keywords...<br>";
   if ($_SESSION['inkeys']) {
     $txt = "";
-    $key_array=split(",",$_SESSION['inkeys']);
+    $key_array=explode(",",$_SESSION['inkeys']);
     while (list($dummy,$kwid) = each($key_array)) {
       $txt .= ", ".$keyword[$kwid];
     }
@@ -123,7 +123,7 @@ if (!$_SESSION['inkeys'] & !$_SESSION['exkeys']) {
   }
   if ($_SESSION['exkeys']) {
     $txt = "";
-    $key_array=split(",",$_SESSION['exkeys']);
+    $key_array=explode(",",$_SESSION['exkeys']);
     while (list($dummy,$kwid) = each($key_array)) {
       $txt .= ", ".$keyword[$kwid];
     }
