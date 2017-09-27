@@ -133,6 +133,8 @@ $(document).ready(function(){
 //       AudioPlayer.embed("audioplayer", {soundFile: "audio.mp3"});$("#audioarea").html("No can do...");
     }
   });
+  $('#audioarea').bind('contextmenu',function() { return false; });
+
   $('#showchords, #showromaji').change(function() {
     if ($('#showchords').prop("checked") && $('#showromaji').prop("checked")) {
       $('.chordlyrics, .lyrics, .chords').show();

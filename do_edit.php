@@ -63,7 +63,7 @@ if ($sid) {
 //echo "Moving on to the code for a possible upload. SID = $sid<br>"; //debugging only
 if (is_uploaded_file($_FILES['audiofile']['tmp_name'])) {
   //echo "There is a temp file called ".$_FILES['audiofile']['tmp_name'].".<br>"; //debugging only
-  if (move_uploaded_file($_FILES['audiofile']['tmp_name'], "audio/s".$sid.".mp3")) {
+  if (move_uploaded_file($_FILES['audiofile']['tmp_name'], CLIENT_PATH."/audio/s".$sid.".mp3")) {
     echo "File is valid, and was successfully uploaded.<br>";
     $sql = "UPDATE song SET Audio=1 WHERE SongID=$sid LIMIT 1";
     if (!$result = mysqli_query($db,$sql)) {
