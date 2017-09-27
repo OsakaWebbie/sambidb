@@ -117,23 +117,23 @@ label.keyword span { white-space:nowrap; }
 <script type="text/JavaScript" src="js/jquery.min.js"></script>
 <script type="text/Javascript">
 $(document).ready(function(){
-  $("#playaudio").click(function(e) {
-    if (MP3support()) {
-      e.preventDefault();
-      var audioPlayer = new Audio();
-      audioPlayer.controls="controls";
-      audioPlayer.src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>";
-      audioPlayer.autoplay="true";
-      document.getElementById("audioarea").appendChild(audioPlayer);
-    } else {
-      html = '<embed src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>" controls="console" height="20"';
-      html += ' vspace="0" hspace="0" border="0" align="top" autoplay=true';
-      html += ' pluginspage="http://www.apple.com/quicktime/download/?video/quicktime"></embed>\n';
-      $("#audioarea").html(html);
+  //$("#playaudio").click(function(e) {
+  //  if (MP3support()) {
+  //    e.preventDefault();
+  //    var audioPlayer = new Audio();
+  //    audioPlayer.controls="controls";
+  //    audioPlayer.src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>";
+  //    audioPlayer.autoplay="true";
+  //    document.getElementById("audioarea").appendChild(audioPlayer);
+  //  } else {
+  //    html = '<embed src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>" controls="console" controlsList="nodownload" height="20"';
+  //    html += ' vspace="0" hspace="0" border="0" align="top" autoplay=true';
+  //    html += ' pluginspage="http://www.apple.com/quicktime/download/?video/quicktime"></embed>\n';
+  //    $("#audioarea").html(html);
 //       AudioPlayer.embed("audioplayer", {soundFile: "audio.mp3"});$("#audioarea").html("No can do...");
-    }
-  });
-  $('#audioarea').bind('contextmenu',function() { return false; });
+//    }
+//  });
+  $('audio').bind('contextmenu',function() { return false; });
 
   $('#showchords, #showromaji').change(function() {
     if ($('#showchords').prop("checked") && $('#showromaji').prop("checked")) {
@@ -243,8 +243,11 @@ if ($song->Instruction) {
   echo "<br>\n    <b>Instruction (intro, etc.):&nbsp;</b>$song->Instruction\n";
 }
 if ($song->Audio) {
-  echo "    <div><b>Audio for learning:&nbsp;</b><a id=\"playaudio\" href=\"#\">Click to Listen</a></div>";
-  echo "<div id=\"audioarea\"></div>\n";
+  echo "    <div><b>Audio for learning:</b><br>\n";
+  echo "    <audio src=\"sendaudio.php?sid=".$_GET['sid']."\" controls=\"console\" controlsList=\"nodownload\">\n";
+  echo "<a id=\"playaudio\" href=\"#\">Click to Listen</a></div>";
+//  echo "    <div><b>Audio for learning:&nbsp;</b><a id=\"playaudio\" href=\"#\">Click to Listen</a></div>";
+//  echo "<div id=\"audioarea\"></div>\n";
   if ($song->AudioComment) {
     echo "<br>\n    <b>Comment about audio recording:</b> ".$song->AudioComment."\n";
   }
