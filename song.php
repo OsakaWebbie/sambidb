@@ -117,22 +117,6 @@ label.keyword span { white-space:nowrap; }
 <script type="text/JavaScript" src="js/jquery.min.js"></script>
 <script type="text/Javascript">
 $(document).ready(function(){
-  //$("#playaudio").click(function(e) {
-  //  if (MP3support()) {
-  //    e.preventDefault();
-  //    var audioPlayer = new Audio();
-  //    audioPlayer.controls="controls";
-  //    audioPlayer.src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>";
-  //    audioPlayer.autoplay="true";
-  //    document.getElementById("audioarea").appendChild(audioPlayer);
-  //  } else {
-  //    html = '<embed src="sendaudio.php?sid=<?php echo $_GET['sid']; ?>" controls="console" controlsList="nodownload" height="20"';
-  //    html += ' vspace="0" hspace="0" border="0" align="top" autoplay=true';
-  //    html += ' pluginspage="http://www.apple.com/quicktime/download/?video/quicktime"></embed>\n';
-  //    $("#audioarea").html(html);
-//       AudioPlayer.embed("audioplayer", {soundFile: "audio.mp3"});$("#audioarea").html("No can do...");
-//    }
-//  });
   $('audio').bind('contextmenu',function() { return false; });
 
   $('#showchords, #showromaji').change(function() {
@@ -151,18 +135,6 @@ $(document).ready(function(){
     }
   });
 });
-
-function MP3support() {
-  var a = document.createElement('audio');
-  return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
-}
-
-function play_audio(url) {
-  var oWin = window.open(url,"audiowin","height=80,width=200,scrollbars=yes");
-  if (oWin==null || typeof(oWin)=="undefined") {
-    alert("The audio would play in a small window, but you appear to have popups blocked.  Many features of this database rely on popups, so please allow popups for this site (I promise, no annoying ads!)");
-  }
-}
 </script>
 <?php
 header2(1);
@@ -243,11 +215,8 @@ if ($song->Instruction) {
   echo "<br>\n    <b>Instruction (intro, etc.):&nbsp;</b>$song->Instruction\n";
 }
 if ($song->Audio) {
-  echo "    <div><b>Audio for learning:</b><br>\n";
-  echo "    <audio src=\"sendaudio.php?sid=".$_GET['sid']."\" controls=\"console\" controlsList=\"nodownload\">\n";
-  echo "<a id=\"playaudio\" href=\"#\">Click to Listen</a></div>";
-//  echo "    <div><b>Audio for learning:&nbsp;</b><a id=\"playaudio\" href=\"#\">Click to Listen</a></div>";
-//  echo "<div id=\"audioarea\"></div>\n";
+  echo "    <br><div><b>Audio for learning:</b><br>\n";
+  echo "    <audio src='sendaudio.php?sid=".$_GET['sid']."' controls='controls' controlsList='nodownload'></audio></div>\n";
   if ($song->AudioComment) {
     echo "<br>\n    <b>Comment about audio recording:</b> ".$song->AudioComment."\n";
   }
