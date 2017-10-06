@@ -8,7 +8,7 @@ define('CLIENT_PATH',"/var/www/sambidb/client/".CLIENT);
 
 /* Eventually I should figure out how to use this, but I don't know how */
 //$okplaces = array ("song.php", "edit.php");
-//if (!in_array($_SERVER['referrer'],$okplaces)) die("You can't call this directly.");
+//if (!in_array($_SERVER['referer'],$okplaces)) die("You can't call this directly.");
 
 if (!isset($_SESSION['userid'])) exit("no session");
 
@@ -20,5 +20,8 @@ $size = filesize($file);
 header("Content-Type: audio/mpeg");
 header("Content-Transfer-Encoding: binary");
 header("Content-Length: ".$size);
+header('Accept-Ranges: bytes');
 @readfile($file);
 ?>
+
+
