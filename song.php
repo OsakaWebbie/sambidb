@@ -22,7 +22,7 @@ if (isset($_GET['tag'])) {
 }
 
 //Keyword changes
-if ($newkeyword) {
+if (isset($_POST['newkeyword'])) {
   if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
       "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_POST['sid']} ".
       "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
@@ -112,6 +112,21 @@ div#keywordsection { border:2px solid gray; padding:5px; text-align:center; }
 div.checkboxes { border-top:2px solid gray; padding:5px; margin-top:3px; text-align:left; } 
 label.keyword { margin-right:2em; }
 label.keyword span { white-space:nowrap; }
+
+#audioplayer { vertical-align:middle; }
+#audioloop {
+  font-size: 20px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+#audioloop.enabled { position: relative; }
+#audioloop.enabled:after {
+  content: "✔";
+  color: red;
+  font-weight: bold;
+  position: absolute;
+  right: -7px;
+}
 </style>
 
 <script type="text/JavaScript" src="js/jquery.min.js"></script>
@@ -133,6 +148,11 @@ $(document).ready(function(){
       $('.lyrics').show();
       $('.chordlyrics, .chords, .romaji').hide();
     }
+  });
+  $("#audioloop").click(function(){
+    var player = $("#audioplayer")[0];
+    player.loop =!player.loop;
+    $(this).toggleClass('enabled', player.loop);
   });
 });
 </script>
@@ -197,8 +217,8 @@ foreach ($lines as $line) {
 }*/
 echo "  <td>\n<td valign=top><b>";
 if ($song->Title != $song->OrigTitle) echo ("    Original Title: $song->OrigTitle<br>&nbsp;<br>\n");
-echo "    Key: <font color=#00C000>".($song->SongKey ? $song->SongKey : "?")."</font>";
-if ($song->Tempo) echo (" &nbsp;&nbsp;Tempo: <font color=#C00000>$song->Tempo</font>");
+echo "    Key: <span style='color:#00C000'>".($song->SongKey ? $song->SongKey : "?")."</span>";
+if ($song->Tempo) echo (" &nbsp;&nbsp;Tempo: <span style='color:#C00000'>$song->Tempo</span>");
 echo "<br>\n";
 if ($song->Composer) echo ("    Composer: $song->Composer");
 if ($song->Copyright) echo ("<br>\n    Copyright: $song->Copyright");
@@ -215,8 +235,15 @@ if ($song->Instruction) {
   echo "<br>\n    <b>Instruction (intro, etc.):&nbsp;</b>$song->Instruction\n";
 }
 if ($song->Audio) {
-  echo "    <br><div><b>Audio for learning:</b><br>\n";
-  echo "    <audio src='sendaudio.php?sid=".$_GET['sid']."' controls='controls' controlsList='nodownload'></audio></div>\n";
+  ?>
+    <br>
+    <div><b>Audio for learning:</b><br>
+    <audio id="audioplayer" controls controlsList="nodownload">
+      <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
+    </audio>
+    <span id="audioloop">&#x1f501;</span>
+    </div>
+  <?php
   if ($song->AudioComment) {
     echo "<br>\n    <b>Comment about audio recording:</b> ".$song->AudioComment."\n";
   }

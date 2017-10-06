@@ -265,13 +265,6 @@ header('Content-Disposition: attachment; filename="songs_'.date('Y-m-d').'.pdf"'
 header('Content-Transfer-Encoding: binary');
 @readfile("$tmppath$fileroot.pdf");
 
-// DELIVER PDF CONTENT TO BROWSER
-
-header('Content-Type: application/pdf');
-header('Content-Disposition: attachment; filename="songs_'.date('Y-m-d').'.pdf"');
-header('Content-Transfer-Encoding: binary');
-@readfile("$tmppath$fileroot.pdf");
-
 function escape_most($data) {
   $search_array = array('#','$','%','&','~','_');
   $replace_array = array('\\#','\\$','\\%','\\&','\\~{}','\\_','\\^{}');
