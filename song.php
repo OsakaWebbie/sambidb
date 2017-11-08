@@ -110,8 +110,7 @@ if (!$_GET['romaji']) {
 form#keywordform { padding:0; margin:0; }
 div#keywordsection { border:2px solid gray; padding:5px; text-align:center; }
 div.checkboxes { border-top:2px solid gray; padding:5px; margin-top:3px; text-align:left; } 
-label.keyword { margin-right:2em; }
-label.keyword span { white-space:nowrap; }
+label.keyword { white-space:nowrap; margin-right:2em; }
 
 #audioplayer { vertical-align:middle; }
 #audioloop {
@@ -152,7 +151,8 @@ $(document).ready(function(){
   $("#audioloop").click(function(){
     var player = $("#audioplayer")[0];
     player.loop =!player.loop;
-    $(this).toggleClass('enabled', player.loop);
+    $(this).toggleClass('enabled', player.loop)
+        .prop('title',player.loop?'<?=_('Disable looping')?>':'<?=_('Play in loop')?>');
   });
 });
 </script>
@@ -161,7 +161,7 @@ header2(1);
 ?>
 <table width="735" border="0" cellpadding="0" cellspacing="0"><tr><td>
   <table width="730" border="0" cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle">
-    <h1><font color="#0000C0"><?=$song->Title?></font></h1>
+    <h1 style="color:#0000C0"><?=$song->Title?></h1>
   </td><td width="132" align="center" valign="middle">
     <a href="song.php?sid=<?=$_GET['sid']?>&<?=($song->Tagged?'untag':'tag')?>=1">
       <img src="graphics/<?=($song->Tagged?'tagged':'not_tagged')?>.gif" height="52" width="132" border="0">
@@ -216,16 +216,16 @@ foreach ($lines as $line) {
   echo "<tr><td align=left>{$lyrics}</td></tr></table>\n";
 }*/
 echo "  <td>\n<td valign=top><b>";
-if ($song->Title != $song->OrigTitle) echo ("    Original Title: $song->OrigTitle<br>&nbsp;<br>\n");
+if ($song->Title != $song->OrigTitle) echo ("    Original Title: ".$song->OrigTitle."<br>&nbsp;<br>\n");
 echo "    Key: <span style='color:#00C000'>".($song->SongKey ? $song->SongKey : "?")."</span>";
-if ($song->Tempo) echo (" &nbsp;&nbsp;Tempo: <span style='color:#C00000'>$song->Tempo</span>");
+if ($song->Tempo) echo (" &nbsp;&nbsp;Tempo: <span style='color:#C00000'>".$song->Tempo."</span>");
 echo "<br>\n";
-if ($song->Composer) echo ("    Composer: $song->Composer");
-if ($song->Copyright) echo ("<br>\n    Copyright: $song->Copyright");
+if ($song->Composer) echo ("    Composer: ".$song->Composer);
+if ($song->Copyright) echo ("<br>\n    Copyright: ".$song->Copyright);
 echo "</b>";
 if ($song->Source) {
   echo "<br>\n    <b>Source(s):</b>";
-  echo "<table border=0 cellspacing=0 cellpadding=0><tr><td width=20></td>";
+  echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=20></td>';
   echo "<td align=left>".url2link(d2h($song->Source))."</td></tr></table>\n";
 }
 if ($song->Pattern) {
@@ -241,7 +241,7 @@ if ($song->Audio) {
     <audio id="audioplayer" controls controlsList="nodownload">
       <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
     </audio>
-    <span id="audioloop">&#x1f501;</span>
+    <span id="audioloop" title="<?=_('Play in loop')?>">&#x1f501;</span>
     </div>
   <?php
   if ($song->AudioComment) {
@@ -254,31 +254,36 @@ echo "  </td></tr></table>\n";
 
 // ********** KEYWORDS **********
 
-echo "<form id=\"keywordsform\" action=\"song.php\" method=\"POST\"><div id=\"keywordsection\">";
-echo "<h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>Keywords</i></b>";
+echo '<form id="keywordsform" action="song.php" method="POST"><div id="keywordsection">';
+echo '<h3 style="margin-bottom:0; color:#0000C0;"><b><i>Keywords</i></b>';
 if ($_SESSION['admin'] > 0) {
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value=\"Save Keyword Changes\" name=newkeyword>";
+  echo '&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value="Save Keyword Changes" name=newkeyword>';
 }
-echo "<input type=hidden name=sid value={$_GET['sid']}></h3>";
+echo '<input type=hidden name=sid value={$_GET[\'sid\']}></h3>';
 
 if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
     "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_GET['sid']} ".
     "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
   echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
-  echo "<div class=\"checkboxes\">\n";
+  echo '<div class="checkboxes">
+';
   while ($row = mysqli_fetch_object($result)) {
     if (!($row->SongID)) {
       if ($_SESSION['admin'] > 0) {
-        echo "<div class=\"clear\"></div></div><div class=\"checkboxes\">\n<label class=\"keyword\"><span><input type=checkbox name=$row->KeywordID>$row->Keyword</span></label>\n";
+        echo '<div class="clear"></div></div><div class="checkboxes">
+<label class="keyword"><input type=checkbox name=$row->KeywordID>$row->Keyword</label>
+';
       }
       break;
     }
-    echo "<label class=\"keyword\"><span><input type=checkbox name=\"".$row->KeywordID."\" checked>".$row->Keyword."</span></label>\n";
+    echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'" checked>'.$row->Keyword.'</label>
+';
   }
   if ($_SESSION['admin'] > 0) {
     while ($row = mysqli_fetch_object($result)) {
-      echo "<label class=\"keyword\"><span><input type=checkbox name=\"".$row->KeywordID."\">".$row->Keyword."</span></label>\n";
+      echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>
+';
     }
   }
   echo "<div class=\"clear\"></div></div>";
