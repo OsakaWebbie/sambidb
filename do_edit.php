@@ -5,7 +5,7 @@ include("functions.php");
 include("accesscontrol.php");
 print_header("Editing Record...","#FFFFFF",0);
 
-echo "<h3 color=green>Editing (or adding) record...</h3>";
+echo "<h3>Editing (or adding) record...</h3>";
 
 if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
 	echo '<h2 style="color:red">The uploaded file was too large. You must upload a file smaller than '.ini_get("upload_max_filesize").".<br><br>\n";
@@ -14,17 +14,18 @@ if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
   exit;
 }
 
-if ($sid) {
+if (!empty($_POST['sid'])) {
+  $sid = $_POST['sid'];
   //echo "Editing an existing record.<br>"; //debugging only
-  $sql = "UPDATE song SET Title='".mysqli_real_escape_string($db,str_replace("\n"," ",$title))."',".
-  "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($origtitle)))."',".
-  "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($composer)))."',".
-  "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($copyright)))."',".
-  "SongKey='$songkey',Tempo='$tempo',Source='".mysqli_real_escape_string($db,trim($source))."',".
-  "Lyrics='".mysqli_real_escape_string($db,trim($lyrics))."',".
-  "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($pattern)))."',".
-  "Instruction='".mysqli_real_escape_string($db,trim($instruction))."',".
-  "AudioComment='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($audiocomment)))."'".
+  $sql = "UPDATE song SET Title='".mysqli_real_escape_string($db,str_replace("\n"," ",$_POST['title']))."',".
+  "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
+  "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
+  "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
+  "SongKey='${_POST['songkey']}',Tempo='${_POST['tempo']}',Source='".mysqli_real_escape_string($db,trim($_POST['source']))."',".
+  "Lyrics='".mysqli_real_escape_string($db,rtrim($_POST['lyrics']))."',".
+  "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".
+  "Instruction='".mysqli_real_escape_string($db,trim($_POST['instruction']))."',".
+  "AudioComment='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['audiocomment'])))."'".
   " WHERE SongID=$sid LIMIT 1";
   //echo "SQL is:<pre>$sql</pre><br>"; //debugging only
   if (!$result = mysqli_query($db,$sql)) {
@@ -38,16 +39,16 @@ if ($sid) {
   //echo "Creating a new record.<br>"; //debugging only
   $sql = "INSERT INTO song (Title,OrigTitle,Composer,Copyright,SongKey,".
   "Tempo,Source,Lyrics,Pattern,Instruction,AudioComment) VALUES (".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($title)))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($origtitle)))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($composer)))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($copyright)))."',".
-  "'$songkey','$tempo',".
-  "'".mysqli_real_escape_string($db,trim($source))."',".
-  "'".mysqli_real_escape_string($db,trim($lyrics))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($pattern)))."',".
-  "'".mysqli_real_escape_string($db,trim($instruction))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($audiocomment)))."')";
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['title'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
+  "'${_POST['songkey']}','${_POST['tempo']}',".
+  "'".mysqli_real_escape_string($db,trim($_POST['source']))."',".
+  "'".mysqli_real_escape_string($db,trim($_POST['lyrics']))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".
+  "'".mysqli_real_escape_string($db,trim($_POST['instruction']))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['audiocomment'])))."')";
   //echo "SQL is:<pre>$sql</pre><br>"; //debugging only
   if (!$result = mysqli_query($db,$sql)) {
     echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
@@ -58,6 +59,7 @@ if ($sid) {
     echo "The song record was inserted.<br>";
   } else {
     echo "No song record was inserted for some reason.<br>";
+    exit;
   }
 }
 //echo "Moving on to the code for a possible upload. SID = $sid<br>"; //debugging only
