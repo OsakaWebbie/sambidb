@@ -3,10 +3,7 @@ include("functions.php");
 include("accesscontrol.php");
 
 if ($_POST['filter_submit']) {
-  if (!$result = mysqli_query($db,"SELECT * FROM keyword ORDER BY Keyword")) {
-    echo("<b>SQL Error ".mysqli_errno($db)." while getting keywords: ".mysqli_error($db)."</b>");
-    exit;
-  }
+  $result = sqlquery_checked("SELECT * FROM keyword ORDER BY Keyword");
   $in_list = "";
   $ex_list = "";
   while ($row = mysqli_fetch_object($result)) {
@@ -19,22 +16,18 @@ if ($_POST['filter_submit']) {
   }
   $_SESSION['inkeys'] = substr($in_list,1);
   $_SESSION['exkeys'] = substr($ex_list,1);
-  $sql = "UPDATE login SET IncludeKeywords='".$_SESSION['inkeys'].
+  $sql = "UPDATE user SET IncludeKeywords='".$_SESSION['inkeys'].
   "', ExcludeKeywords='".$_SESSION['exkeys']."' WHERE UserID='".$_SESSION['userid']."'";
-  if (!$result = mysqli_query($db,$sql)) {
-    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-    exit;
-  }
+  $result = sqlquery_checked($sql);
   echo "<html><head></head><body onload=\"window.location = 'index.php';\"></body></html>\n";
   exit;
 }
  
 print_header("Praise & Worship DB: Search Filtering","#F0FFF0",1);
 ?>
-<center>
-  <h1><font color=#40A040>Search Filtering</font></h1>
+  <h1>Search Filtering</h1>
   <h3>Modify filter criteria as desired, and click "Modify Search Filtering".</h3>
-  <form name="filterform" action="<?php echo $PHP_SELF; ?>" method="POST">
+  <form name="filterform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
     <input type="submit" name="filter_submit" value="Modify Search Filtering"><br>&nbsp;<br>
     <table border=0 cellpadding=2 cellspacing=0 bgcolor="#FFFFFF"><tr>
     <td align=center valign=middle bgcolor="#D0DDD0">Keyword</td>
@@ -48,10 +41,7 @@ print_header("Praise & Worship DB: Search Filtering","#F0FFF0",1);
     <td align=center bgcolor="#D0DDD0">&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;</td>
     </tr><tr>
 <?php
-if (!$result = mysqli_query($db,"SELECT * FROM keyword ORDER BY Keyword")) {
-  echo("<b>SQL Error ".mysqli_errno($db)." while getting keywords: ".mysqli_error($db)."</b>");
-  exit;
-}
+$result = sqlquery_checked("SELECT * FROM keyword ORDER BY Keyword");
 $column = 1;
 while ($row = mysqli_fetch_object($result)) {
   echo "      <td>".$row->Keyword.":&nbsp;</td>\n      <td align=center>";
@@ -76,5 +66,4 @@ while ($row = mysqli_fetch_object($result)) {
     </tr></table>
     <input type="submit" name="filter_submit" value="Modify Search Filtering">
   </form>
-</center>
 <?php print_footer(); ?>
