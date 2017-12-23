@@ -402,8 +402,9 @@ while ($row = mysqli_fetch_object($result)) {
     <div style="border:1px solid gray; padding:5px; margin-top:20px; text-align:center">
       <strong>Text file to import into Powerpoint (工事中)</strong><br>
       <label>Max lines per slide: <input name="ppt_lines" value="8" style="width:2em"></label><br>
-      <label><input type="checkbox" name="ppt_crlf">Windows line endings</label><br>
-      <label><input type="checkbox" name="ppt_sjis">Convert to Shift-JIS</label><br>
+      <label><input type="checkbox" name="ppt_trim">Trim leading spaces</label><br>
+      <label><input type="checkbox" name="ppt_crlf" checked>Windows line endings</label><br>
+      <label><input type="checkbox" name="ppt_sjis" checked>Convert to Shift-JIS</label><br>
       <input type="submit" id="powerpoint" name="submit" value="Make Text">
     </div>
   </td>

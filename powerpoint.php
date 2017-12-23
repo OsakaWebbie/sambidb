@@ -47,7 +47,8 @@ foreach ($steps as $step) {
   switch(substr($piecetype,0,1)) {
   case 't':
     if (!empty($thistitle) && count($thisslide)) { //Need to dump the last of the previous song
-      echo $thistitle."\r\n".implode("\r\n",$thisslide)."\r\n";
+      echo encode($thistitle."\r\n".implode("\r\n",$thisslide)."\r\n");
+      $thisslide = [];
     }
     $thistitle = $songs[$key];
     break;
@@ -65,31 +66,39 @@ foreach ($steps as $step) {
     foreach ($lines as $line) {
       if (strtolower(substr($line,0,3)) == '[r]') {  //romaji line
         if ($_GET['romaji'] != 'hide') {
-          $thisstanza[] = ($romajionly?'':"\t")."\t".prepare($line);
+          $thisstanza[] = ($romajionly?'':"\t")."\t".clean_lyrics($line);
         }
       } else { //line is not romaji
         if (!$romajionly) {
-          $thisstanza[] = "\t" . prepare($line);
+          $thisstanza[] = "\t".clean_lyrics($line);
         }
       }
     }
     // end of stanza, so decide if it fits on this slide
     if (count($thisslide) + count($thisstanza) < $_GET['ppt_lines']) {
-      // This stanza will fit on this slide
+      // This stanza will fit on the same slide
       if (count($thisslide) > 0) $thisslide[] = "\t\t "; //blank line in same size as Romaji
       $thisslide = array_merge($thisslide, $thisstanza);
       $thisstanza = [];
     } else {
       // Output the previous content as a slide and then start fresh with this stanza
-      echo $thistitle."\r\n".implode("\r\n",$thisslide)."\r\n";
+      echo encode($thistitle."\r\n".implode("\r\n",$thisslide)."\r\n");
       $thisslide = $thisstanza;
       $thisstanza = [];
     }
   }
 }  //end while looping through items to print
+//output remaining content
+if (!empty($thistitle) && count($thisslide)) {
+  echo encode($thistitle."\r\n".implode("\r\n",$thisslide)."\r\n");
+}
 
-function prepare($text) {
-  $text = preg_replace('#\[[^\[]*\]#','',rtrim($text));
+function clean_lyrics($text) {
+  $text = preg_replace('#\[[^\[]*\]#u','',preg_replace('/　+$/u','',rtrim($text)));
+  if (!empty($_GET['ppt_trim']))  $text = ltrim($text);
+  return $text;
+}
+function encode($text) {
   if (!empty($_GET['ppt_sjis']))  $text = mb_convert_encoding($text, "SJIS");
   return $text;
 }
