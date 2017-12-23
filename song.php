@@ -266,29 +266,25 @@ if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
     "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
   echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
-  echo '<div class="checkboxes">
-';
+  echo '<div class="checkboxes">'."\n";
   while ($row = mysqli_fetch_object($result)) {
     if (!($row->SongID)) {
       if ($_SESSION['admin'] > 0) {
-        echo '<div class="clear"></div></div><div class="checkboxes">
-<label class="keyword"><input type=checkbox name=$row->KeywordID>$row->Keyword</label>
-';
+        echo '<div class="clear"></div></div><div class="checkboxes">'."\n".
+            '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>'."\n";
       }
       break;
     }
-    echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'" checked>'.$row->Keyword.'</label>
-';
+    echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'" checked>'.$row->Keyword.'</label>'."\n";
   }
   if ($_SESSION['admin'] > 0) {
     while ($row = mysqli_fetch_object($result)) {
-      echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>
-';
+      echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>'."\n";
     }
   }
-  echo "<div class=\"clear\"></div></div>";
+  echo '<div class="clear"></div></div>';
 }
-echo "</td></tr></table></form>";
+echo '</td></tr></table></form>';
 
 // ********** USAGE **********
 

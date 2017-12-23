@@ -276,7 +276,13 @@ $(document).ready(function(){
     e.stopPropagation();
     $(this).toggleClass("colbreak");
   });
-  
+
+// DIFFERENTIATE BETWEEN PDF AND TXT GENERATION
+  $("#layoutform input[type='submit']").click(function(e) {
+    $("#layoutform").attr("action", $(this).attr("id")+'.php');
+    if ($(this).attr("id") == 'powerpoint')  $("#layoutform").attr("target", '_blank');
+  });
+
 // PREP FOR SUBMIT
   $("#layoutform").submit(function(e) {
     /* e.preventDefault();  //need to manually submit so I can do actions afterward */
@@ -314,12 +320,12 @@ $(document).ready(function(){
 <?php
 header2(1);
 ?>
-<h3><font color="SteelBlue">Set options and arrange the songs and stanzas as you want.
+<h3 style="color:SteelBlue">Set options and arrange the songs and stanzas as you want.
 &nbsp;You can drag whole songs (by the title line) or parts within a song, and copy or delete parts (or whole songs) as needed.
 &nbsp;Hover over any part to see the complete content.
 <span style="font-weight:normal">(Note: Romaji settings and key transpose will not change what you see here, but will affect the PDF.)</span>
 &nbsp;Clicking the printer icon will disable that part without deleting it (handy if you plan to use it for a different printout).
-&nbsp;To force an item to the next page/column, double-click it (double-click again to turn it off).</font></h3>
+&nbsp;To force an item to the next page/column, double-click it (double-click again to turn it off).</h3>
 
 <form id="layoutform" action="pdfgenerate.php" method="get">
   <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
@@ -357,7 +363,7 @@ while ($row = mysqli_fetch_object($result)) {
           <strong>Instructions:</strong><br>
           <div class="indented"><a id="instrshort" href="javascript:void(0)">Short (omit "[text in brackets]")</a></div>
           <div class="indented"><a id="instrlong" href="javascript:void(0)">Long (include "[text]")</a></div>
-          <div class="indented"><a id="instr-none" href="javascript:void(0)">Remove</a></div>
+          <div class="indented"><a id="instrnone" href="javascript:void(0)">Remove</a></div>
           <br>
           <strong>Credits:</strong><br>
           <div class="indented">Before lyrics: <a id="copyright-before" href="javascript:void(0)">One line</a> |
@@ -391,7 +397,15 @@ while ($row = mysqli_fetch_object($result)) {
         </fieldset>
       </div>
     </div>
-    <input type="submit" name="submit" value="Generate PDF" style="text-size:150%; font-weight:bold; padding:5px; margin-top: 20px;">
+    <div><input type="submit" id="pdfgenerate" name="submit" value="Generate PDF"
+                style="text-size:150%; font-weight:bold; padding:5px; margin-top: 20px;"></div>
+    <div style="border:1px solid gray; padding:5px; margin-top:20px; text-align:center">
+      <strong>Text file to import into Powerpoint (工事中)</strong><br>
+      <label>Max lines per slide: <input name="ppt_lines" value="8" style="width:2em"></label><br>
+      <label><input type="checkbox" name="ppt_crlf">Windows line endings</label><br>
+      <label><input type="checkbox" name="ppt_sjis">Convert to Shift-JIS</label><br>
+      <input type="submit" id="powerpoint" name="submit" value="Make Text">
+    </div>
   </td>
   <td style="vertical-align:top">
     <div id="layout">
