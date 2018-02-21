@@ -2,7 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 
-if ($xml) {
+if (!empty($_GET['xml'])) {
   echo "<?xml version=\"1.0\" encoding=\"".$_SESSION['charset']."\" ?>\n<songlist>\n";
 } else {
   echo "<html><head>";
@@ -20,32 +20,32 @@ for ($sid_index=0; $sid_index<$num_sids; $sid_index++) {
     exit;
   }
   $row = mysqli_fetch_object($result);
-  if ($xml) {
+  if (!empty($_GET['xml'])) {
     echo "<song>\n";
   }
   for ($i=1; $i<7; $i++) {
     if (${"field".$i} != "") {
-      if ($xml) {
-        $text = ereg_replace("&","&amp;",$row->{${"field".$i}});
-        $text = ereg_replace("'","&apos;",$text);
-        $text = ereg_replace("\[[^\[]*\]","",$text);  //to remove the chords
+      if (!empty($_GET['xml'])) {
+        $text = str_replace("&","&amp;",$row->{${"field".$i}});
+        $text = str_replace("'","&apos;",$text);
+        $text = preg_replace("#\[[^\[]*\]#u","",$text);  //to remove the chords and romaji markers
         echo "<".${"field".$i}.">".$text."</".${"field".$i}.">\n";
       } else {
         echo ${"layout".$i};
         if (${"newline".$i} == "YES")  echo "<br>\n";
-        $text = ereg_replace("  "," &nbsp;",$row->{${"field".$i}});
-        $text = ereg_replace("\r\n|\n|\r","<br>\n",$text);
-        $text = ereg_replace("\[[^\[]*\]","",$text);  //to remove the chords
+        $text = str_replace("  "," &nbsp;",$row->{${"field".$i}});
+        $text = preg_replace("#\r\n|\n|\r#u","<br>\n",$text);
+        $text = preg_replace("#\[[^\[]*\]#u","",$text);  //to remove the chords and romaji markers
         echo $text;
         if (substr(${"layout".$i},-1) == "(")  echo ")";
       }
     }
   }
-  if ($xml) {
+  if (!empty($_GET['xml'])) {
     echo "</song>\n";
   }
 }
-if ($xml) {
+if (!empty($_GET['xml'])) {
   echo "</songlist>\n";
 } else {
   echo "</body></html>";
