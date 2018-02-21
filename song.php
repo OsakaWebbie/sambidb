@@ -1,58 +1,35 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-$nav_bar = 1;
 
-if (!$_GET['sid'] && !$_POST['sid']) {
-  echo "SongID not passed.";
-  exit;
+if ((!isset($_GET['sid']) && !isset($_POST['sid'])) || !(is_numeric($_GET['sid']) || is_numeric($_POST['sid']))) {
+  die("SongID not passed.");
 }
+$sid = isset($_POST['sid']) ? $_POST['sid'] : $_GET['sid'];
 
 //Song to be tagged or untagged
 if (isset($_GET['tag'])) {
-  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=1 WHERE SongID={$_GET['sid']}")) {
-    echo("<b>SQL Error ".mysqli_errno($db)." while tagging song: ".mysqli_error($db)."</b>");
-    exit;
-  }
+  sqlquery_checked("UPDATE song SET Tagged=1 WHERE SongID=$sid");
 } elseif (isset($_GET['untag'])) {
-  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=0 WHERE SongID={$_GET['sid']}")) {
-    echo("<b>SQL Error ".mysqli_errno($db)." while untagging song: ".mysqli_error($db)."</b>");
-    exit;
-  }
+  sqlquery_checked("UPDATE song SET Tagged=0 WHERE SongID=$sid");
 }
 
 //Keyword changes
 if (isset($_POST['newkeyword'])) {
-  if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
-      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_POST['sid']} ".
-      "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
-    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
-  } else {
-    while ($row = mysqli_fetch_object($result)) {
-      $keyid = $row->KeywordID;
-      if ($row->SongID && !($_POST[$keyid])) {
-        if (!mysqli_query($db,"DELETE from songkey WHERE KeywordID=$keyid and SongID={$_POST['sid']}")) {
-          echo("<b>SQL Error ".mysqli_errno($db)." during DELETE FROM songkey: ".mysqli_error($db)."</b>");
-        }
-      } elseif (!$row->SongID && ($_POST[$keyid])) {
-        if (!mysqli_query($db,"INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,{$_POST['sid']})")) {
-          echo("<b>SQL Error ".mysqli_errno($db)." during INSERT INTO songkey: ".mysqli_error($db)."</b>");
-        }
-      }
-    }
+  $result = sqlquery_checked("SELECT k.KeywordID, k.Keyword, s.SongID ".
+      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
+      "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword");
+  while ($row = mysqli_fetch_object($result)) {
+    $keyid = $row->KeywordID;
+    if ($row->SongID && !($_POST[$keyid])) sqlquery_checked("DELETE from songkey WHERE KeywordID=$keyid and SongID=$sid");
+    elseif (!$row->SongID && ($_POST[$keyid])) sqlquery_checked("INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,$sid)");
   }
   header("Location: song.php?sid=".$_POST['sid']);
   exit;
 }
 
-if (!$result = mysqli_query($db,"SELECT * FROM song WHERE SongID={$_GET['sid']}")) {
-  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
-  exit;
-}
-if (mysqli_num_rows($result) == 0) {
-  echo("<b>Failed to find a record for SongID {$_GET['sid']}.</b>");
-  exit;
-}
+$result = sqlquery_checked("SELECT * FROM song WHERE SongID=$sid");
+if (mysqli_num_rows($result) == 0) die("<b>Failed to find a record for SongID $sid.</b>");
 $song = mysqli_fetch_object($result);
 $haschords = preg_match('/\[[^rR]/u',$song->Lyrics);
 $hasromaji = preg_match('/\[r\]/iu',$song->Lyrics);
@@ -77,8 +54,8 @@ header1("Song: ".$song->Title);
   text-indent: -30px;
   padding-left: 30px;
 /* Note: Hanging indent messes up Ruby in IE */
-  *text-indent: 0px;
-  *padding-left: 0px;
+  *text-indent: 0;
+  *padding-left: 0;
 }
 .chordlyrics ruby {
   ruby-align: start;
@@ -166,7 +143,7 @@ header2(1);
     <a href="song.php?sid=<?=$_GET['sid']?>&<?=($song->Tagged?'untag':'tag')?>=1">
       <img src="graphics/<?=($song->Tagged?'tagged':'not_tagged')?>.gif" height="52" width="132" border="0">
     </a><br>
-    <span style="fontsize:0.8em; color:<?=($song->Tagged?'black':'red')?>">(Click image to <?=($song->Tagged?'untag':'tag')?>)</span>
+    <span style="font-size:0.8em; color:<?=($song->Tagged?'black':'red')?>">(Click image to <?=($song->Tagged?'untag':'tag')?>)</span>
   </td></tr></table>
 </td></tr><tr><td>
   <table border="0" cellspacing="0" cellpadding="5"><tr><td valign="top">
@@ -202,7 +179,7 @@ foreach ($lines as $line) {
 /*} else {  //no chords
   echo "<font color=#0000C0><b>Lyrics:</b></font>";
   if (preg_match('/\[[^rR]/u',$song->Lyrics)) {
-    echo "&nbsp;&nbsp;<a href=\"song.php?sid={$_GET['sid']}&chords=yes\"><font color=#E00000>";
+    echo "&nbsp;&nbsp;<a href=\"song.php?sid=$sid&chords=yes\"><font color=#E00000>";
     echo "<b>(Click here to show chords)</b></font></a>";
   }
   echo "<br>\n<table border=1 bordercolor=#000080 cellspacing=0 cellpadding=5 width=350>";
@@ -259,10 +236,10 @@ echo '<h3 style="margin-bottom:0; color:#0000C0;"><b><i>Keywords</i></b>';
 if ($_SESSION['admin'] > 0) {
   echo '&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value="Save Keyword Changes" name=newkeyword>';
 }
-echo '<input type=hidden name=sid value={$_GET[\'sid\']}></h3>';
+echo "<input type=hidden name=sid value=$sid></h3>";
 
 if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
-    "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID={$_GET['sid']} ".
+    "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
     "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
   echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
@@ -296,7 +273,7 @@ if (!$result = mysqli_query($db,$sql)) {
 } elseif (mysqli_num_rows($result) == 0) {
   echo ("<p>No history records.<br>&nbsp;</p>");
 } else {
-  echo "<table width=735 border=2 cellpadding=5 cellspacing=0 bordercolor=#0000C0 bgcolor=#F0F0FF>";
+  echo "<table width=735 border=2 cellpadding=5 cellspacing=0 bgcolor=#F0F0FF>";
   echo "<tr><td align=center><h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>Usage History</i></b></h3>";
   echo ("<table width=730 border=1 cellspacing=0 cellpadding=2 bgcolor=#FFFFFF>");
   while ($row = mysqli_fetch_object($result)) {
