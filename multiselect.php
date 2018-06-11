@@ -15,10 +15,9 @@ if (!$sid_list) {
     exit;
   }
 }
+header2(1);
 ?>
-<?php
-header2(1,'white',1,0);
-?>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #tagged { border:1px #999999 solid; margin:0; padding:3px; background-color:#EEEEEE; }
   #tagged li { list-style-type:none; border:1px #999999 solid; margin:1px; padding:2px 4px; white-space:nowrap; background-color:White; }
@@ -30,52 +29,6 @@ header2(1,'white',1,0);
   #tagged li img { margin-left:5px; }
 </style>
 
-<script type="text/JavaScript">
-$(document).ready(function(){
-
-  $("#tagged").sortable({
-    placeholder: "ui-state-highlight",
-    forcePlaceholderSize: true,
-    update: function() { $("#actionframe").attr("src","blank.html"); }
-  });
-// ACTIONS RELATED TO COPY ICONS
-  $("#tagged").delegate("img.copy","click",function() {
-    var original = $(this).closest("li");
-    var cloned = $(original).clone(true,true);
-    $(original).after($(cloned));
-  });
-// ACTIONS RELATED TO DELETE ICONS
-  $("#tagged").delegate("img.delete","click",function() {
-    $(this).closest("li").remove();
-  });
-
-// PREP FOR SUBMIT
-  $("#sform input[type=submit]").click(function() {
-    $("#sform").attr("action",$(this).attr("name")+".php");
-  });
-  $("#sform").submit(function(e) {
-    var items = "";
-    $("#tagged li span.songid").each(function() { // For each song title
-      if (items!="") items += ",";
-      items += $(this).text();
-    });
-    $("#sid_list").val(items);
-  });
-  
-});
-    
-function make_list() {
-  var f = document.sform;
-  f.sid_list.value = "";
-  for (var index = 0; index < f.tagged.length; index++) {
-    if (f.sid_list.value == "") {
-      f.sid_list.value = f.tagged[index].value;
-    } else {
-      f.sid_list.value = f.sid_list.value + "," + f.tagged[index].value;
-    }
-  }
-}
-</script>
 <h3>Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then choose an action from the buttons on the right.</h3>
 <form action="ms_history.php" method="get" id="sform" target="actionframe">
   <input type="hidden" name="sid_list" id="sid_list" value="">
@@ -119,4 +72,54 @@ while ($song = mysqli_fetch_object($result)) {
 </form>
 <iframe id= "actionframe" name="actionframe" style="width:90%;height:300px" src="blank.html">
 </iframe>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<script type="text/JavaScript">
+  $(document).ready(function(){
+
+    $("#tagged").sortable({
+      placeholder: "ui-state-highlight",
+      forcePlaceholderSize: true,
+      update: function() { $("#actionframe").attr("src","blank.html"); }
+    });
+// ACTIONS RELATED TO COPY ICONS
+    $("#tagged").delegate("img.copy","click",function() {
+      var original = $(this).closest("li");
+      var cloned = $(original).clone(true,true);
+      $(original).after($(cloned));
+    });
+// ACTIONS RELATED TO DELETE ICONS
+    $("#tagged").delegate("img.delete","click",function() {
+      $(this).closest("li").remove();
+    });
+
+// PREP FOR SUBMIT
+    $("#sform input[type=submit]").click(function() {
+      $("#sform").attr("action",$(this).attr("name")+".php");
+    });
+    $("#sform").submit(function(e) {
+      var items = "";
+      $("#tagged li span.songid").each(function() { // For each song title
+        if (items!="") items += ",";
+        items += $(this).text();
+      });
+      $("#sid_list").val(items);
+    });
+
+  });
+
+  function make_list() {
+    var f = document.sform;
+    f.sid_list.value = "";
+    for (var index = 0; index < f.tagged.length; index++) {
+      if (f.sid_list.value == "") {
+        f.sid_list.value = f.tagged[index].value;
+      } else {
+        f.sid_list.value = f.sid_list.value + "," + f.tagged[index].value;
+      }
+    }
+  }
+</script>
 <?php print_footer();?>

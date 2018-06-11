@@ -2,6 +2,8 @@
 include("functions.php");
 include("accesscontrol.php");
 header1("Layout Prep for PDF or Powerpoint");
+header2(1);
+
 
 $sql = "SELECT * from song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
 if (!$result = mysqli_query($db,$sql)) die("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br><pre>[$sql]</pre>");
@@ -66,6 +68,7 @@ while ($song = mysqli_fetch_object($result)) {
 }
 ?>
 </script>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #help-section, #layoutform { visibility:hidden; } /* shown after jQuery UI effects are applied */
 
@@ -103,60 +106,6 @@ while ($song = mysqli_fetch_object($result)) {
   .ui-accordion .ui-accordion-content { padding: 0.5em !important; }
 </style>
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
-<script type="text/JavaScript" src="js/jquery.min.js"></script>
-<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
-<script type="text/JavaScript" src="js/jquery.ui.touch-punch.min.js"></script>
-
-<script type="text/JavaScript">
-$(document).ready(function(){
-<?php if ($_GET['multilingual']) { //JS code to consolidate songs with same original title ?>
-  var mlsong = [];
-  var origtitle = "";
-  $("#layout ul li.song").each(function() {  //loop through songs, collecting info in mlsong array
-    thisid = this.className.match(/s([0-9]+)/)[1];
-    if (songs[thisid].origtitle != origtitle) {  //take necessary action for the previous set, and start next set
-      if (mlsong.length > 1) {
-        after = 0;
-        $.each(mlsong,function() { //loop through mlsong array, moving stanzas and adding transpose form field
-          if (this != origsong) {
-            if (after)  $(origsong).children("ul").append($(this).children("ul").children("li"));  //put after original song stanzas
-            else  $(origsong).children("ul").prepend($(this).children("ul").children("li"));  //put before original song stanzas
-            $(origsong).find("select").after('<input type="hidden" id="'+$(origsong).find("select").attr('name')+
-                '" name="trans'+this.className.match(/s([0-9]+)/)[1]+'" value="0">');  //add a hidden field for translation
-            $(this).remove();
-          } else {
-            after = 1;
-          }
-        });
-      }
-      origtitle = songs[thisid].origtitle;
-      mlsong = [];
-      origsong = this;  //if we don't find an exact match, we'll just use the first one
-    }
-    if (songs[thisid].title.indexOf(origtitle) != -1)  origsong = this;  //found a match, so this is the original
-    mlsong.push(this);
-  });
-  if (mlsong.length > 1) {  //process the last remaining mlsong, if it exists
-    after = 0;
-    $.each(mlsong,function() {  //loop through mlsong array, moving stanzas and adding transpose form field
-      if (this != origsong) {
-        if (after)  $(origsong).children("ul").append($(this).children("ul").children("li"));  //put after original song stanzas
-        else  $(origsong).children("ul").prepend($(this).children("ul").children("li"));  //put before original song stanzas
-        $(origsong).find("select").after('<input type="hidden" id="'+$(origsong).find("select").attr('name')+
-            '" name="trans'+this.className.match(/s([0-9]+)/)[1]+'" value="0">');  //add a hidden field for translation
-        $(this).remove();
-      } else {
-        after = 1;  //we found the original, so anything after this needs to be appended, not prepended
-      }
-    });
-  }
-<?php } //end handling of multilingual song consolidation ?>
-  
-});
-</script>
-<?php
-header2(1);
-?>
 
 <div id="help-section">
   <div class="help" id="pdf-help" title="How to make a PDF for printing or tablet">
@@ -315,8 +264,56 @@ while ($row = mysqli_fetch_object($result)) {
   </div>
 </form>
 
+<script type="text/JavaScript" src="js/jquery.min.js"></script>
+<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
+<script type="text/JavaScript" src="js/jquery.ui.touch-punch.min.js"></script>
+
 <script type="text/JavaScript">
-$(document).ready(function() {
+  $(document).ready(function(){
+    <?php if ($_GET['multilingual']) { //JS code to consolidate songs with same original title ?>
+    var mlsong = [];
+    var origtitle = "";
+    $("#layout ul li.song").each(function() {  //loop through songs, collecting info in mlsong array
+      thisid = this.className.match(/s([0-9]+)/)[1];
+      if (songs[thisid].origtitle != origtitle) {  //take necessary action for the previous set, and start next set
+        if (mlsong.length > 1) {
+          after = 0;
+          $.each(mlsong,function() { //loop through mlsong array, moving stanzas and adding transpose form field
+            if (this != origsong) {
+              if (after)  $(origsong).children("ul").append($(this).children("ul").children("li"));  //put after original song stanzas
+              else  $(origsong).children("ul").prepend($(this).children("ul").children("li"));  //put before original song stanzas
+              $(origsong).find("select").after('<input type="hidden" id="'+$(origsong).find("select").attr('name')+
+                  '" name="trans'+this.className.match(/s([0-9]+)/)[1]+'" value="0">');  //add a hidden field for translation
+              $(this).remove();
+            } else {
+              after = 1;
+            }
+          });
+        }
+        origtitle = songs[thisid].origtitle;
+        mlsong = [];
+        origsong = this;  //if we don't find an exact match, we'll just use the first one
+      }
+      if (songs[thisid].title.indexOf(origtitle) != -1)  origsong = this;  //found a match, so this is the original
+      mlsong.push(this);
+    });
+    if (mlsong.length > 1) {  //process the last remaining mlsong, if it exists
+      after = 0;
+      $.each(mlsong,function() {  //loop through mlsong array, moving stanzas and adding transpose form field
+        if (this != origsong) {
+          if (after)  $(origsong).children("ul").append($(this).children("ul").children("li"));  //put after original song stanzas
+          else  $(origsong).children("ul").prepend($(this).children("ul").children("li"));  //put before original song stanzas
+          $(origsong).find("select").after('<input type="hidden" id="'+$(origsong).find("select").attr('name')+
+              '" name="trans'+this.className.match(/s([0-9]+)/)[1]+'" value="0">');  //add a hidden field for translation
+          $(this).remove();
+        } else {
+          after = 1;  //we found the original, so anything after this needs to be appended, not prepended
+        }
+      });
+    }
+    <?php } //end handling of multilingual song consolidation ?>
+
+  });
 
   $(".help").dialog({ autoOpen:false, width:450 });
   $("#pdf-help-btn").click(function() {

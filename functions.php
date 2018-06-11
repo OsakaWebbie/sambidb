@@ -6,88 +6,121 @@ function header1($title='') {
 ?>
 <!DOCTYPE html>
 <html><head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-<meta name="theme-color" content="#ffffff">
-<link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico">
-<title><?=$title?></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json"
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico">
+  <title><?=(isset($_SESSION['dbtitle']) ? $_SESSION['dbtitle'].': ' : '').$title?></title>
 <?php
 }
 
-function header2($nav=0, $color="#FFFFFF", $jquery=0, $tablelayout=1) {
-  if ($jquery) {
-    echo '<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">'."\n";
-    echo '<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>'."\n";
-    echo '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>'."\n";
-    echo '<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>'."\n";
-  }
-  echo '<link rel="stylesheet" type="text/css" href="css/style.css">'."\n";
+function header2($nav=0) {
+  echo '<link rel="stylesheet" type="text/css" href="style.php">'."\n";
   echo "</head>\n";
-  echo '<body bgcolor="'.$color.'"><div align="center">'."\n";
+  $fileroot = substr($_SERVER['PHP_SELF'],(strrpos($_SERVER['PHP_SELF'],"/")+1),(strrpos($_SERVER['PHP_SELF'],".")-strrpos($_SERVER['PHP_SELF'],"/")-1));
+  echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
+
   if ($nav) {
-    if ($tablelayout) echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0 width=750>";
-    print_nav($tablelayout);
-  } else {
-    if ($tablelayout) echo "<table id=\"layouttable\" border=0 cellpadding=0 cellspacing=0>";
-  }
-  echo "<tr><td>\n";
-}
+    $navmarkup = "<ul class=\"nav\">\n";
+    $navmarkup .= "  <li><a href=\"index.php\" target=\"_top\">"._("Search")."</a></li>\n";
+    $navmarkup .= "  <li><a href=\"list.php?tagged=1\" target=\"_top\">"._("List Tagged")."</a></li>\n";
+    $navmarkup .= "  <li><a href=\"edit.php\" target=\"_top\">"._("New Song")."</a></li>\n";
+    $navmarkup .= "  <li><a href=\"multiselect.php\" target=\"_top\">"._("Tagged Song Actions")."</a></li>\n";
+    $navmarkup .= "  <li><a href=\"event_use.php\" target=\"_top\">"._("Song Use Chart")."</a></li>\n";
+    $navmarkup .= "  <li><a href=\"maintenance.php\" target=\"_top\">"._("DB Settings")."</a></li>\n";
+    if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
+      $navmarkup .= "  <li><a href=\"sqlquery.php\" target=\"_top\">"._("(Freeform SQL)")."</a></li>\n";
+    }
+    $navmarkup .= "  <li><a class=\"switchlang\" href=\"#\">".
+        ($_SESSION['lang']=='en_US'?'日本語':'English')."</a></li>\n";
+    $navmarkup .= "  <li class=\"menu-usersettings\"><a href=\"user_settings.php\" target=\"_top\">"._("User Settings")."<span> (".$_SESSION['username'].")</span></a></li>\n";
+    $navmarkup .= "  <li><a href=\"index.php?logout=1\" target=\"_top\">"._("Log Out")."</a></li>\n</ul>\n";
+    echo "<nav id=\"scrollnav\"></nav>\n";  //only appears when scrolled
 
-function print_nav($tablelayout=1) {
-  if ($tablelayout) {
-    echo '<tr><td id="navbar">';
-  } else {
-    echo '<div id="navbar">';
+    echo "<div id=\"main-container\">\n";
+    echo "<nav id=\"nav-main\">\n$navmarkup</nav>\n";  //main nav for large screens
+    echo "<div id=\"nav-trigger\"><img src=\"graphics/sambidb-logo.png\" alt=\"Logo\"><span>Menu</span></div>\n";  //button for narrow screens
+    echo "<nav id=\"nav-mobile\"></nav>\n";  //vertical menu for narrow screens
   }
-  echo "<a href=\"index.php\" target=\"_top\">Top (Search)</a>&nbsp;&nbsp;|&nbsp;";
-  echo "<a href=\"list.php?tagged=1\">List Tagged</a>&nbsp;&nbsp;|&nbsp;";
-  if ($_SESSION['admin'] > 0) {
-    echo "<a href=\"edit.php\" target=\"_top\">New Song</a>&nbsp;&nbsp;|&nbsp;";
-  }
-  echo "<a href=\"multiselect.php\" target=\"_top\">Tagged Song Actions</a>&nbsp;&nbsp;|&nbsp;";
-  echo "<a href=\"event_use.php\" target=\"_top\">Song Use Chart</a>&nbsp;&nbsp;|&nbsp;";
-  echo "<a href=\"maintenance.php\" target=\"_top\">DB Maintenance</a>";
-  if ($_SESSION['admin'] == 2) {
-    echo "&nbsp;&nbsp;|&nbsp;<a href=\"sqlquery.php\" target=\"_top\">(Freeform SQL)</a>";
-  }
-  echo "&nbsp;&nbsp;|&nbsp;<a href=\"index.php?logout=1\" target=\"_top\">Log Out</a>";
-  if ($tablelayout) {
-    echo '</td></tr>';
-  } else {
-    echo '</div>';
-  }
-}
-
-// For the older pages
-function print_header($title,$color,$nav) {
-  header1($title);
-  header2($nav,$color);
+  echo "<div id=\"content\">\n";
 }
 
 // Function print_footer: sends final html
-function print_footer($tablelayout=1) {
-  global $nav_bar;
-  if ($tablelayout) echo "</td></tr>";
-  if ($nav_bar) {
-    print_nav();
-  }
-  if ($tablelayout) echo "</table></body></html>";
+function footer($nav=0) {
+  echo "  <div style=\"clear:both\"></div>\n";
+  echo "</div>\n"; //end of content div
+  echo "</div>\n"; //end of main-container div
+
+?>
+  <script type="text/javascript">
+    if (window.jQuery) { //really simple files that don't have jQuery don't need this stuff either
+      $(function() {
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 150 && !$('#scrollnav').hasClass('visible')) {
+            $('#scrollnav').addClass('visible');
+          } else if ($(this).scrollTop() <= 150 && $('#scrollnav').hasClass('visible')) {
+            $('#scrollnav').removeClass('visible');
+          }
+        });
+
+        $("#nav-mobile").html($("#nav-main").html());
+        $("#scrollnav").html($("#nav-main").html());
+        $("#nav-trigger").click(function(){
+          if ($("nav#nav-mobile ul").hasClass("expanded")) {
+            $("nav#nav-mobile ul.expanded").removeClass("expanded").slideUp(250);
+            $(this).removeClass("open");
+          } else {
+            $("nav#nav-mobile ul").addClass("expanded").slideDown(250);
+            $(this).addClass("open");
+          }
+        });
+
+        $('.switchlang').click(function(event) {
+          event.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: "ajax_actions.php?action=SwitchLang&lang=<?=$_SESSION['lang']=='en_US'?'ja_JP':'en_US' ?>",
+            success: function() {
+              location.reload(true);
+            }
+          });
+        });
+      });
+    }
+  </script>
+  </body>
+</html>
+<?php
+}
+
+//DEPRECATED
+function print_header($title,$color,$nav) {
+  header1($title);
+  header2($nav);
+  echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"white\"><tr><td>";
+}
+
+//DEPRECATED
+function print_footer($nav=0) {
+  echo "</td></tr></table>";
+  footer();
 }
 
 // function sqlquery_checked: shorten the repeated checks for SQL errors
@@ -110,19 +143,22 @@ function d2h($text) {
   return nl2br(htmlspecialchars($text, ENT_QUOTES, mb_internal_encoding()));
 }
 
-// Function post2form: prepares text from DB for display in form
-function post2form($text) {
-//  $text = str_replace("\'","'",$text);
-  return stripslashes($text);
-}
-
 function escape_quotes($text) {
   $text = str_replace("\"","\\\"",$text);
   return $text;
 }
 
 function url2link($text) {
-  return preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?[^\s<]+)?)?)?)@', '<a href="$1">$1</a>', $text);
+  //return preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?[^\s<]+)?)?)?)@', '<a href="$1">$1</a>', $text);
+
+  /*** copied from KizunaDB (should probably be in a "common" function file) ***/
+  // I have no idea how this works - I got it from https://gist.github.com/winzig/8894715 (2017/11/07)
+  // removing the part that looks for URLs with no protocol (because that was too greedy).
+  // I don't know why this matches on a multibyte domain name, but it does.
+  return preg_replace('~\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:[a-z]{2,13})/)'.
+      '(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|'.
+      '\([^\s]+?\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))~iu',
+      '<a href="$1">$1</a>', $text);
 }
 
 //Function parseLyrics: takes in lyrics (in the format from the database) and parses to use ruby
@@ -209,7 +245,7 @@ define('CLIENT',$hostarray[0]);
 define('CLIENT_PATH',"/var/www/sambidb/client/".CLIENT);
 // Get client login credentials and connect to client database
 $configfile = CLIENT_PATH."/sambidb.ini";
-if (!is_readable($configfile)) die("No configuration file. Notify the developer.");
+if (!is_readable($configfile)) die("No SambiDB configuration file. Notify the developer.");
 $config = parse_ini_file($configfile);
 $db = mysqli_connect("localhost", "sambi_".CLIENT, $config['password'], "sambi_".CLIENT)
     or die("Failed to connect to database. Notify the developer.");
