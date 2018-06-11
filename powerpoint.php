@@ -42,6 +42,7 @@ foreach ($steps as $step) {
   if (substr($step,0,3)=='br-')  $step = substr($step,3);  // Remove unused break indicator
   preg_match('/s([0-9]*)(.)/',$step,$matches);
   //print_r($matches);
+  $prev_key = empty($key) ? '' : $key;
   $key = $matches[0];
   $songid = $matches[1];
   $piecetype = $matches[2];
@@ -51,7 +52,7 @@ foreach ($steps as $step) {
     if (!empty($thistitle) && count($thisslide)) { //New song
       //Dump the last of the previous song plus its credits
       $output .= $thistitle.' ['.$slidenum++.'/]'.$linebreak.implode($linebreak,$thisslide).$linebreak;
-      if (!empty($songs[substr($key,0,-1).'c'])) $output .= "\t\t\t".$songs[substr($key,0,-1).'c'].$linebreak; //uses 3rd outline level
+      if (!empty($songs[substr($prev_key,0,-1).'c'])) $output .= "\t\t\t".$songs[substr($prev_key,0,-1).'c'].$linebreak; //uses 3rd outline level
       $thisslide = [];
     }
     $thistitle = $songs[$key];
