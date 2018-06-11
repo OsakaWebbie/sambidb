@@ -2,6 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 
+$criterialist = "<ul id=\"criteria\">";
 $select = "song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,stripchord(LEFT(Lyrics,INSTR(Lyrics,'\n')-1)) AS FirstLine, ".
 "Audio, Lyrics REGEXP '\\\\[[^rR]' AS Chords";
 $from = "song";
@@ -15,31 +16,33 @@ $from = "song";
   }
   $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID IN ($list))";
 }*/
-if ($eid) {
+$eid = $_GET['eid'];
+if (!empty($eid)) {
   $select .= ",MAX(UseDate) AS Last";
   $from .= " LEFT OUTER JOIN history ON song.SongID=history.SongID AND history.EventID=$eid";
   $groupby = "song.SongID,Title,Tagged,OrigTitle,Tempo,SongKey,FirstLine,Audio,Chords";
 }
 $href = $_SERVER['PHP_SELF'];
+$where = '';
 
-if ($title_search) {
-  $text = "Songs whose title contains '".stripslashes($title_search)."' (ignoring punctuation)";
-  $where .= ($where?" AND ":"")."Title LIKE '%".preg_replace('/[\W]+/u','%',$title_search)."%' OR OrigTitle LIKE '%".
-    preg_replace('/[\W]+/u','%',$title_search)."%'";
-  $href .= "?title_search=".stripslashes($title_search).($eid?"&eid=$eid":"")."&sort=";
-} elseif ($lyrics_search) {
-  $text = "Songs whose lyrics contain '".stripslashes($lyrics_search)."' (ignoring punctuation)";
-  $where .= ($where?" AND ":"")."LOWER(stripchord(Lyrics)) LIKE '%".preg_replace('/[\W]+/u','%',$lyrics_search)."%'";
-  $href .= "?lyrics_search=".stripslashes($lyrics_search).($eid?"&eid=$eid":"")."&sort=";
-} elseif ($source_search) {
-  $text = "Songs whose source contains '".stripslashes($source_search)."' (ignoring punctuation)";
-  $where .= ($where?" AND ":"")."Source LIKE '%".preg_replace('/[\W]+/u','%',$source_search)."%'";
-  $href .= "?source_search=".stripslashes($source_search).($eid?"&eid=$eid":"")."&sort=";
-} elseif ($tempo_search) {
-  $text = "Songs with ".$tempo_search." tempo";
-  $where .= ($where?" AND ":"")."Tempo='".$tempo_search."'";
-  $href .= "?tempo_search=".$tempo_search.($eid?"&eid=$eid":"")."&sort=";
-} elseif ($kwid) {
+if (!empty($title)) {
+  $text = "Songs whose title contains '".stripslashes($title)."' (ignoring punctuation)";
+  $where .= ($where?" AND ":"")."Title LIKE '%".preg_replace('/[\W]+/u','%',$title)."%' OR OrigTitle LIKE '%".
+    preg_replace('/[\W]+/u','%',$title)."%'";
+  $href .= "?title=".stripslashes($title).($eid?"&eid=$eid":"")."&sort=";
+} elseif ($_GET['lyrics']) {
+  $text = "Songs whose lyrics contain '".stripslashes($lyrics)."' (ignoring punctuation)";
+  $where .= ($where?" AND ":"")."LOWER(stripchord(Lyrics)) LIKE '%".preg_replace('/[\W]+/u','%',$lyrics)."%'";
+  $href .= "?lyrics=".stripslashes($_GET['lyrics']).($eid?"&eid=$eid":"")."&sort=";
+} elseif ($_GET['source']) {
+  $text = "Songs whose source contains '".stripslashes($_GET['source'])."' (ignoring punctuation)";
+  $where .= ($where?" AND ":"")."Source LIKE '%".preg_replace('/[\W]+/u','%',$_GET['source'])."%'";
+  $href .= "?source=".stripslashes($_GET['source']).($eid?"&eid=$eid":"")."&sort=";
+} elseif ($_GET['tempo']) {
+  $text = "Songs with ".$_GET['tempo']." tempo";
+  $where .= ($where?" AND ":"")."Tempo='".$_GET['tempo']."'";
+  $href .= "?tempo_search=".$_GET['tempo'].($eid?"&eid=$eid":"")."&sort=";
+} elseif ($_GET['kwid']) {
   if (!$result = mysqli_query($db,"SELECT Keyword FROM keyword WHERE KeywordID = $kwid")) {
     echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
     exit;
@@ -48,12 +51,12 @@ if ($title_search) {
   $text = "Songs with Keyword '".$kw->Keyword."'";
   $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkey WHERE KeywordID=$kwid)";
   $href .= "?kwid=".$kwid.($eid?"&eid=$eid":"")."&sort=";
-} elseif ($where_search) {
-  $where_search = stripslashes($where_search);
-  $text = "Songs found \"".$where_search."\"";
-  $where .= ($where?" AND ":"").$where_search;
-  $href .= "?where_search=".$where_search.($eid?"&eid=$eid":"")."&sort=";
-} elseif ($tagged) {
+} elseif ($where) {
+  $where_search = stripslashes($where);
+  $text = "Songs found \"".$where."\"";
+  $where .= ($where?" AND ":"").$where;
+  $href .= "?freeform=".$where.($eid?"&eid=$eid":"")."&sort=";
+} elseif ($_GET['tagged']) {
   $text = "Tagged Songs";
   $where .= ($where?" AND ":"")."Tagged=1";
   $href .= "?tagged=1".($eid?"&eid=$eid":"")."&sort=";
@@ -90,28 +93,79 @@ if (mysqli_num_rows($result) == 0) {
   header("Location: song.php?sid=".$kw_song->SongID);
   exit;
 }
-print_header("Praise & Worship DB: ".$text,"#FFFFF0",1);
-echo "<script language=\"Javascript\">\n";
-echo "function all_check(status) {\n";
-echo "  for (var i = 0; i < document.tagform.elements.length; i++) {\n";
-echo "    var e = document.tagform.elements[i];\n";
-echo "    if (e.type == 'checkbox') {\n";
-echo "      e.checked = ((status=='true')?true:false);\n";
-echo "    }\n";
-echo "  }\n";
-echo "}\n";
-echo "</script>\n";
-echo "<center><h2><font color=#A04040>".$text.": ".mysqli_num_rows($result)." Records</font></h2>";
 
-echo "<form name=tagform action=\"do_tag.php\" method=post>\n";
+//build array with: class, whether sortable, type of data for sort
+$cols[] = array("songid",1,"digit");
+$cols[] = array("title",1,"text");
+$cols[] = array("tagged",1,"text");
+$cols[] = array("origtitle",1,"text");
+$cols[] = array("songkey",1,"text");
+$cols[] = array("tempo",1,"text");
+$cols[] = array("lastusage",1,"isoDate");
+$cols[] = array("numusage",1,"digit");
+$cols[] = array("firstline",1,"text");
+$cols[] = array("audio",1,"text");
+$cols[] = array("categories",1,"text");
+$cols[] = array("selectcol",0,"");
+$colsHidden = $hideInList = "";
+foreach($cols as $i=>$col) {
+  if ($col[1]==0) $hideInList .= ",".($i+1);
+  elseif (stripos(",".$_SESSION['list_showcols'].",",",".$col[0].",") === FALSE)  $colsHidden .= ",".($i+1);
+}
+$hideInList = substr($hideInList,1);  //to remove the leading comma
+$colsHidden = substr($colsHidden,1);  //to remove the leading comma
 
-echo "<table border=0 cellspacing=0 cellpadding=0 width=700><tr><td align=center valign=middle>";
-echo "<input type=submit value=\"Update tags according to checkboxes below\"><br>&nbsp;<br>\n";
-echo "<input type=button value=\"   Check All   \" onclick=\"all_check('true');\">&nbsp;&nbsp;&nbsp;\n";
-echo "<input type=button value=\"  Uncheck All  \" onclick=\"all_check('false');\">\n";
+header1(_("Search Results"));
+header2(1);
+echo "<h3>".sprintf(_("%d results of these criteria:"),mysqli_num_rows($result))."</h3>\n";
+echo $criterialist;
+?>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.jqueryui.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
 
-echo "</td><td align=center valign=middle>Include last date used for:<br>\n";
-if (!$events = mysqli_query($db,"SELECT * FROM event WHERE Active=1 ORDER BY Event")) {
+<label>Show history data for: </label>
+<select id="event" name="event">
+<?php
+$events = sqlquery_checked('SELECT * FROM event WHERE Active=1 ORDER BY '.
+(isset($_SESSION['default_event'])?'IF (EventID='.$_SESSION['default_event'].',0,1), ':'').'Event');
+while ($ev = mysqli_fetch_object($events)) {
+  echo "  <option value='".$ev->EventID."'>".$ev->Event."</option>\n";
+}
+?>
+</select>
+
+<input type=button value="Go to action page with\nthis list in this order"
+       onclick="location='multiselect.php?sid_list='+document.tagform.sid_list.value;">
+
+<form name="tagform" action="do_tag.php" method="post">
+  <input type="submit" value="Update tags according to checkboxes below">
+  <input type="button" value="   Check All   " onclick="all_check('true');">
+  <input type="button" value="  Uncheck All  " onclick="all_check('false');">
+
+  <table id="songlist">
+  <thead>
+  <tr>
+    <th><?=_('Title')?></th>
+    <th><?=_('Tagged')?></th>
+    <th><?=_('Original Title')?></th>
+    <th><?=_('Key')?></th>
+    <th><?=_('Tempo')?></th>
+    <th><?=_('Last Use')?></th>
+    <th><?=_('# Uses')?></th>
+    <th><?=_('First Line')?></th>
+    <th><?=_('Audio')?></th>
+    <th><?=_('Composer')?></th>
+    <th><?=_('Copyright')?></th>
+    <th><?=_('Source')?></th>
+  </tr>
+  </thead>
+  <tbody>
+<?php
+//echo "<center><h2><font color=#A04040>".$text.": ".mysqli_num_rows($result)." Records</font></h2>";
+
+
+/*if (!$events = mysqli_query($db,"SELECT * FROM event WHERE Active=1 ORDER BY Event")) {
   echo ("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
   exit;
 }
@@ -122,40 +176,31 @@ while ($event = mysqli_fetch_object($events)) {
     echo "<a href=\"".$href.$sort."&eid=".$event->EventID."\"><font color=#A04040><b>".
     $event->Event."</b></font></a><br>\n";
   }
-}
-echo "</td><td align=center valign=middle>";
-echo "<input type=button value=\"Go to action page with\nthis list in this order\" ";
-echo "onclick=\"location='multiselect.php?sid_list='+document.tagform.sid_list.value;\">\n";
-echo "</td></tr></table><br>&nbsp;<br>\n";
+}*/
+
+
 
 echo "<div align=left><img src=\"graphics/audio.gif\" height=16 width=16>=Has Audio&nbsp;&nbsp;";
 echo "<img src=\"graphics/guitar.gif\" height=16 width=16>=Has Chords&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 echo "<font color=#A04040 size=-1>(click on a table heading to sort by that field)</font><br>\n";
-echo "<table border=1 cellspacing=0 cellpadding=2 bordercolor=#A04040 bgcolor=#FFFFFF>\n";
+/*echo "<table id='songlist'>\n";
 echo "<tr><td bgcolor=#FFF0D0 align=center><b>";
-if ($sort == "Title") echo "<font color=#A04040>Title</font>";
-else echo "<a href=\"".$href."Title\"><font color=#A04040>Title</font></a>";
+echo "<font color=#A04040>Title</font>";
 echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
-if ($sort == "Tagged") echo "<font color=#A04040>Tag</font></b></td>";
-else echo "<a href=\"".$href."Tagged\"><font color=#A04040>Tag</font></a>";
+echo "<font color=#A04040>Tag</font></b></td>";
 echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
-if ($sort == "OrigTitle") echo "<font color=#A04040>Original Title</font>";
-else echo "<a href=\"".$href."OrigTitle\"><font color=#A04040>Original Title</font></a>";
+echo "<font color=#A04040>Original Title</font>";
 echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
-if ($sort == "SongKey") echo "<font color=#A04040>Key</font>";
-else echo "<a href=\"".$href."SongKey\"><font color=#A04040>Key</font></a>";
+echo "<font color=#A04040>Key</font>";
 echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
-if ($sort == "Tempo") echo "<font color=#A04040>Tempo</font>";
-else echo "<a href=\"".$href."Tempo\"><font color=#A04040>Tempo</font></a>";
+echo "<font color=#A04040>Tempo</font>";
 echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
 if ($eid) {
-  if ($sort == "Last") echo "<font color=#A04040>Last Used</font>";
-  else echo "<a href=\"".$href."Last\"><font color=#A04040>Last Used</font></a>";
+  echo "<font color=#A04040>Last Used</font>";
   echo "</b></td>\n<td bgcolor=#FFF0D0 align=center><b>";
 }
-if ($sort == "FirstLine") echo "<font color=#A04040>First Line</font>";
-else echo "<a href=\"".$href."FirstLine\"><font color=#A04040>First Line</font></a>";
-echo "</b></td>\n";
+echo "<font color=#A04040>First Line</font>";
+echo "</b></td>\n";*/
 
 $sid_list = "";
 while ($row = mysqli_fetch_object($result)) {
@@ -175,7 +220,35 @@ while ($row = mysqli_fetch_object($result)) {
   $sid_list .= ",".$row->SongID;   //  \[[^\[]*\]
 }
 echo "<input type=hidden name=\"sid_list\" value=\"".substr($sid_list,1)."\">";
-echo "</tr></table></form></center>";
-if ($_SESSION['userid']=="karen") echo "<p style=\"textsize:0.8em\">$sql</p>\n";
+echo "</tr></tbody></table></form>";
+if ($_SESSION['userid']=="dev") echo "<p style=\"font-size:0.8em\">$sql</p>\n";
 
-print_footer();
+?>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.jqueryui.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#songlist').dataTable( {
+      "language": {
+        "url": "dataTables.japanese.lang"
+      }
+    } );
+  } );
+
+function all_check(status) {
+  for (var i = 0; i < document.tagform.elements.length; i++) {
+    var e = document.tagform.elements[i];
+    if (e.type == 'checkbox') {
+      e.checked = (status==='true');
+    }
+  }
+}
+
+</script>
+<?php print_footer(); ?>

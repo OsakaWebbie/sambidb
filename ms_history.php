@@ -2,7 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 header1('');
-header2(0,"#F0E0FF",1,0);
+header2(0);
 
 if (isset($_POST['save_history'])) {
   if (!isset($_POST['confirmed'])) {
@@ -15,10 +15,9 @@ if (isset($_POST['save_history'])) {
     }
     if (mysqli_num_rows($result) > 0) {
       // ask for confirmation before replacing song session
-      echo "<table border=0 cellspacing=0 cellpadding=5><tr><td width=350>\n";
-      echo "<font color=red><b>There are already songs recorded for this event and date.";
-      echo " The list is to the right. If you do not want to replace these songs with your selection,";
-      echo " just select your browser's Back button.</b></font>";
+      echo "<div class='ui-icon-alert'>"._('There are already songs recorded for this event and date.')."</div>";
+      echo _("The list is to the right. If you do not want to replace these songs with your selection,".
+          " just select your browser's Back button.")."</b></font>";
       echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>";
       echo "<input type=hidden name=sid_list value=\"$sid_list\">\n";
       echo "<input type=hidden name=event_id value=\"".$_POST['event_id']."\">";
@@ -34,7 +33,7 @@ if (isset($_POST['save_history'])) {
     }
   }
   
-  echo "<h3 style='color=:#663399'>";
+  echo "<h3>";
   
   if (isset($_POST['confirmed'])) {   // there are old records that need to be deleted
     $sql = "DELETE FROM history WHERE EventID=".$_POST['event_id']." AND UseDate='".$_POST['use_date']."'";
@@ -90,6 +89,8 @@ while ($row = mysqli_fetch_object($result)) {
     </div>
   </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 <script>
 $( function() {
   $( "#use_date" ).datepicker({ dateFormat: "yy-mm-dd"});
