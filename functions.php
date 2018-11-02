@@ -32,9 +32,9 @@ function header1($title='') {
 
 function header2($nav=0, $color="#FFFFFF", $jquery=0, $tablelayout=1) {
   if ($jquery) {
-    echo '<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">'."\n";
+    echo '<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">'."\n";
     echo '<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>'."\n";
-    echo '<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>'."\n";
+    echo '<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>'."\n";
     echo '<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>'."\n";
   }
   echo '<link rel="stylesheet" type="text/css" href="css/style.css">'."\n";
