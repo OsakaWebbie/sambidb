@@ -74,8 +74,8 @@ if ($_SESSION['exkeys']) {
 
 /* PUT IT ALL TOGETHER */
 $sql = "SELECT $select FROM $from".($where ? " WHERE $where":"").
-($groupby ? " GROUP BY $groupby":"").($having ? " HAVING $having":"");
-if ($sort and ($sort != "OrigTitle")) {
+(!empty($groupby) ? " GROUP BY $groupby":"").(!empty($having) ? " HAVING $having":"");
+if (!empty($_GET['sort']) and ($_GET['sort'] != "OrigTitle")) {
   $sql .= " ORDER BY $sort,OrigTitle";
 } else {
   $sql .= " ORDER BY OrigTitle";

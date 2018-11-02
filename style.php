@@ -31,7 +31,7 @@ body.simple {
 }
 
 body.full div#main-container {
-  background:<?=(!empty($mainbg)?$mainbg:"White")?> url('graphics/sambidb-logo-small.png') no-repeat 3px 3px;
+  background-color:<?=(!empty($mainbg)?$mainbg:"White")?>;
   text-align:left;
   width:auto;
   border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
@@ -51,6 +51,8 @@ table { background-color: White;}
 
 /* MAIN MENU (WIDE SCREENS) */
 #nav-main {
+  background:<?=(!empty($mainbg)?$mainbg:"White")?> url('graphics/sambidb-logo-small.png') no-repeat 3px center;
+  min-height: 53px;
 }
 #nav-main ul, #scrollnav ul {
   background-color:<?=(!empty($navbg)?$navbg:"rgb(88,57,7)")?>;
@@ -150,6 +152,7 @@ table { background-color: White;}
   position: relative;
   display: none;
   margin-left:35px;
+  z-index: 100;
 }
 #nav-mobile ul {
   display: none;
@@ -486,7 +489,13 @@ body.sqlquery #mainTable tbody td { vertical-align:top; }
   ul.nav { display:none; }
 }
 
-<?php
+/* Repeated here because the earlier instance doesn't work for some reason */
+body.full {
+  text-align:center;
+  background-color: <?=(!empty($bodybg)?$bodybg:"DarkGrey")?>;
+}
+
+  <?php
 } // end IF USING THIS FILE
 
 /*if (isset($_GET['jquery'])) {

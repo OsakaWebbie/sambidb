@@ -266,7 +266,7 @@ header('Content-Transfer-Encoding: binary');
 @readfile("$tmppath$fileroot.pdf");
 
 function escape_most($data) {
-  $search_array = array('#','$','%','&','~','_');
+  $search_array = array('#','$','%','&','~','_','^');
   $replace_array = array('\\#','\\$','\\%','\\&','\\~{}','\\_','\\^{}');
   return str_replace($search_array, $replace_array, $data);
 }

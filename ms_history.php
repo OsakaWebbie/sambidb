@@ -41,11 +41,11 @@ if (isset($_POST['save_history'])) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-  echo "Old history records deleted.<br>";
+  echo _("Old history records deleted.");
   }
 
   if ($sid_list == "") {
-    echo "No new records added, as list was empty.<br>You must have just wanted to get rid of some old data (wink!).";
+    echo _("No new records added, as list was empty.<br>You must have just wanted to get rid of some old data (wink!).");
   } else {
     $sid_array = explode(",",$sid_list);
     $num_sids = count($sid_array);
