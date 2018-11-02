@@ -151,26 +151,6 @@ ECHOEND;
     $need_confirmation = 1;
   }
 
-} elseif ($upd) {
-  $sql = "SELECT * FROM login WHERE UserID = '".$_SESSION['userid']."' AND Password = OLD_PASSWORD('$old_pw')";
-  if (!$result = mysqli_query($db,$sql)) {
-    echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-    exit;
-  }
-  if (mysqli_num_rows($result) == 0) {
-    $message = "Sorry, but your old password entry was incorrect, so the password was not changed.";
-  } elseif ($new_pw1 != $new_pw2) {
-    $message = "Sorry, but the two entries for the new password did not match.  Password not changed.";
-  } else {
-    $sql = "UPDATE login set Password = OLD_PASSWORD('$new_pw1') WHERE UserID = '".$_SESSION['userid']."'";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
-    if (mysqli_affected_rows($db) == 1) {
-      $message = "Password successfully changed.";
-    }
-  }
 }
 
 if (!$need_confirmation) {
