@@ -30,7 +30,7 @@ echo "<a href=\"".$_SERVER['PHP_SELF']."?playsid=".$sid."\">Click here to run ot
   //echo $title."<br>";
   //echo "<embed src=\"".$_SERVER['PHP_SELF']."?playsid=".$sid."\" controls=\"console\" width=\"144\" height=\"60\""; 
   //echo " vspace=\"0\" hspace=\"0\" border=\"2\" align=\"top\" autoplay=true";
-  //echo " pluginspage=\"http://www.apple.com/quicktime/download/?video/quicktime\"></embed>\n";
+  //echo " pluginspage=\"//www.apple.com/quicktime/download/?video/quicktime\"></embed>\n";
   //echo "</div>\n";
   echo "</body></html>";
 }

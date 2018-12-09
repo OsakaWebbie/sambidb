@@ -106,7 +106,7 @@ label.keyword { white-space:nowrap; margin-right:2em; }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 <script type="text/Javascript">
 $(document).ready(function(){
