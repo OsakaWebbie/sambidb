@@ -68,7 +68,7 @@ while ($song = mysqli_fetch_object($result)) {
 }
 ?>
 </script>
-<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #help-section, #layoutform { visibility:hidden; } /* shown after jQuery UI effects are applied */
 

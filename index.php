@@ -26,7 +26,7 @@ while ($row = mysqli_fetch_object($result)) {
 
 header1("Search");
 header2(1); ?>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
 
 <div style="font-size:0.8em; font-style:italic; float:right; width:25%; border:1px solid grey; padding:3px">

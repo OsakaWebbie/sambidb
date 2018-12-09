@@ -3,6 +3,9 @@ include("functions.php");
 include("accesscontrol.php");
 header1('');
 header2(0);
+?>
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<?php
 
 if (isset($_POST['save_history'])) {
   if (!isset($_POST['confirmed'])) {
@@ -90,7 +93,7 @@ while ($row = mysqli_fetch_object($result)) {
   </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 <script>
 $( function() {
   $( "#use_date" ).datepicker({ dateFormat: "yy-mm-dd"});

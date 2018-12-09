@@ -17,7 +17,7 @@ if (!$sid_list) {
 }
 header2(1);
 ?>
-<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #tagged { border:1px #999999 solid; margin:0; padding:3px; background-color:#EEEEEE; }
   #tagged li { list-style-type:none; border:1px #999999 solid; margin:1px; padding:2px 4px; white-space:nowrap; background-color:White; }
@@ -74,7 +74,7 @@ while ($song = mysqli_fetch_object($result)) {
 </iframe>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 <script type="text/JavaScript">
   $(document).ready(function(){

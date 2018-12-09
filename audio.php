@@ -26,7 +26,7 @@ if (isset($_GET['playsid'])) {
   echo "<div align=center style=\"font-size:10pt;color:#00D000;font-weight:bold;\">\n".$_GET['title']."<br>";
   echo "<embed src=\"".$_SERVER['PHP_SELF']."?playsid=".$_GET['sid']."\" controls=\"console\" width=\"144\" height=\"60\""; 
   echo " vspace=\"0\" hspace=\"0\" border=\"2\" align=\"top\" autoplay=true";
-  echo " pluginspage=\"http://www.apple.com/quicktime/download/?video/quicktime\"></embed>\n</div>\n";
+  echo " pluginspage=\"//www.apple.com/quicktime/download/?video/quicktime\"></embed>\n</div>\n";
   echo "</body></html>";
 
 } else {
