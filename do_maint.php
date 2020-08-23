@@ -23,9 +23,9 @@ if ($kw_add_upd) {
   
 } elseif ($kw_del) {
 
-  // if first time around, check for songkey records - if none, don't need confirmation
+  // if first time around, check for songkeyword records - if none, don't need confirmation
   if (!$confirmed) {
-    $sql = "SELECT Title FROM songkey LEFT JOIN song ON songkey.SongID=song.SongID ".
+    $sql = "SELECT Title FROM songkeyword LEFT JOIN song ON songkeyword.SongID=song.SongID ".
     "WHERE KeywordID=$kw_select ORDER BY Title";
     if (!$result = mysqli_query($db,$sql)) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
@@ -36,7 +36,7 @@ if ($kw_add_upd) {
     }
   }
   if ($confirmed) {
-    $sql = "DELETE FROM songkey WHERE KeywordID=$kw_select";
+    $sql = "DELETE FROM songkeyword WHERE KeywordID=$kw_select";
     if (!$result = mysqli_query($db,$sql)) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
@@ -59,7 +59,7 @@ if ($kw_add_upd) {
 The following songs are still associated with the $keyword keyword.&nbsp;
  If you are sure you want to delete these keyword associations, click the button.&nbsp;
  (If not, just press your browser's Back button.)
-<form action=$PHP_SELF method=post>
+<form action={$_SERVER['PHP_SELF']} method=post>
   <input type=hidden name=kw_select value="$kw_select">
   <input type=hidden name=kw_del value="$kw_del">
   <input type=hidden name=confirmed value="yes">
@@ -141,7 +141,7 @@ ECHOEND;
 There are $use_num history records for this event, during the time period $use_first
 thru $use_last.  In deleting the event, you will also delete all history data associated
 with it.  Are you sure you want to do this?  (If not, just press your browser's Back button.)
-<form action=$PHP_SELF method=post>
+<form action={$_SERVER['PHP_SELF']} method=post>
   <input type=hidden name=event_id value="$event_id">
   <input type=hidden name=event_del value="$event_del">
   <input type=hidden name=confirmed value="yes">

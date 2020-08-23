@@ -38,38 +38,40 @@ function header2($nav=0) {
   echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
 
   if ($nav) {
-    $navmarkup = "<ul class=\"nav\">\n";
-    $navmarkup .= "  <li><a href=\"index.php\" target=\"_top\">"._("Search")."</a></li>\n";
-    $navmarkup .= "  <li><a href=\"list.php?tagged=1\" target=\"_top\">"._("List Tagged")."</a></li>\n";
-    $navmarkup .= "  <li><a href=\"edit.php\" target=\"_top\">"._("New Song")."</a></li>\n";
-    $navmarkup .= "  <li><a href=\"multiselect.php\" target=\"_top\">"._("Tagged Song Actions")."</a></li>\n";
-    $navmarkup .= "  <li><a href=\"event_use.php\" target=\"_top\">"._("Song Use Chart")."</a></li>\n";
-    $navmarkup .= "  <li><a href=\"maintenance.php\" target=\"_top\">"._("DB Settings")."</a></li>\n";
+    $navmarkup = "<ul class='nav'>\n";
+    $navmarkup .= "  <li><a href='index.php' target='_top'>"._("Search")."</a></li>\n";
+    $navmarkup .= "  <li><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
+    $numtags = sql_single("SELECT COUNT(SongID) FROM song WHERE Tagged=1");
+    $navmarkup .= "  <li>".($numtags>0?"<a href='list.php?tagged=1' target='_top'>":'')._('List Tagged')." ($numtags)".($numtags>0?"</a>":'')."</li>\n";
+    $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
+    $navmarkup .= "  <li><a href='multiselect.php' target='_top'>"._("Tagged Song Actions")."</a></li>\n";
+    $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
+    $navmarkup .= "  <li><a href='maintenance.php' target='_top'>"._("DB Settings")."</a></li>\n";
     if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
-      $navmarkup .= "  <li><a href=\"sqlquery.php\" target=\"_top\">"._("(Freeform SQL)")."</a></li>\n";
+      $navmarkup .= "  <li><a href='sqlquery.php' target='_top'>"._("(Freeform SQL)")."</a></li>\n";
     }
-    $navmarkup .= "  <li><a class=\"switchlang\" href=\"#\">".
+    $navmarkup .= "  <li><a class='switchlang' href='#'>".
         ($_SESSION['lang']=='en_US'?'日本語':'English')."</a></li>\n";
-    $navmarkup .= "  <li class=\"menu-usersettings\"><a href=\"user_settings.php\" target=\"_top\">"._("User Settings")."<span> (".$_SESSION['username'].")</span></a></li>\n";
-    $navmarkup .= "  <li><a href=\"index.php?logout=1\" target=\"_top\">"._("Log Out")."</a></li>\n</ul>\n";
-    echo "<nav id=\"scrollnav\"></nav>\n";  //only appears when scrolled
+    $navmarkup .= "  <li class='menu-usersettings'><a href='user_settings.php' target='_top'>"._("User Settings")."<span> (".$_SESSION['username'].")</span></a></li>\n";
+    $navmarkup .= "  <li><a href='index.php?logout=1' target='_top'>"._("Log Out")."</a></li>\n</ul>\n";
+    echo "<nav id='scrollnav'></nav>\n";  //only appears when scrolled
 
-    echo "<div id=\"main-container\">\n";
-    echo "<nav id=\"nav-main\">\n$navmarkup</nav>\n";  //main nav for large screens
-    echo "<div id=\"nav-trigger\"><img src=\"graphics/sambidb-logo.png\" alt=\"Logo\"><span>Menu</span></div>\n";  //button for narrow screens
-    echo "<nav id=\"nav-mobile\"></nav>\n";  //vertical menu for narrow screens
+    echo "<div id='main-container'>\n";
+    echo "<nav id='nav-main'>\n$navmarkup</nav>\n";  //main nav for large screens
+    echo "<div id='nav-trigger'><img src='graphics/sambidb-logo.png' alt='Logo'><span>Menu</span></div>\n";  //button for narrow screens
+    echo "<nav id='nav-mobile'></nav>\n";  //vertical menu for narrow screens
   }
-  echo "<div id=\"content\">\n";
+  echo "<div id='content'>\n";
 }
 
-// Function print_footer: sends final html
+// Function footer: sends final html
 function footer($nav=0) {
-  echo "  <div style=\"clear:both\"></div>\n";
+  echo "  <div style='clear:both'></div>\n";
   echo "</div>\n"; //end of content div
   echo "</div>\n"; //end of main-container div
 
 ?>
-  <script type="text/javascript">
+  <script>
     if (window.jQuery) { //really simple files that don't have jQuery don't need this stuff either
       $(function() {
         $(window).scroll(function() {
@@ -114,7 +116,7 @@ function footer($nav=0) {
 function print_header($title,$color,$nav) {
   header1($title);
   header2($nav);
-  echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"white\"><tr><td>";
+  echo "<table border='0' cellspacing='0' cellpadding='0' bgcolor='white'><tr><td>";
 }
 
 //DEPRECATED
@@ -128,9 +130,16 @@ function sqlquery_checked($sql) {
   global $db;
   $result = mysqli_query($db, $sql);
   if ($result === false ){
-    die("<pre style=\"font-size:15px;\"><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
+    die("<pre style='font-size:15px;'><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
   }
   return $result;
+}
+
+// Function sql_single: expects SQL query that returns one row and one column and simply returns the resulting value
+function sql_single($sql) {
+  $result = sqlquery_checked($sql);
+  $row = mysqli_fetch_row($result);
+  return $row[0];
 }
 
 // Function db2table: prepares text from DB for display in table cell (or plain html text)
@@ -144,7 +153,7 @@ function d2h($text) {
 }
 
 function escape_quotes($text) {
-  $text = str_replace("\"","\\\"",$text);
+  $text = str_replace('"','\"',$text);
   return $text;
 }
 
@@ -163,10 +172,6 @@ function url2link($text) {
 
 //Function parseLyrics: takes in lyrics (in the format from the database) and parses to use ruby
 function chordsToRuby($unfmt){
-  //For Firefox, preset the parameters for the XHTML Ruby Support plugin
-  /*$ruby = (strpos($_SERVER['HTTP_USER_AGENT'],'Firefox'))?"<ruby moz-ruby-align=\"start\" ".
-  "moz-ruby-line-edge=\"none\" style=\"vertical-align: -2px ! important;\" moz-ruby-reformed=\"done\" ".
-  "moz-ruby-mode=\"block\" moz-ruby-parsed=\"done\">" : "<ruby>";*/
   $ruby = "<ruby>";
   $fmt = "";
   $insideword = FALSE;

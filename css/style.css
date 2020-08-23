@@ -6,7 +6,6 @@ body,p,div,span,td,input,textarea {
 }
 
 body {
-  max-width: 750px;
   margin: 0 auto;
 }
 

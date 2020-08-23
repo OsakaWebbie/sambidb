@@ -3,7 +3,8 @@ include("functions.php");
 include("accesscontrol.php");
 print_header("","#E8FFE0",0);
 
-if ($save_kw) {
+if (!empty($_POST['save_kw'])) {
+  $pwid = $_POST['kwid'];
   if ($kwid == "new") {  //need to insert the new keyword record first
     $sql = "INSERT INTO keyword (Keyword) VALUES ('$keyword')";
     if (!$result = mysqli_query($db,$sql)) {
@@ -23,7 +24,7 @@ if ($save_kw) {
   $num_sids = count($sid_array);
   $num_previous = 0;
   for ($i=0; $i<$num_sids; $i++) {
-    $sql = "SELECT * FROM songkey WHERE SongID=".$sid_array[$i]." AND KeywordID=$kwid";
+    $sql = "SELECT * FROM songkeyword WHERE SongID=".$sid_array[$i]." AND KeywordID=$kwid";
     if (!$result = mysqli_query($db,$sql)) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
@@ -31,7 +32,7 @@ if ($save_kw) {
     if (mysqli_num_rows($result) == 1) {
       $num_previous++;
     } else {
-      $sql = "INSERT INTO songkey (SongID,KeywordID) VALUES (".
+      $sql = "INSERT INTO songkeyword (SongID,KeywordID) VALUES (".
            $sid_array[$i].",$kwid)";
       if (!$result = mysqli_query($db,$sql)) {
         echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
@@ -65,7 +66,7 @@ function validate() {
   <div align="center">
     <font color="#449933" size=4><b>Choose existing keyword,
         or choose New and fill in new keyword name:</b></font>
-    <form action="<?php echo $PHP_SELF; ?>" method="post" name="kwform" target="_self" onsubmit="return validate();">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="kwform" target="_self" onsubmit="return validate();">
       <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
       <table border="1" cellspacing="0" cellpadding="4">
         <tr>

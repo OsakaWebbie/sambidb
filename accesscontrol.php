@@ -24,17 +24,14 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
     exit;
   }
   if (mysqli_num_rows($result) == 1) {
+    // LOGIN SUCCESS
     $user = mysqli_fetch_object($result);
     //convert to new password hashing if necessary
     if ($user->NeedPwdUpgrade == 1) {
       sqlquery_checked("UPDATE user SET Password=PASSWORD('".$_POST['pwd']."') WHERE UserID='".$_POST['usr']."'");
     }
-    $hostarray = explode(".",$_SERVER['HTTP_HOST']);
-    $_SESSION['userid'] = $user->UserID;
-    $_SESSION['username'] = $user->UserName;
-    $_SESSION['admin'] = $user->Admin;
-    $_SESSION['lang'] = $user->Language;
 
+    // add entry to login log
     mysqli_query($db, "SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'STRICT_TRANS_TABLES', '')") or die("SQL Error: ".mysqli_error($db).")");
     $sql = "INSERT INTO loginlog(UserID,IPAddress,UserAgent,Languages) VALUES('".
         $user->UserID."','".$_SERVER['REMOTE_ADDR']."','".$_SERVER['HTTP_USER_AGENT']."','".
@@ -42,12 +39,24 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
     $result = mysqli_query($db, $sql) or die("SQL Error: ".mysqli_error($db).")");
     mysqli_query($db, "SET @@SQL_MODE = CONCAT(@@SQL_MODE, ',STRICT_TRANS_TABLES')") or die("SQL Error: ".mysqli_error($db).")");
 
+
+    //$hostarray = explode(".",$_SERVER['HTTP_HOST']);
+
+    // get instance settings first and set session variables
     $result = mysqli_query($db, "SELECT Parameter, Value FROM config ORDER BY Parameter")
     or die("SQL Error: ".mysqli_error($db).")");
     while ($row = mysqli_fetch_object($result)) {
       $par = $row->Parameter;
       $_SESSION[$par] = $row->Value;
     }
+
+    // set session variables for user-specific settings
+    $_SESSION['userid'] = $user->UserID;
+    $_SESSION['username'] = $user->UserName;
+    $_SESSION['admin'] = $user->Admin;
+    $_SESSION['lang'] = $user->Language;
+    if (!empty($user->DefaultEvent))  $_SESSION['default_ event'] = $user->DefaultEvent;  // overwrite instance default if user setting != 0
+
   } else {     // INFORM USER OF FAILED LOGIN
     $message = "<h3 style='color:red'>Invalid UserID or Password.</h3>\n";
   }
@@ -63,7 +72,7 @@ if (!isset($_SESSION['userid'])) {      // COVERS TWO CASES: FIRST TIME THROUGH 
   <link rel="icon" type="image/x-icon" href="/sambidb.ico">
   <title>SambiDB Login</title>
   <?php
-  $hostarray = explode(".",$_SERVER['HTTP_HOST']);
+  //$hostarray = explode(".",$_SERVER['HTTP_HOST']);
   ?>
   <link rel="stylesheet" type="text/css" href="style.php?page=<?=$_SERVER['PHP_SELF']?>&jquery=1" />
   <style>

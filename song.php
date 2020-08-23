@@ -17,12 +17,12 @@ if (isset($_GET['tag'])) {
 //Keyword changes
 if (isset($_POST['newkeyword'])) {
   $result = sqlquery_checked("SELECT k.KeywordID, k.Keyword, s.SongID ".
-      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
+      "FROM keyword k LEFT JOIN songkeyword s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
       "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword");
   while ($row = mysqli_fetch_object($result)) {
     $keyid = $row->KeywordID;
-    if ($row->SongID && !($_POST[$keyid])) sqlquery_checked("DELETE from songkey WHERE KeywordID=$keyid and SongID=$sid");
-    elseif (!$row->SongID && ($_POST[$keyid])) sqlquery_checked("INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,$sid)");
+    if ($row->SongID && !($_POST[$keyid])) sqlquery_checked("DELETE from songkeyword WHERE KeywordID=$keyid and SongID=$sid");
+    elseif (!$row->SongID && ($_POST[$keyid])) sqlquery_checked("INSERT INTO songkeyword(KeywordID,SongID) VALUES($keyid,$sid)");
   }
   header("Location: song.php?sid=".$_POST['sid']);
   exit;
@@ -241,7 +241,7 @@ if ($_SESSION['admin'] > 0) {
 echo "<input type=hidden name=sid value=$sid></h3>";
 
 if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
-    "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
+    "FROM keyword k LEFT JOIN songkeyword s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
     "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
   echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
