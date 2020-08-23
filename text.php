@@ -3,10 +3,10 @@ include("functions.php");
 include("accesscontrol.php");
 
 if (!empty($_GET['xml'])) {
-  echo "<?xml version=\"1.0\" encoding=\"".$_SESSION['charset']."\" ?>\n<songlist>\n";
+  echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<songlist>\n";
 } else {
   echo "<html><head>";
-  echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=".$_SESSION['charset']."\">\n";
+  echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
   echo "<style type=\"text/css\">p {margin-bottom: 0; margin-top: 0;}</style>";
   echo "</head><body>";
 }

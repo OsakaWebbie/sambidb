@@ -114,7 +114,7 @@ foreach ($keyword as $kwid => $kw) {
 <?php
 if ($_SESSION['admin'] == 2) {
   echo "  <div style='grid-column:1/4'><label style='margin-top:1em'>Freeform SQL: SELECT this stuff FROM wherever WHERE...</label><br>\n";
-  echo "  <textarea name='freeform' style='height:3em; width:90%'></textarea></div>\n";
+  echo "  <textarea name='freesql' style='height:3em; width:90%'></textarea></div>\n";
 }
 
 ?>

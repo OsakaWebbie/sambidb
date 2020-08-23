@@ -21,7 +21,7 @@ if (isset($_GET['playsid'])) {
 } elseif (isset($_GET['sid'])) {
   $_SESSION['audio_ok'] = 1;
   echo "<html><head>\n";
-  echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=".$_SESSION['charset']."\">\n";
+  echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
   echo "<title>Audio: ".$_GET['title']."</title></head>\n<body>\n";
   echo "<div align=center style=\"font-size:10pt;color:#00D000;font-weight:bold;\">\n".$_GET['title']."<br>";
   echo "<embed src=\"".$_SERVER['PHP_SELF']."?playsid=".$_GET['sid']."\" controls=\"console\" width=\"144\" height=\"60\""; 

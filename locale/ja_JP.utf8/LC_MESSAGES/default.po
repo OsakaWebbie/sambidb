@@ -1,0 +1,1092 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SambiDB\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-07 15:58+0900\n"
+"PO-Revision-Date: 2018-11-07 15:59+0900\n"
+"Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
+"Language-Team: Karen Ellrick\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: action.php:19 db_settings.php:285 do_maint.php:131 do_maint.php:206
+#: donations.php:19 event_attend.php:21 individual.php:559 individual.php:809
+#: ms_attendance.php:154 ms_custom.php:12 search.php:218
+msgid "Select..."
+msgstr "選択…"
+
+#: action.php:20 donations.php:20 event_attend.php:22 search.php:219
+msgid "# selected"
+msgstr "# 選択された"
+
+#: action.php:21 donation_list.php:304 donations.php:21 event_attend.php:23
+#: search.php:220
+msgid "Check All"
+msgstr "全部にチェックを付ける"
+
+#: action.php:22 donations.php:22 event_attend.php:24 search.php:221
+msgid "Uncheck All"
+msgstr "全部にチェックを外す"
+
+#: action.php:24 donations.php:24 event_attend.php:26 search.php:224
+#: search.php:251
+msgid "Search:"
+msgstr "検索："
+
+#: action.php:47 donations.php:129
+msgid "Continuous List (can sort freely)"
+msgstr "グループ無しの表（ソート可）"
+
+#: action.php:59 donations.php:101 event_attend.php:73
+#, php-format
+msgid "Optional Dates: after %s and/or before %s"
+msgstr "日付フィルター：　%sから、および、または %sまで"
+
+#: action.php:64 functions.php:28 individual.php:404 individual.php:405
+#: ms_organization.php:49 ms_organization.php:50 search.php:15 search.php:19
+msgid "Search"
+msgstr "検索"
+
+#: action.php:65
+msgid "Show List"
+msgstr "表を表示"
+
+#: action.php:67 donations.php:152 event_attend.php:94
+#, php-format
+msgid "Show in: %sframe below&nbsp; %snew window"
+msgstr "%s下記の枠&nbsp; %s新規ウインドーに表示する"
+
+#: action_chart.php:38 attend_aggregate.php:50 donation_list.php:64
+#: functions.php:190 individual.php:245 list.php:288 ms_person_xml.php:112
+#: ms_person_xml.php:215 ms_person_xml.php:245 ms_person_xml.php:270
+#: selectorg.php:35
+msgid "ID"
+msgstr "ID"
+
+#: action_chart.php:40 action_chart.php:42 attend_aggregate.php:51
+#: attend_aggregate.php:52 donation_list.php:21 donation_list.php:23
+#: donation_list.php:67 donation_list.php:70 edit.php:233 edit.php:387
+#: individual.php:246 individual.php:247 list.php:289 list.php:290
+#: ms_person_text.php:47 ms_person_text.php:48 ms_person_xml.php:109
+#: ms_person_xml.php:110 ms_person_xml.php:111 ms_person_xml.php:212
+#: ms_person_xml.php:213 ms_person_xml.php:214 ms_person_xml.php:242
+#: ms_person_xml.php:243 ms_person_xml.php:244 ms_person_xml.php:269
+#: search.php:43 selectorg.php:37
+msgid "Romaji"
+msgstr "ローマ字"
+
+#: action_chart.php:48 donation_list.php:77 edit.php:552 individual.php:257
+#: individual.php:354 list.php:300 ms_person_text.php:67 ms_person_xml.php:130
+#: ms_person_xml.php:233 ms_person_xml.php:258 overview.php:92
+#: pledge_list.php:112 search.php:49 search.php:178
+msgid "Remarks"
+msgstr "備考"
+
+#: action_chart.php:50 donation_list.php:61 individual.php:557
+#: individual.php:586 individual.php:648 individual.php:694 individual.php:818
+#: ms_action.php:76 ms_attendance.php:170 overview.php:163 overview.php:190
+#: overview.php:217
+msgid "Date"
+msgstr "日付"
+
+#: action_chart.php:52 db_settings.php:378 donation_list.php:83
+#: edit_pledge.php:161 individual.php:586 individual.php:674 individual.php:694
+#: individual.php:773 individual.php:890 individual.php:902 ms_action.php:59
+#: ms_action.php:77 overview.php:165 overview.php:191 overview.php:218
+msgid "Description"
+msgstr "内容"
+
+#: action_chart.php:105 attend_detail.php:23 donation_list.php:243
+msgid "There are no records matching your criteria."
+msgstr "この条件に合う項目はありません。"
+
+#: action_chart.php:119 attend_aggregate.php:148 attend_detail.php:170
+#: donation_list.php:288 individual.php:438 individual.php:499 list.php:317
+#: list.php:320
+msgid "Go to Multi-Select with these entries preselected"
+msgstr "この項目を選択される状態で、「複数作業」のページに移動"
+
+#: action_chart.php:124 attend_aggregate.php:152 donation_list.php:296
+#: list.php:325 sqlquery.php:53
+msgid "Download a CSV file of this table"
+msgstr "この表のCSVファイルをダウンロード"
+
+#: ajax_actions.php:10
+msgid "Update successful."
+msgstr "変更ができました。"
+
+#: ajax_actions.php:26
+msgid "Delete successful."
+msgstr "削除ができました。"
+
+#: ajax_actions.php:27
+msgid "Record to delete was not found."
+msgstr "削除しようですが、項目は見つかりませんでした。"
+
+#: ajax_request.php:5 db_settings.php:49 db_settings.php:84 db_settings.php:128
+#: db_settings.php:150 db_settings.php:173
+msgid "Your login has timed out - please refresh the page."
+msgstr ""
+"あなたのログインはタイムアウトしました。このページを更新すれば、またログイン"
+"できます。"
+
+#: attend_aggregate.php:62 db_settings.php:370 individual.php:807
+#: individual.php:852 ms_attendance.php:152 overview.php:189 overview.php:216
+msgid "Event"
+msgstr "イベント"
+
+#: attend_aggregate.php:63
+msgid "First"
+msgstr "最初"
+
+#: attend_aggregate.php:64
+msgid "Last"
+msgstr "最後"
+
+#: attend_aggregate.php:65
+msgid "# Times"
+msgstr "回数"
+
+#: attend_aggregate.php:120 attend_datesums.php:45 attend_detail.php:102
+#: list.php:111 list.php:167 list.php:190
+#, php-format
+msgid ", between %s and %s"
+msgstr "、%sと%sの間"
+
+#: attend_aggregate.php:121 attend_datesums.php:46 attend_detail.php:103
+#: list.php:112 list.php:168 list.php:191
+#, php-format
+msgid ", on or after %s"
+msgstr "、%sから"
+
+#: attend_aggregate.php:122 attend_datesums.php:47 attend_detail.php:104
+#: list.php:113 list.php:169 list.php:192
+#, php-format
+msgid ", on or before %s"
+msgstr "、%sまで"
+
+#: attend_datesums.php:43 individual.php:259 ms_person_xml.php:192
+msgid "Events"
+msgstr "イベント"
+
+#: attend_detail.php:89
+msgid "No cells have been selected for deletion."
+msgstr "削除対象のために選択されたセルはありません。"
+
+#: attend_detail.php:101
+#, php-format
+msgid "Event: \"%s\" (%s)"
+msgstr "イベント： \"%s\" (%s)"
+
+#: attend_detail.php:173
+msgid ""
+"To delete entries, drag, click, and/or Ctrl-click one or more cells, and "
+"then click this button:"
+msgstr ""
+"削除するには、セルをクリック、Ctrl-クリック、またはドラッグしてから、このボタ"
+"ンをクリック："
+
+#: attend_detail.php:174
+msgid "Delete Selected Cells"
+msgstr "選択されたセルを削除"
+
+#: attend_detail.php:182
+msgid "<< Beginning of Range"
+msgstr "<< 最初"
+
+#: attend_detail.php:184
+msgid "< Earlier Dates"
+msgstr "< 前"
+
+#: attend_detail.php:186
+#, php-format
+msgid "Show Whole Range (%s)"
+msgstr "期間全体を表示 (%s)"
+
+#: attend_detail.php:187
+msgid "Later Dates >"
+msgstr "次 >"
+
+#: attend_detail.php:189
+msgid "End of Range >>"
+msgstr "最後 >>"
+
+#: custom.php:4 multiselect.php:127
+msgid "Custom Report"
+msgstr "特別なレポート"
+
+#: dashboard.php:20 functions.php:26
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#: dashboard.php:28
+msgid ""
+"You don't have a dashboard yet.  If you would like one, talk to your "
+"KizunaDB administrator."
+msgstr ""
+"あなたはまだダッシュボードはありません。ほしいなら、KizunaDBの管理者にお問い"
+"合わせください。"
+
+#: dashboard.php:33
+msgid "'s Dashboard"
+msgstr "のダッシュボード"
+
+#: db_settings.php:5 db_settings.php:244
+msgid "Database Settings"
+msgstr "基本データ設定"
+
+#: db_settings.php:199
+msgid "Event name cannot be blank."
+msgstr "イベント名を入力してください。"
+
+#: db_settings.php:215
+msgid "All fields must be filled in."
+msgstr "空白のフィールドはいけません。"
+
+#: db_settings.php:227
+msgid "User Name cannot be blank."
+msgstr "ユーザ名を入力してください。"
+
+#: db_settings.php:230
+msgid "UserID cannot be blank."
+msgstr "ユーザIDを入力してください。"
+
+#: db_settings.php:233
+msgid "You must enter a password for a new user."
+msgstr "新規ユーザのために、パスワードの入力は必要です。"
+
+#: db_settings.php:236
+msgid "The two password entries don't match."
+msgstr "入力された二つのパスワードは異なります。"
+
+#: db_settings.php:288
+msgid "All records"
+msgstr "全項目"
+
+#: db_settings.php:291
+msgid "Add or Rename"
+msgstr "作成や名前を変更"
+
+#: db_settings.php:292 db_settings.php:320 db_settings.php:350
+#: db_settings.php:380 db_settings.php:421
+msgid "Delete"
+msgstr "削除"
+
+#: db_settings.php:309 db_settings.php:340
+msgid "Optional background color (choose something light)"
+msgstr "背景色（テキストの読みやすさのため薄い色の方がいい）"
+
+#: db_settings.php:310 db_settings.php:341
+msgid "Click to pick a color..."
+msgstr "色を選ぶにはクリック…"
+
+#: db_settings.php:319 db_settings.php:349 db_settings.php:379
+#: db_settings.php:420
+msgid "Add or Update"
+msgstr "作成や変更"
+
+#: db_settings.php:359
+msgid "Event Management"
+msgstr "イベント管理"
+
+#: db_settings.php:360
+msgid ""
+"Fill in the information to add a new event.&nbsp; Or select an event, and "
+"modify its info (name, remarks, active status, and/or start date).&nbsp; Or "
+"select a category to delete and press Delete."
+msgstr ""
+"作成したい新しいイベントの情報を記入する、またはイベントを選択して情報を変更"
+"する、またはイベントを選択して削除する。"
+
+#: db_settings.php:363
+msgid "New Event..."
+msgstr "新規イベント…"
+
+#: db_settings.php:389
+msgid "User Management"
+msgstr "ユーザ（ログイン）管理"
+
+#: db_settings.php:390
+msgid ""
+"Fill in the information to add a new user.  Or select an existing user to "
+"make changes or delete.NOTE: You cannot see the existing password, but you "
+"can enter a new one if the user forgot his/her password."
+msgstr ""
+"ユーザを作成するには、情報を入力する。現在のユーザを変更や削除することもでき"
+"ます。注意：現在のパスワードを表示できないですが、パスワードを忘れたユーザの"
+"ために新しいパスワードを上書きできます。"
+
+#: db_settings.php:393
+msgid "New User..."
+msgstr "新しいユーザ…"
+
+#: db_settings.php:402
+msgid "UserID (to log in)"
+msgstr "UserID （ログインする時に使う）"
+
+#: db_settings.php:404
+msgid "(max. 16 English characters, no spaces or punctuation)"
+msgstr "（16文字以下、半角英字だけ、スペースや句読点はダメ）"
+
+#: db_settings.php:405
+msgid "Language for Interface"
+msgstr "インタフェースの原語"
+
+#: db_settings.php:406 user_settings.php:19
+msgid "English"
+msgstr "英語"
+
+#: db_settings.php:407 user_settings.php:20
+msgid "Japanese"
+msgstr "日本語"
+
+#: db_settings.php:409
+msgid "Admin Privileges"
+msgstr "管理者許可"
+
+#: db_settings.php:414
+msgid "New Password"
+msgstr "新しいパスワード"
+
+#: db_settings.php:416
+msgid "(leave blank if not changing password)"
+msgstr "（パスワード変更しない場合、空けておいてください。）"
+
+#: db_settings.php:417
+msgid "New Password again"
+msgstr "新しいパスワード（確認用）"
+
+#: do_maint.php:22
+msgid "No data was changed."
+msgstr "データは変更されませんでした。"
+
+#: do_maint.php:231
+msgid "New event successfully added."
+msgstr "イベントを作成しました。"
+
+#: do_maint.php:237
+msgid "Event information successfully updated."
+msgstr "イベント情報を変更しました。"
+
+#: do_maint.php:260
+#, php-format
+msgid "%s related attendance records deleted."
+msgstr "関係ある %s の参加記録を削除しました。"
+
+#: do_maint.php:264
+msgid "Event record successfully deleted."
+msgstr "イベントを削除しました。"
+
+#: do_maint.php:268
+msgid "Please Confirm Event Delete"
+msgstr "イベント削除の確認"
+
+#: do_maint.php:269
+#, php-format
+msgid ""
+"There are %s attendance records for this event, during the time period %s "
+"thru %s."
+msgstr "このイベントには、%2$sから%3$sまでの間、%1$s の参加記録があります。"
+
+#: do_maint.php:271
+msgid ""
+" In deleting the event, you will also delete all attendance data associated "
+"with it.  Are you sure you want to do this?  (If not, just press your "
+"browser's Back button.)"
+msgstr ""
+"このイベントを削除したら、関係ある参加記録も削除します。よろしいですか。"
+"（キャンセルしたい場合は、ブラウザの「戻る」ボタンをクリックしてください。）"
+
+#: do_maint.php:277
+msgid "Yes, delete the event and attendance records"
+msgstr "はい、イベントも参加記録も削除したい"
+
+#: do_maint.php:289
+msgid "Language successfully changed."
+msgstr "原語を変更しました。"
+
+#: do_maint.php:297
+msgid ""
+"Sorry, but your old password entry was incorrect, so the password was not "
+"changed."
+msgstr "すみませんが、現在のパスワードは一致していませんので、変更を断ります。"
+
+#: do_maint.php:299
+msgid ""
+"Sorry, but the two entries for the new password did not match. Password not "
+"changed."
+msgstr "入力された二つのパスワードは異なります。"
+
+#: do_maint.php:303
+msgid "Password successfully changed."
+msgstr "パスワードを変更しました。"
+
+#: do_maint.php:315 do_maint.php:329
+#, php-format
+msgid "UserID '%s' is already in use by %s. Please choose a different UserID."
+msgstr ""
+"ユーザID「%s」は、現在ユーザ「%s」に使われています。他のユーザIDを選んでして"
+"ください。"
+
+#: do_maint.php:322
+msgid "New user successfully added."
+msgstr "ユーザを作成しました。"
+
+#: do_maint.php:351
+msgid "User information successfully updated."
+msgstr "ユーザ情報を変更しました。"
+
+#: do_maint.php:359
+msgid "User successfully deleted."
+msgstr "ユーザを削除しました。"
+
+#: donation_list.php:193
+#, php-format
+msgid "Date between %s and %s"
+msgstr "日付は%sから%sまでの間"
+
+#: donation_list.php:194
+#, php-format
+msgid "Date on or after %s"
+msgstr "日付は%sから"
+
+#: donation_list.php:195
+#, php-format
+msgid "Date on or before %s"
+msgstr "日付は%sまで"
+
+#: donation_list.php:280 list.php:310
+#, php-format
+msgid "%d results of these criteria:"
+msgstr "この条件の結果（%d項目）："
+
+#: edit.php:39 edit.php:367
+#, php-format
+msgid "Edit %s"
+msgstr "「%s」を編集　"
+
+#: edit.php:41 edit.php:367
+msgid "New Song"
+msgstr "新規の曲"
+
+#: edit.php:79
+msgid "Your session has timed out - please refresh the page."
+msgstr ""
+"あなたのログインはタイムアウトしました。このページを更新すれば、またログイン"
+"できます。"
+
+#: edit.php:174
+msgid "Possible Duplicates"
+msgstr "同じかもしれない…"
+
+#: edit.php:336
+msgid ""
+"There was an error checking for similar existing entries (to avoid "
+"duplicates). Continue anyway? (To try checking again, click Cancel and then "
+"Save Changes again.)"
+msgstr ""
+"ダブルがないかどうかを検索するとき、何かのエラーが発生しました。それなのに続"
+"行しますか。（再びチェックするには、キャンセル、それから保存をクリックしてく"
+"ださい。）"
+
+#: edit.php:398
+msgid "Title"
+msgstr "タイトル"
+
+#: edit.php:520
+msgid "Clear file"
+msgstr "ファイル選択を空ける"
+
+#: edit.php:524
+msgid "(This song already has audio uploaded, but you can replace it with a new file if you want.)"
+msgstr "（この曲は既にオーディオがアップロードされましたが、必要なら上書きできます。）"
+
+#: edit.php:551 edit_pledge.php:184 individual.php:571 individual.php:679
+#: user_settings.php:22
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: event_attend.php:37
+msgid "Please select an event."
+msgstr "イベントを選んでください。"
+
+#: functions.php:32
+msgid "Multi-Select"
+msgstr "複数選択/作業"
+
+#: functions.php:39
+msgid "DB Settings"
+msgstr "基本データ設定"
+
+#: functions.php:41
+msgid "(Freeform SQL)"
+msgstr "（自由ＳＱＬ）"
+
+#: functions.php:45 user_settings.php:8 user_settings.php:12
+msgid "User Settings"
+msgstr "私のユーザ設定"
+
+#: functions.php:46
+msgid "Log Out"
+msgstr "ログアウト"
+
+#: get_duplicates.php:28
+msgid ""
+"Is one of these existing entries the same<br />as the new one you are "
+"entering?"
+msgstr ""
+"入力しようとしている項目は、このすでに存在している項目のいずれかと一緒でしょ"
+"うか？"
+
+#: get_duplicates.php:29
+msgid "(click on a name to see details in a new window/tab)"
+msgstr "（名前をクリックすると、別のウインドー/タブで詳細を見れる）"
+
+#: get_duplicates.php:43
+msgid "Yes, this is it"
+msgstr "はい、これです"
+
+#: get_duplicates.php:46
+msgid "Yes, this is it, but I want to edit it"
+msgstr "はい、これですが、訂正したいです"
+
+#: get_duplicates.php:47
+msgid "(will open edit page in separate tab)"
+msgstr "（別のタブに編集ページが開かれる）"
+
+#: get_duplicates.php:51
+msgid "No, it's none of these, so please submit the new entry"
+msgstr "いいえ、違います。入力した新規項目を保存したい"
+
+#: import_csv.php:13
+msgid "CSV Import"
+msgstr "CSVのインポート"
+
+#: individual.php:355
+msgid "Edit This Record"
+msgstr "この項目を編集"
+
+#: individual.php:359
+msgid "Go to Multi-Select"
+msgstr "複数選択/作業へ移動"
+
+#: individual.php:405 ms_organization.php:50
+msgid "Browse"
+msgstr "参照"
+
+#: individual.php:470 individual.php:532 individual.php:619 individual.php:733
+#: individual.php:870 individual.php:912
+msgid "Del"
+msgstr "削除"
+
+#: individual.php:559 individual.php:773 overview.php:164
+msgid "Type"
+msgstr "種類"
+
+#: individual.php:612
+msgid "Edit"
+msgstr "変更"
+
+#: individual.php:625 individual.php:739
+msgid "Show Older Records Also"
+msgstr "以前の記録も表示"
+
+#: individual.php:626 individual.php:740
+msgid "Hide Older Records"
+msgstr "最近の項目のみを表示"
+
+#: individual.php:643
+msgid "Edit any fields you want to change, and Press \"SAVE\" to save changes"
+msgstr "変更したいところを編集して、「保存」のボタンをクリックする"
+
+#: individual.php:773 individual.php:852 pledge_list.php:94
+msgid "Dates"
+msgstr "日付"
+
+#: individual.php:785
+msgid "Edit/Del"
+msgstr "変更/削除"
+
+#: individual.php:852
+msgid "Event Description"
+msgstr "イベントの内容"
+
+#: individual.php:883 individual.php:896
+msgid "Uploaded Files"
+msgstr "アップロードされているファイル"
+
+#: individual.php:888
+msgid "File"
+msgstr "ファイル"
+
+#: individual.php:888
+msgid " (max 8MB)"
+msgstr "（最大８MB）"
+
+#: individual.php:892
+msgid "Upload File and Save Entry"
+msgstr "ファイルをアップロードし、記録を保存"
+
+#: individual.php:899
+msgid "No uploaded files"
+msgstr "アップロードされているファイルはありません。"
+
+#: individual.php:902
+msgid "Upload Date"
+msgstr "アップロード日付"
+
+#: individual.php:902
+msgid "File Name"
+msgstr "ファイル名"
+
+#: individual.php:908
+msgid "Are you sure you want to delete this file?"
+msgstr "このファイルを削除してよろしいですか。"
+
+#: individual.php:1019
+msgid "[Read more]"
+msgstr "[続きを読む]"
+
+#: individual.php:1023 individual.php:1028 ms_attendance.php:90
+#: ms_attendance.php:95
+msgid "Show Active"
+msgstr "現在のを表示"
+
+#: individual.php:1025 ms_attendance.php:92
+msgid "Hide Active"
+msgstr "現在のを隠す"
+
+#: individual.php:1032 individual.php:1037 ms_attendance.php:99
+#: ms_attendance.php:104
+msgid "Show Old"
+msgstr "過去のを表示"
+
+#: individual.php:1034 ms_attendance.php:101
+msgid "Hide Old"
+msgstr "過去のを隠す"
+
+#: individual.php:1057
+msgid "Are you sure you want to delete this record?"
+msgstr "この情報を削除してよろしいですか。"
+
+#: individual.php:1094 individual.php:1112 individual.php:1153
+#: ms_attendance.php:126
+msgid "You must enter a date."
+msgstr "日付が必要です。"
+
+#: individual.php:1100 individual.php:1118 individual.php:1159
+#: individual.php:1165 ms_attendance.php:132 ms_attendance.php:138
+msgid "Date is invalid."
+msgstr "日付は正しくありません。"
+
+#: individual.php:1104
+msgid "You must select a Action Type."
+msgstr "アクションタイプを選択してください。"
+
+#: individual.php:1123
+msgid "Date cannot be in the future."
+msgstr "日付は将来にしてはなれません。"
+
+#: individual.php:1149 ms_attendance.php:122
+msgid "You must select an event."
+msgstr "イベントを選択してください。"
+
+#: individual.php:1178
+msgid "File size cannot exceed 8MB. Yours is: "
+msgstr "８MBを超えるファイルは受け入れません。このファイルは："
+
+#: list.php:245
+msgid "Error"
+msgstr "エラー"
+
+#: list.php:256
+msgid "Search resulted in no records."
+msgstr "一致する項目はありません。"
+
+#: list.php:263
+msgid "Search Results"
+msgstr "検索の結果"
+
+#: list.php:311
+msgid "(Show results)"
+msgstr "（結果を表示）"
+
+#: ms_action.php:41
+#, php-format
+msgid "%s new records successfully added."
+msgstr "%s の項目を追加しました。"
+
+#: ms_action.php:58
+msgid ""
+"(You can click on a song title to view its page - it will open in a "
+"new window/tab.)"
+msgstr "（タイトルをクリックすると、別のウインドー/タブで詳細を見れる）"
+
+#: ms_category.php:20
+#, php-format
+msgid "%d new records successfully added."
+msgstr "%d の項目を追加しました。"
+
+#: ms_label.php:63 ms_printaddr.php:70
+msgid "Make PDF"
+msgstr "PDFを作成"
+
+#: ms_person_text.php:41
+msgid "Field to Show:"
+msgstr "表示するフィールド："
+
+#: ms_person_xml.php:265 search.php:55 search.php:73 search.php:98
+#: search.php:111 search.php:134 search.php:157 search.php:183
+msgid "Add another..."
+msgstr "同じような条件を追加…"
+
+#: ms_person_xml.php:267
+msgid "Order By"
+msgstr "順番"
+
+#: ms_printaddr.php:63
+msgid "None"
+msgstr "なし"
+
+#: multiselect.php:87
+msgid ""
+"Highlight and press > or\n"
+"                select all with >>"
+msgstr ""
+"ハイライトして ＞ をクリック、\n"
+"または ＞＞ ですべてを選ぶ"
+
+#: multiselect.php:108
+#, php-format
+msgid "%s Entries Selected"
+msgstr "%s の項目が選択された"
+
+#: multiselect.php:109
+msgid "Choose an Action:"
+msgstr "やりたいことを選択："
+
+#: multiselect.php:111
+msgid "Batch Data Entry"
+msgstr "一括設定"
+
+#: search.php:25
+msgid "records"
+msgstr "項目"
+
+#: search.php:167
+msgid "(select if desired...)"
+msgstr "（必要なら、選ぶ…）"
+
+#: search.php:190
+msgid "Freeform SQL"
+msgstr "自由ＳＱＬ"
+
+#: search.php:199
+msgid "Search!"
+msgstr "検索"
+
+#: user_settings.php:17
+msgid "My User Settings"
+msgstr "私のユーザ設定"
+
+#: user_settings.php:18
+msgid "Default Language"
+msgstr "初期の言語"
+
+#: user_settings.php:28
+msgid "Change My Password"
+msgstr "私のパスワードを変更"
+
+#: user_settings.php:29
+msgid "Old"
+msgstr "現在のパスワード"
+
+#: user_settings.php:30
+msgid "New"
+msgstr "新しいパスワード"
+
+#: user_settings.php:31
+msgid "New again"
+msgstr "新しいパスワード（確認用）"
+
+#: user_settings.php:32
+msgid "Change Password"
+msgstr "パスワードを変更"
+
+#: user_settings.php:44
+msgid "You must enter your current password for validation."
+msgstr "確証のため、現在のパスワードを入力してください。"
+
+#: user_settings.php:48
+msgid "The two new password entries do not match."
+msgstr "入力された二つのパスワードは異なります。"
+
+#~ msgid "PHP for Dashboard Body"
+#~ msgstr "ダッシュボードの「body」のPHP"
+
+#~ msgid "All"
+#~ msgstr "全て"
+
+#~ msgid "Open"
+#~ msgstr "終わっていない"
+
+#~ msgid "Account Settings"
+#~ msgstr "アカウント設定"
+
+#~ msgid "No donations meeting this criteria."
+#~ msgstr "この条件に合う献金記録はありません。"
+
+#~ msgid "Database Maintenance"
+#~ msgstr "データベース管理"
+
+#~ msgid "You must check at least one 'Use For' checkbox."
+#~ msgstr "少なくともひとつの「…に使う」のボックスにチェックを付けてください。"
+
+#~ msgid "Use for Organizations"
+#~ msgstr "団体に使う"
+
+#~ msgid "Use for Individuals"
+#~ msgstr "個人に使う"
+
+#~ msgid "DB Maintenance"
+#~ msgstr "ＤＢ管理"
+
+#~ msgid "Use Individual Names"
+#~ msgstr "個人名前を使う"
+
+#~ msgid "Use Household Label Names"
+#~ msgstr "世帯のラベル用名前を使う"
+
+#~ msgid ""
+#~ "(To select multiple possible categories (\"this one OR that one\"), hold "
+#~ "Ctrl key while clicking.)"
+#~ msgstr ""
+#~ "（「Ctrl」キーを押しながら選択すれば、複数のカテゴリを選択できる。）"
+
+#~ msgid ""
+#~ "(To select multiple possible types (\"this one OR that one\"), hold Ctrl "
+#~ "key while clicking.)"
+#~ msgstr ""
+#~ "（「Ctrl」キーを押しながら選択すれば、複数のアクションタイプを選択でき"
+#~ "る。）"
+
+#~ msgid ""
+#~ "(To select multiple possible events (\"this one OR that one\"), hold Ctrl "
+#~ "key while clicking.)"
+#~ msgstr ""
+#~ "（「Ctrl」キーを押しながら選択すれば、複数のイベントを選択できる。）"
+
+#~ msgid " (People/Orgs Pre-selected)"
+#~ msgstr "（人/団体のフィルター有効）"
+
+#~ msgid ""
+#~ "There are no attendance records for this event and these people/"
+#~ "organizations."
+#~ msgstr "このイベントとこの人/団体には、参加記録はありません。"
+
+#~ msgid "There are no attendance records for this event."
+#~ msgstr "このイベントには、参加記録はありません。"
+
+#~ msgid "from %s"
+#~ msgstr "%sから"
+
+#~ msgid "on %s"
+#~ msgstr "%sに"
+
+#~ msgid "Top (Search)"
+#~ msgstr "ホーム（検索）"
+
+#~ msgid "New Person"
+#~ msgstr "新規項目"
+
+#~ msgid "Action Chart"
+#~ msgstr "アクション表"
+
+#~ msgid "Pledges/Donations"
+#~ msgstr "約束/献金"
+
+#~ msgid "Attendance Chart"
+#~ msgstr "イベント参加表"
+
+#~ msgid "Top Page"
+#~ msgstr "ホーム"
+
+#~ msgid "Welcome,"
+#~ msgstr "ようこそ、"
+
+#~ msgid "Get records..."
+#~ msgstr "項目を見る…"
+
+#~ msgid "...by Search Text"
+#~ msgstr "テキスト検索で"
+
+#~ msgid "Search Text:"
+#~ msgstr "検索のテキスト："
+
+#~ msgid "Field to search in:"
+#~ msgstr "検索先："
+
+#~ msgid "Church"
+#~ msgstr "教会"
+
+#~ msgid "...by Category"
+#~ msgstr "カテゴリで…"
+
+#~ msgid "List All in Category:"
+#~ msgstr "このカテゴリの項目を見る："
+
+#~ msgid "(select a category)"
+#~ msgstr "（カテゴリを選択…"
+
+#~ msgid "\"SELECT people/orgs who. . .\" (start with WHERE)"
+#~ msgstr "「SELECT people/orgs who. . .」 (「WHERE」で始まる)"
+
+#~ msgid "%s with \"%s\" in Name, Furigana, or Label"
+#~ msgstr "「%2$s」が名前、フリガナ、またはラベル名前にある%1$s"
+
+#~ msgid "%s with \"%s\" in Address"
+#~ msgstr "「%2$s」が住所にある%1$s"
+
+#~ msgid "%s with \"%s\" in Phone or FAX"
+#~ msgstr "「%2$s」が電話、携帯、またはFAXにある%1$s"
+
+#~ msgid "%s with \"%s\" in %s"
+#~ msgstr "「%2$s」が%3$sにある%1$s"
+
+#~ msgid "Members of Category \"%s\""
+#~ msgstr "カテゴリ「%s」に属する項目"
+
+#~ msgid "All People"
+#~ msgstr "すべての個人"
+
+#~ msgid " Records"
+#~ msgstr " 項目"
+
+#~ msgid "Go to Multi-Select with This List Preselected"
+#~ msgstr "この表にある項目を選択される状態で、「複数作業」のページに移動"
+
+#~ msgid "Currently Ongoing"
+#~ msgstr "現在続けている"
+
+#~ msgid "Home Phone and/or Cell Phone"
+#~ msgstr "固定/携帯の電話番号"
+
+#~ msgid "Organization Name"
+#~ msgstr "団体の名前"
+
+#~ msgid "Member Name"
+#~ msgstr "メンバーの名前"
+
+#~ msgid "Update \"Processed\" Indicator"
+#~ msgstr "「修理済」をアップデート"
+
+#~ msgid "KFGF Co-Labor Input"
+#~ msgstr "KFGF Co-Labor 入力"
+
+#~ msgid "Please select a special designation code."
+#~ msgstr "特別の指名コードを指定してください。"
+
+#~ msgid "Please select Male or Female."
+#~ msgstr "男性か女性かを指定してください。"
+
+#~ msgid ""
+#~ "The Church ID does not point to a valid church record. Please confirm and "
+#~ "try again."
+#~ msgstr "教会IDは教会の項目を指していません。確認の上、やり直してください。"
+
+#~ msgid ""
+#~ "'<a href=\"individual.php?pid=%s\">%s</a>' successfully added - Inquirer "
+#~ "ID is <span class=\"highlight\">%s</span><h4>"
+#~ msgstr ""
+#~ "「<a href=\"individual.php?pid=%s\">%s</a>」はデータベースに追加されまし"
+#~ "た。応答者IDは <span class=\"highlight\">%s</span> です。<h4>"
+
+#~ msgid "(please write the ID on the left side of the Followup Card)"
+#~ msgstr "（IDをフォロアップカードの左側に書いてください。）"
+
+#~ msgid "Accepted Christ"
+#~ msgstr "キリストを受け入れる"
+
+#~ msgid "Assurance of Salvation"
+#~ msgstr "救いの確信"
+
+#~ msgid "Inquiry"
+#~ msgstr "求道中"
+
+#~ msgid "Other:"
+#~ msgstr "その他："
+
+#~ msgid "Church ID"
+#~ msgstr "教会ID"
+
+#~ msgid "School Name (if student)"
+#~ msgstr "学校名（学生の場合）"
+
+#~ msgid "Category successfully renamed."
+#~ msgstr "カテゴリ名を変更しました。"
+
+#~ msgid "Event Attendance (People/Orgs Pre-selected)"
+#~ msgstr "イベントの参加 （人/団体のフィルター有効）"
+
+#~ msgid "%s...did%s...did not%s attend one of these events:%s"
+#~ msgstr "%4$sのイベントいずれか、参加したことが%1$sある%2$sない%3$s"
+
+#~ msgid "Date is not in a valid format: yyyy-mm-dd."
+#~ msgstr "日付は、yyyy-mm-ddの形にしてください。"
+
+#~ msgid "Not a valid date."
+#~ msgstr "日付は正しくありません。"
+
+#~ msgid "End Date is not in a valid format: yyyy-mm-dd."
+#~ msgstr "最終日付は、yyyy-mm-ddの形にしてください。"
+
+#~ msgid "End Date must be after Start Date."
+#~ msgstr "最終日付は、最初日付の後にならないといけません。"
+
+#~ msgid "Counselor Name"
+#~ msgstr "カウンセラー名"
+
+#~ msgid ""
+#~ "Please fill in furigana/romaji field.  For non-Japanese names,\n"
+#~ "just repeat the name with last name first."
+#~ msgstr ""
+#~ "フリガナ/ローマ字のところに何かを入力してください。外国名の場合、名字と"
+#~ "「,」から繰り返してください。"
+
+#~ msgid "Invalid postal code."
+#~ msgstr "郵便番号は存在していません。"
+
+#~ msgid "Copy from \"Rest of Address\" field"
+#~ msgstr "「住所の残り」からコピー"
+
+#~ msgid "Search Results of:"
+#~ msgstr "下記の条件の検索結果："
+
+#, fuzzy
+#~ msgid "\"%s\" %s Name, Furigana, or Label"
+#~ msgstr "「%s」が名前、ふりがな、またはラベル名前にある"
+
+#, fuzzy
+#~ msgid "\"%s\" in Address"
+#~ msgstr "「%2$s」が住所にある%1$s"
+
+#, fuzzy
+#~ msgid "\"%s\" in Phone or FAX"
+#~ msgstr "「%2$s」が電話、携帯、またはFAXにある%1$s"
+
+#~ msgid "...by Freeform SQL"
+#~ msgstr "自由ＳＱＬで…"
+
+#~ msgid "en-gb"
+#~ msgstr "ja-jp"
+
+#~ msgid "Maintenance Page"
+#~ msgstr "管理のページ"
