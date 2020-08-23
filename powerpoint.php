@@ -51,7 +51,7 @@ foreach ($steps as $step) {
   case 't':
     if (!empty($thistitle) && count($thisslide)) { //New song
       //Dump the last of the previous song plus its credits
-      $output .= $thistitle.' ['.$slidenum++.'/]'.$linebreak.implode($linebreak,$thisslide).$linebreak;
+      $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
       if (!empty($songs[substr($prev_key,0,-1).'c'])) $output .= "\t\t\t".$songs[substr($prev_key,0,-1).'c'].$linebreak; //uses 3rd outline level
       $thisslide = [];
     }
@@ -86,7 +86,7 @@ foreach ($steps as $step) {
       $thisstanza = [];
     } else {
       // Output the previous content as a slide and then start fresh with this stanza
-      if (!empty($thisslide)) $output .= $thistitle.' ['.$slidenum++.'/]'.$linebreak.implode($linebreak,$thisslide).$linebreak;
+      if (!empty($thisslide)) $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
       $thisslide = $thisstanza;
       $thisstanza = [];
     }
@@ -94,25 +94,28 @@ foreach ($steps as $step) {
 }  //end while looping through items to print
 //output remaining content
 if (!empty($thistitle) && count($thisslide)) {
-  $output .= $thistitle.' ['.$slidenum.'/]'.$linebreak.implode($linebreak,$thisslide).$linebreak;
+  $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
   if (!empty($songs[substr($key,0,-1).'c'])) $output .= "\t\t\t".$songs[substr($key,0,-1).'c'].$linebreak; //uses 3rd outline level
 }
 
 // Insert slides-per-song in output string
-$slidecount = 1;
-$offset = 0; //only used if we find an irrelevent case of '/]'
-while ($slashpos = strrpos($offset?substr($output,0,$offset):$output, '/]')) {
-  $bracketpos = strrpos(substr($output,0,$slashpos), '[');
-  if ($bracketpos === FALSE) break;
-  if (!ctype_digit(substr($output, $bracketpos+1, $slashpos-$bracketpos-1))) {
-    $offset = $slashpos;
-    continue;
+if (!empty($_GET['pp_slidenum'])) {
+  $slidecount = 1;
+  $offset = 0; //only used if we find an irrelevent case of '/]'
+  while ($slashpos = strrpos($offset ? substr($output, 0, $offset) : $output, '/]')) {
+    $bracketpos = strrpos(substr($output, 0, $slashpos), '[');
+    if ($bracketpos === FALSE) break;
+    if (!ctype_digit(substr($output, $bracketpos + 1, $slashpos - $bracketpos - 1))) {
+      $offset = $slashpos;
+      continue;
+    }
+    $slidenum = substr($output, $bracketpos + 1, $slashpos - $bracketpos - 1);
+    if ($slidenum > $slidecount) $slidecount = $slidenum;  //next song
+    $output = substr_replace($output, strval($slidecount), $slashpos + 1, 0);
+    if ($slidenum == 1) $slidecount = 1;  //finished with song, so reset
   }
-  $slidenum = substr($output, $bracketpos+1, $slashpos-$bracketpos-1);
-  if ($slidenum > $slidecount) $slidecount = $slidenum;  //next song
-  $output = substr_replace($output, strval($slidecount), $slashpos+1, 0);
-  if ($slidenum == 1) $slidecount = 1;  //finished with song, so reset
 }
+
 if (!empty($_GET['pp_sjis']))  echo mb_convert_encoding($output, "SJIS");
 else echo $output; //send final product
 
