@@ -51,7 +51,7 @@ foreach ($steps as $step) {
   case 't':
     if (!empty($thistitle) && count($thisslide)) { //New song
       //Dump the last of the previous song plus its credits
-      $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
+      $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum++.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
       if (!empty($songs[substr($prev_key,0,-1).'c'])) $output .= "\t\t\t".$songs[substr($prev_key,0,-1).'c'].$linebreak; //uses 3rd outline level
       $thisslide = [];
     }
@@ -86,7 +86,7 @@ foreach ($steps as $step) {
       $thisstanza = [];
     } else {
       // Output the previous content as a slide and then start fresh with this stanza
-      if (!empty($thisslide)) $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
+      if (!empty($thisslide)) $output .= $thistitle.(empty($_GET['pp_slidenum']) ? '' : ' ['.$slidenum++.'/]').$linebreak.implode($linebreak,$thisslide).$linebreak;
       $thisslide = $thisstanza;
       $thisstanza = [];
     }
