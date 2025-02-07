@@ -304,7 +304,7 @@ while ($row = mysqli_fetch_object($result)) {
           <fieldset>
             <legend>Compatibility Settings</legend>
             <label><input type="checkbox" name="pp_crlf" checked>Windows line endings</label><br>
-            <label><input type="checkbox" name="pp_sjis" checked>Convert to Shift-JIS</label><br>
+            <label><input type="checkbox" name="pp_ms" checked>Convert to UTF-16 LE (Microsoft)</label><br>
           </fieldset>
         </div>
       </div>
