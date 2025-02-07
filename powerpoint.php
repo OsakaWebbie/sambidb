@@ -23,9 +23,8 @@ while ($song = mysqli_fetch_object($result)) {
     $_GET['trans'.$song->SongID] = 0;
   }
   $songs['s'.$song->SongID.'t'] = $song->title;
-  $songs['s'.$song->SongID.'c'] = ($song->Composer!='' ? 'By '.$song->Composer : '').
-  (($song->Composer && $song->Copyright) ? '; ' : '') . (($song->Copyright!='' && $song->Copyright!='Public Domain') ?
-          (empty($_GET['pp_sjis'])?'©':'(c) ') : '').$song->Copyright;
+  $songs['s'.$song->SongID.'c'] = ($song->Composer!=''?'By '.$song->Composer:'').(($song->Composer && $song->Copyright)?'; ':'').
+      (($song->Copyright!='' && $song->Copyright!='Public Domain')?'©':'').$song->Copyright;
   $stanzas = preg_split('/\n-*\s*\n/u',$song->Lyrics);
   $i = 0;
   foreach ($stanzas as $stanza) {
@@ -116,7 +115,7 @@ if (!empty($_GET['pp_slidenum'])) {
   }
 }
 
-if (!empty($_GET['pp_sjis']))  echo mb_convert_encoding($output, "SJIS");
+if (!empty($_GET['pp_ms']))  echo "\xFF\xFE".mb_convert_encoding($output, "UTF-16LE");
 else echo $output; //send final product
 
 
