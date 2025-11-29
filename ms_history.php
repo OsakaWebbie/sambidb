@@ -18,16 +18,17 @@ if (isset($_POST['save_history'])) {
     }
     if (mysqli_num_rows($result) > 0) {
       // ask for confirmation before replacing song session
-      echo "<div class='ui-icon-alert'>"._('There are already songs recorded for this event and date.')."</div>";
-      echo _("The list is to the right. If you do not want to replace these songs with your selection,".
-          " just select your browser's Back button.")."</b></font>";
-      echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>";
-      echo "<input type=hidden name=sid_list value=\"$sid_list\">\n";
-      echo "<input type=hidden name=event_id value=\"".$_POST['event_id']."\">";
-      echo "<input type=hidden name=use_date value=\"".$_POST['use_date']."\">\n";
-      echo "<input type=hidden name=confirmed value=\"1\">\n";
-      echo "<input type=submit name=save_history value=\"Yes, replace with new selected songs\">\n";
-      echo "</form></td><td><b>Previously recorded song session:</b><br>\n";
+      ?>
+      <div class="ui-icon-alert"><?=_('There are already songs recorded for this event and date.')?></div>
+      <?=_("The list is to the right. If you do not want to replace these songs with your selection, just select your browser's Back button.")?></b></font>
+      <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
+      <input type=hidden name=sid_list value="$sid_list">
+      <input type=hidden name=event_id value="<?=$_POST['event_id']?>">
+      <input type=hidden name=use_date value="<?=$_POST['use_date']?>">
+      <input type=hidden name=confirmed value="1">
+      <input type=submit name=save_history value="<?=_('Yes, replace with new selected songs')?>">
+      </form></td><td><b><?=_('Previously recorded song session:')?></b><br>
+      <?php
       while ($row = mysqli_fetch_object($result)) {
         echo "&nbsp; &nbsp; &nbsp;".$row->UseOrder.". ".$row->Title."<br>\n";
       }
@@ -68,14 +69,14 @@ if (isset($_POST['save_history'])) {
 ?>
 
 <div align="center">
-  <h2 style="color:#663399">Choose the event and pick the date:</h2>
+  <h2 style="color:#663399"><?=_('Choose the event and pick the date:')?></h2>
   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="hform" target="_self" onsubmit="return validate();">
     <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>">
     <div class="flex-container">
       <div class="flexbox align-left">
-        <h3>Event:</h3>
+        <h3><?=_('Event:')?></h3>
 <?php
-$result = sqlquery_checked('SELECT * FROM event ORDER BY '.
+$result = sqlquery_checked('SELECT * FROM event WHERE Active=1 ORDER BY '.
     (isset($_SESSION['default_event'])?'IF (EventID='.$_SESSION['default_event'].',0,1), ':''). 'Event');
 while ($row = mysqli_fetch_object($result)) {
   echo '        <label'.($row->Remarks!==''?' title="'.escape_quotes($row->Remarks).'"':'').
