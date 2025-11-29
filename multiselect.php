@@ -1,7 +1,7 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-header1("Multiple Selection");
+header1(_("Multiple Selection"));
 
 if (!$sid_list) {
   if (!$result = mysqli_query($db,"SELECT count(*) AS Num FROM song WHERE Tagged=1")) {
@@ -10,8 +10,7 @@ if (!$sid_list) {
   }
   $row = mysqli_fetch_object($result);
   if ($row->Num == 0) {
-    echo "&nbsp;<br><b>There are no tagged songs.  Please use the tools on the Top(Search) page to
-    select songs for tagging, then use this page to put them in order and/or take actions.</b><br>";
+    echo "&nbsp;<br><b>"._('There are no tagged songs.  Please use the tools on the Top(Search) page to select songs for tagging, then use this page to put them in order and/or take actions.')."</b><br>";
     exit;
   }
 }
@@ -29,7 +28,7 @@ header2(1);
   #tagged li img { margin-left:5px; }
 </style>
 
-<h3>Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then choose an action from the buttons on the right.</h3>
+<h3><?php echo _('Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then choose an action from the buttons on the right.'); ?></h3>
 <form action="ms_history.php" method="get" id="sform" target="actionframe">
   <input type="hidden" name="sid_list" id="sid_list" value="">
   <div style="float:left">
@@ -52,8 +51,8 @@ while ($song = mysqli_fetch_object($result)) {
   echo '          <li><div class="left"><span class="songid">'.$song->SongID.'</span>['.$song->SongKey.']';
   echo '<span class="tempo'.$song->Tempo.'">['.$song->Tempo.']</span> <span class="songtitle">'.$song->Title;
   if (preg_replace('/^[[:digit:]]{3}: /','',$song->Title) != $song->OrigTitle) echo ' ('.$song->OrigTitle.')';
-  echo '</span></div><div class="right"><img src="graphics/copy.gif" class="copy" title="Duplicate">';
-  echo '<img src="graphics/delete.gif" class="delete" title="Remove"></div><div class="clear"></div>';
+  echo '</span></div><div class="right"><img src="graphics/copy.gif" class="copy" title="'._('Duplicate').'">';
+  echo '<img src="graphics/delete.gif" class="delete" title="'._('Remove').'"></div><div class="clear"></div>';
   echo "</li>\n";
 }
 ?>
@@ -63,11 +62,11 @@ while ($song = mysqli_fetch_object($result)) {
     </table>
   </div>
   <div style="float:left; border:3px solid gray; text-align:center; margin:10px; padding:0 10px;">
-    <h3>Choose an Action:</h3>
-    <p><input type="submit" name="ms_history" value="Record As Event Song Session"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
-    <p><input type="submit" name="ms_pdf" value="Output Songs (PDF)"></p>
-    <p><input type="submit" name="ms_text" value="Output Songs (text)"></p>
-    <p><input type="submit" name="ms_keyword" value="Add a Keyword"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
+    <h3><?php echo _('Choose an Action:'); ?></h3>
+    <p><input type="submit" name="ms_history" value="<?php echo _('Record As Event Song Session'); ?>"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
+    <p><input type="submit" name="ms_pdf" value="<?php echo _('Output Songs (PDF)'); ?>"></p>
+    <p><input type="submit" name="ms_text" value="<?php echo _('Output Songs (text)'); ?>"></p>
+    <p><input type="submit" name="ms_keyword" value="<?php echo _('Add a Keyword'); ?>"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
   </div>
 </form>
 <iframe id= "actionframe" name="actionframe" style="width:90%;height:300px" src="blank.html">

@@ -72,16 +72,14 @@ function fill_event() {
       <tr>
         <td bgcolor="#cfe2ec" width="224">
           <div align="center">
-            <h3><font color="#2b6482">Keyword Management</font></h3>
+            <h3><font color="#2b6482"><?php echo _('Keyword Management'); ?></font></h3>
           </div>
-          <p><font size="2" color="black">Select a keyword to rename, and type its new name.&nbsp;
-          Or select &quot;New Keyword&quot; and type a new keyword name.  Or select a keyword
-          to delete, and press Delete.</font></p>
+          <p><font size="2" color="black"><?php echo _('Select a keyword to rename, and type its new name.&nbsp; Or select &quot;New Keyword&quot; and type a new keyword name.  Or select a keyword to delete, and press Delete.'); ?></font></p>
           <form action="do_maint.php" method="post" name="kwform">
             <input type="hidden" name="process" value="keyword">
             <select name="kw_select" size="1"
             onchange="fill_keyword();">
-              <option value="new">New Keyword...</option>
+              <option value="new"><?php echo _('New Keyword...'); ?></option>
 <?php
 $sql = "SELECT * FROM keyword ORDER BY Keyword";
 if (!$result = mysqli_query($db,$sql)) {
@@ -93,30 +91,30 @@ while ($row = mysqli_fetch_object($result)) {
 }
 ?>
             </select> <br>
-          Keyword Name:<br><input type="text" name="keyword" size="30" maxlength=30>
-            <input type="submit" name="kw_add_upd" value="Add or Rename">
-            <input type="submit" name="kw_del" value="Delete" disabled>
+          <?php echo _('Keyword Name:'); ?><br><input type="text" name="keyword" size="30" maxlength=30>
+            <input type="submit" name="kw_add_upd" value="<?php echo _('Add or Rename'); ?>">
+            <input type="submit" name="kw_del" value="<?php echo _('Delete'); ?>" disabled>
           </form>
         </td>
         <td bgcolor="#e3e0ac" width="402">
           <div align="center">
-            <h3><font color="#826500">Event Management</font></h3>
+            <h3><font color="#826500"><?php echo _('Event Management'); ?></font></h3>
           </div>
-          <p><font size="2" color="black">Fill in the information to add a new event.  Or select an event, and modify its info (name, remarks, and/or active status).  Or select an event to delete and press Delete.</font></p>
+          <p><font size="2" color="black"><?php echo _('Fill in the information to add a new event.  Or select an event, and modify its info (name, remarks, and/or active status).  Or select an event to delete and press Delete.'); ?></font></p>
           <font color="black">
             <form action="do_maint.php" method="post" name="eventform">
               <input type="hidden" name="process" value="keyword">
               <select name="event_list" size="1" onchange="fill_event();">
-                <option value="new">New Event...</option>
+                <option value="new"><?php echo _('New Event...'); ?></option>
               </select><br>
               <input type="hidden" name="event_id" value="">
-              Event: <input type="text" name="event" size="50" maxlength=50>
+              <?php echo _('Event:'); ?> <input type="text" name="event" size="50" maxlength=50>
               &nbsp;&nbsp;&nbsp;<input type="checkbox" name="active"
-              value="CheckboxValue" checked>Currently Occurring Event<br>
-              Description:<br>
+              value="CheckboxValue" checked><?php echo _('Currently Occurring Event'); ?><br>
+              <?php echo _('Description:'); ?><br>
             <textarea name="remarks" rows="3" cols="50"></textarea>
-              <input type="submit" name="event_add_upd" value="Add or Update">
-              <input type="submit" name="event_del" value="Delete" disabled>
+              <input type="submit" name="event_add_upd" value="<?php echo _('Add or Update'); ?>">
+              <input type="submit" name="event_del" value="<?php echo _('Delete'); ?>" disabled>
             </form>
           </font>
         </td>
@@ -124,12 +122,12 @@ while ($row = mysqli_fetch_object($result)) {
 <?php }   // end of if admin>0 ?>
       <tr>
 		<td align="center" bgcolor="#ffa6ec">
-				<h3><font color="#9e0773">Change My Password</font></h3>
+				<h3><font color="#9e0773"><?php echo _('Change My Password'); ?></font></h3>
 				<form action="do_maint.php" method="post" name="pwform">
-					<input type="hidden" name="process" value="category"> Old: <input type="password" name="old_pw" size="16" maxlength=16><br>
-					New:<input type="password" name="new_pw1" size="16" maxlength=16><br>
-					New again:<input type="password" name="new_pw2" size="16" maxlength=16><br>
-					 <input type="submit" name="upd" value="Change Password">
+					<input type="hidden" name="process" value="category"> <?php echo _('Old:'); ?> <input type="password" name="old_pw" size="16" maxlength=16><br>
+					<?php echo _('New:'); ?><input type="password" name="new_pw1" size="16" maxlength=16><br>
+					<?php echo _('New again:'); ?><input type="password" name="new_pw2" size="16" maxlength=16><br>
+					 <input type="submit" name="upd" value="<?php echo _('Change Password'); ?>">
 				</form>
 			</td>
 		<td bgcolor="white">

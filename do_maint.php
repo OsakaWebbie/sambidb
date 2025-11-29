@@ -10,7 +10,7 @@ if ($kw_add_upd) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    $message = "Keyword successfully added.";
+    $message = _('Keyword successfully added.');
 
   } else {
     $sql = "UPDATE keyword SET Keyword='$keyword' WHERE KeywordID=$kw_select";
@@ -18,7 +18,7 @@ if ($kw_add_upd) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    $message = "Keyword successfully renamed.";
+    $message = _('Keyword successfully renamed.');
   }
   
 } elseif ($kw_del) {
@@ -42,7 +42,7 @@ if ($kw_add_upd) {
       exit;
     }
     if (mysqli_affected_rows($db) > 0) {
-      $message = mysqli_affected_rows($db)." songs removed from keyword.\\n";
+      $message = sprintf(_('%s songs removed from keyword.'), mysqli_affected_rows($db))."\\n";
     }
     $sql = "DELETE FROM keyword WHERE KeywordID=$kw_select LIMIT 1";
     if (!$result = mysqli_query($db,$sql)) {
@@ -50,23 +50,19 @@ if ($kw_add_upd) {
       exit;
     }
     if (mysqli_affected_rows($db) == 1) {
-      $message = $message."Keyword successfully deleted.";
+      $message = $message._('Keyword successfully deleted.');
     }
   } else {
   //already did query for the keyword's members - now tell the user and ask for confirmation
-    echo <<<ECHOEND
-<h3><font color=red>Please Confirm Keyword Delete</font></h3>
-The following songs are still associated with the $keyword keyword.&nbsp;
- If you are sure you want to delete these keyword associations, click the button.&nbsp;
- (If not, just press your browser's Back button.)
-<form action={$_SERVER['PHP_SELF']} method=post>
-  <input type=hidden name=kw_select value="$kw_select">
-  <input type=hidden name=kw_del value="$kw_del">
-  <input type=hidden name=confirmed value="yes">
-  <input type=submit value="Yes, delete the keyword">
-</form>
-Songs with this keyword:<br><font size=2>
-ECHOEND;
+    echo "<h3><font color=red>"._('Please Confirm Keyword Delete')."</font></h3>\n";
+    echo sprintf(_('The following songs are still associated with the %s keyword.&nbsp; If you are sure you want to delete these keyword associations, click the button.&nbsp; (If not, just press your browser\'s Back button.)'), $keyword)."\n";
+    echo "<form action={$_SERVER['PHP_SELF']} method=post>\n";
+    echo "  <input type=hidden name=kw_select value=\"$kw_select\">\n";
+    echo "  <input type=hidden name=kw_del value=\"$kw_del\">\n";
+    echo "  <input type=hidden name=confirmed value=\"yes\">\n";
+    echo "  <input type=submit value=\""._('Yes, delete the keyword')."\">\n";
+    echo "</form>\n";
+    echo _('Songs with this keyword:')."<br><font size=2>\n";
     while ($row = mysqli_fetch_object($result)) {
       echo "&nbsp;&nbsp;&nbsp;".$row->Title."<br>\n";
     }
@@ -87,7 +83,7 @@ ECHOEND;
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    $message = "New event successfully added.";
+    $message = _('New event successfully added.');
   } else {
     $sql = "UPDATE event SET Active=$active,Event='$event',".
       "Remarks='$remarks' WHERE EventID=$event_id";
@@ -95,7 +91,7 @@ ECHOEND;
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
-    $message = "Event information successfully updated.";
+    $message = _('Event information successfully updated.');
   }
 
 } elseif ($event_del) {
@@ -124,7 +120,7 @@ ECHOEND;
       exit;
     }
     if (mysqli_affected_rows($db) > 0) {
-      $message = mysqli_affected_rows($db)." related history records deleted.\\n";
+      $message = sprintf(_('%s related history records deleted.'), mysqli_affected_rows($db))."\\n";
     }
     $sql = "DELETE FROM event WHERE EventID=$event_id LIMIT 1";
     if (!$result = mysqli_query($db,$sql)) {
@@ -132,22 +128,18 @@ ECHOEND;
       exit;
     }
     if (mysqli_affected_rows($db) == 1) {
-      $message = $message."Event record successfully deleted.";
+      $message = $message._('Event record successfully deleted.');
     }
   } else {
   //ask for confirmation
-    echo <<<ECHOEND
-<h3><font color=red>Please Confirm Event Delete</font></h3>
-There are $use_num history records for this event, during the time period $use_first
-thru $use_last.  In deleting the event, you will also delete all history data associated
-with it.  Are you sure you want to do this?  (If not, just press your browser's Back button.)
-<form action={$_SERVER['PHP_SELF']} method=post>
-  <input type=hidden name=event_id value="$event_id">
-  <input type=hidden name=event_del value="$event_del">
-  <input type=hidden name=confirmed value="yes">
-  <input type=submit value="Yes, delete the event and history records">
-</form>
-ECHOEND;
+    echo "<h3><font color=red>"._('Please Confirm Event Delete')."</font></h3>\n";
+    echo sprintf(_('There are %s history records for this event, during the time period %s thru %s.  In deleting the event, you will also delete all history data associated with it.  Are you sure you want to do this?  (If not, just press your browser\'s Back button.)'), $use_num, $use_first, $use_last)."\n";
+    echo "<form action={$_SERVER['PHP_SELF']} method=post>\n";
+    echo "  <input type=hidden name=event_id value=\"$event_id\">\n";
+    echo "  <input type=hidden name=event_del value=\"$event_del\">\n";
+    echo "  <input type=hidden name=confirmed value=\"yes\">\n";
+    echo "  <input type=submit value=\""._('Yes, delete the event and history records')."\">\n";
+    echo "</form>\n";
     $need_confirmation = 1;
   }
 
