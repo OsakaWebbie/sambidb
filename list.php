@@ -137,8 +137,8 @@ $(document).ready(function() {
   var table = $('#songlist').DataTable( {
     data: dataSet,
     columns: [
-      {name:'SongID', className:'songid', title:'<?=_('ID')?>', type:'num, visible:false'},
-      {name:'Tagged', className:'tagged', title:'<?=_('Tagged')?>', type:'num, visible:false'},
+      {name:'SongID', className:'songid', title:'<?=_('ID')?>', type:'num', visible:false},
+      {name:'Tagged', className:'tagged', title:'<?=_('Tagged')?>', type:'num', visible:false},
 //      {name:'SongID', className:'songid', title:'<?=_('ID')?>', type:'num'},
 //      {name:'Tagged', className:'tagged', title:'<?=_('Tag')?>', type:'num'},
       {name:'Title', className:'title dt-nowrap', title:'<?=_('Title')?>', type:'text',
