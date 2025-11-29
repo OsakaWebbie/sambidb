@@ -13,9 +13,9 @@ if (!empty($_POST['save_kw'])) {
     }
     if (mysqli_affected_rows($db) > 0) {
       $kwid = mysqli_insert_id($db);
-      echo "<h3><font color=\"#449933\">New keyword successfully added.</font></h3>";
+      echo "<h3><font color=\"#449933\">"._('New keyword successfully added.')."</font></h3>";
     } else {
-      echo "No keyword record was inserted for some reason.<br>";
+      echo _('No keyword record was inserted for some reason.')."<br>";
       exit;
     }
   }
@@ -40,9 +40,9 @@ if (!empty($_POST['save_kw'])) {
       }
     }
   }
-  echo "<h3><font color=\"#449933\">".($num_sids - $num_previous)." new records successfully added.";
+  echo "<h3><font color=\"#449933\">".sprintf(_('%s new records successfully added.'), ($num_sids - $num_previous));
   if ($num_previous > 0) {
-    echo "<br>&nbsp; ($num_previous songs in this list already included this keyword.)";
+    echo "<br>&nbsp; ".sprintf(_('(%s songs in this list already included this keyword.)'), $num_previous);
   }
   echo "</font></h3>";
   exit;
@@ -54,7 +54,7 @@ if (!empty($_POST['save_kw'])) {
 function validate() {
 //If new keyword, make sure name is not blank
   if (document.kwform.kwid.value == "new" && document.kwform.keyword.value == "") {
-    alert("You need to specify a name for the new keyword.");
+    alert("<?php echo _('You need to specify a name for the new keyword.'); ?>");
     document.kwform.keyword.focus();
     return false;
   } else {
@@ -64,16 +64,15 @@ function validate() {
 </SCRIPT>
 
   <div align="center">
-    <font color="#449933" size=4><b>Choose existing keyword,
-        or choose New and fill in new keyword name:</b></font>
+    <font color="#449933" size=4><b><?php echo _('Choose existing keyword, or choose New and fill in new keyword name:'); ?></b></font>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="kwform" target="_self" onsubmit="return validate();">
       <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
       <table border="1" cellspacing="0" cellpadding="4">
         <tr>
-          <td nowrap>Keyword:
+          <td nowrap><?php echo _('Keyword:'); ?>
             <select name="kwid" size="1">
-              <option value="" selected>Select a keyword...</option>
-              <option value="new">New Keyword (input name)</option>
+              <option value="" selected><?php echo _('Select a keyword...'); ?></option>
+              <option value="new"><?php echo _('New Keyword (input name)'); ?></option>
 <?php
 $sql = "SELECT * FROM keyword ORDER BY Keyword";
 if (!$result = mysqli_query($db,$sql)) {
@@ -85,11 +84,11 @@ while ($row = mysqli_fetch_object($result)) {
 }
 ?>
             </select><br>&nbsp;<br>
-            New Keyword Name: <input type="text" name="keyword" size="35"
+            <?php echo _('New Keyword Name:'); ?> <input type="text" name="keyword" size="35"
             maxlength="50" border="0">
           </td>
           <td align="center" valign="middle" nowrap>
-          <input type="submit" name="save_kw" value="Add This Keyword to These Songs" border="0"></td>
+          <input type="submit" name="save_kw" value="<?php echo _('Add This Keyword to These Songs'); ?>" border="0"></td>
         </tr>
       </table>
     </form>

@@ -61,7 +61,7 @@ if (isset($_POST['save_history'])) {
         exit;
       }
     }
-    echo $num_sids." new history records added.";
+    echo sprintf(_('%s new history records added.'), $num_sids);
   }
   echo "</h3>";
   exit;
@@ -87,8 +87,8 @@ while ($row = mysqli_fetch_object($result)) {
 ?>
       </div>
       <div class="flexbox">
-        <h3><label>Date Used: <input type="text" name="use_date" id="use_date" value="" size="12" maxlength="10"></label></h3>
-        <input type="submit" name="save_history" value="Save Data">
+        <h3><label><?php echo _('Date Used:'); ?> <input type="text" name="use_date" id="use_date" value="" size="12" maxlength="10"></label></h3>
+        <input type="submit" name="save_history" value="<?php echo _('Save Data'); ?>">
       </div>
     </div>
   </form>

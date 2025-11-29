@@ -145,14 +145,14 @@ header2(1);
     <a href="song.php?sid=<?=$_GET['sid']?>&<?=($song->Tagged?'untag':'tag')?>=1">
       <img src="graphics/<?=($song->Tagged?'tagged':'not_tagged')?>.gif" height="52" width="132" border="0">
     </a><br>
-    <span style="font-size:0.8em; color:<?=($song->Tagged?'black':'red')?>">(Click image to <?=($song->Tagged?'untag':'tag')?>)</span>
+    <span style="font-size:0.8em; color:<?=($song->Tagged?'black':'red')?>"><?php echo sprintf(_('(Click image to %s)'), ($song->Tagged?_('untag'):_('tag'))); ?></span>
   </td></tr></table>
 </td></tr><tr><td>
   <table border="0" cellspacing="0" cellpadding="5"><tr><td valign="top">
 <?php if ($haschords || $hasromaji) {
-  echo '    <div style="font-weight:bold">Show:';
-  if ($haschords) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showchords" '.($_GET['chords']?' checked':'').'>Chords</label>';
-  if ($hasromaji) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showromaji" '.($_GET['romaji']?' checked':'').'>Romaji</label>';
+  echo '    <div style="font-weight:bold">'._('Show:');
+  if ($haschords) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showchords" '.($_GET['chords']?' checked':'').'>'._('Chords').'</label>';
+  if ($hasromaji) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showromaji" '.($_GET['romaji']?' checked':'').'>'._('Romaji').'</label>';
   echo '</div>';
 }
 ?>
@@ -195,28 +195,28 @@ foreach ($lines as $line) {
   echo "<tr><td align=left>{$lyrics}</td></tr></table>\n";
 }*/
 echo "  <td>\n<td valign=top><b>";
-if ($song->Title != $song->OrigTitle) echo ("    Original Title: ".$song->OrigTitle."<br>&nbsp;<br>\n");
-echo "    Key: <span style='color:#00C000'>".($song->SongKey ? $song->SongKey : "?")."</span>";
-if ($song->Tempo) echo (" &nbsp;&nbsp;Tempo: <span style='color:#C00000'>".$song->Tempo."</span>");
+if ($song->Title != $song->OrigTitle) echo ("    "._('Original Title:')." ".$song->OrigTitle."<br>&nbsp;<br>\n");
+echo "    "._('Key:')." <span style='color:#00C000'>".($song->SongKey ? $song->SongKey : "?")."</span>";
+if ($song->Tempo) echo (" &nbsp;&nbsp;"._('Tempo:')." <span style='color:#C00000'>".$song->Tempo."</span>");
 echo "<br>\n";
-if ($song->Composer) echo ("    Composer: ".$song->Composer);
-if ($song->Copyright) echo ("<br>\n    Copyright: ".$song->Copyright);
+if ($song->Composer) echo ("    "._('Composer:')." ".$song->Composer);
+if ($song->Copyright) echo ("<br>\n    "._('Copyright:')." ".$song->Copyright);
 echo "</b>";
 if ($song->Source) {
-  echo "<br>\n    <b>Source(s):</b>";
+  echo "<br>\n    <b>"._('Source(s):')."</b>";
   echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=20></td>';
   echo "<td align=left>".url2link(d2h($song->Source))."</td></tr></table>\n";
 }
 if ($song->Pattern) {
-  echo "<br>\n    <b>Pattern of Stanzas:&nbsp;</b>$song->Pattern\n";
+  echo "<br>\n    <b>"._('Pattern of Stanzas:')."&nbsp;</b>$song->Pattern\n";
 }
 if ($song->Instruction) {
-  echo "<br>\n    <b>Instruction (intro, etc.):&nbsp;</b>$song->Instruction\n";
+  echo "<br>\n    <b>"._('Instruction (intro, etc.):')."&nbsp;</b>$song->Instruction\n";
 }
 if ($song->Audio) {
   ?>
     <br>
-    <div><b>Audio for learning:</b><br>
+    <div><b><?php echo _('Audio for learning:'); ?></b><br>
     <audio id="audioplayer" controls controlsList="nodownload">
       <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
     </audio>
@@ -224,19 +224,19 @@ if ($song->Audio) {
     </div>
   <?php
   if ($song->AudioComment) {
-    echo "<br>\n    <b>Comment about audio recording:</b> ".$song->AudioComment."\n";
+    echo "<br>\n    <b>"._('Comment about audio recording:')."</b> ".$song->AudioComment."\n";
   }
 }
-if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">Edit This Record</a></h2>";
+if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">"._('Edit This Record')."</a></h2>";
 
 echo "  </td></tr></table>\n";
 
 // ********** KEYWORDS **********
 
 echo '<form id="keywordsform" action="song.php" method="POST"><div id="keywordsection">';
-echo '<h3 style="margin-bottom:0; color:#0000C0;"><b><i>Keywords</i></b>';
+echo '<h3 style="margin-bottom:0; color:#0000C0;"><b><i>'._('Keywords').'</i></b>';
 if ($_SESSION['admin'] > 0) {
-  echo '&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value="Save Keyword Changes" name=newkeyword>';
+  echo '&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value="'._('Save Keyword Changes').'" name=newkeyword>';
 }
 echo "<input type=hidden name=sid value=$sid></h3>";
 
@@ -273,17 +273,17 @@ $sql = "SELECT e.Event, min(u.UseDate) AS first, max(u.UseDate) AS last,".
 if (!$result = mysqli_query($db,$sql)) {
   echo ("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
 } elseif (mysqli_num_rows($result) == 0) {
-  echo ("<p>No history records.<br>&nbsp;</p>");
+  echo ("<p>"._('No history records.')."<br>&nbsp;</p>");
 } else {
   echo "<table width=735 border=2 cellpadding=5 cellspacing=0 bgcolor=#F0F0FF>";
-  echo "<tr><td align=center><h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>Usage History</i></b></h3>";
+  echo "<tr><td align=center><h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>"._('Usage History')."</i></b></h3>";
   echo ("<table width=730 border=1 cellspacing=0 cellpadding=2 bgcolor=#FFFFFF>");
   while ($row = mysqli_fetch_object($result)) {
     echo ("<tr><td nowrap>".$row->Event."</td><td nowrap>");
     if ($row->first == $row->last) {
       echo ($row->first);
     } else {
-      echo ($row->first." to<br>".$row->last." (".$row->times."x)");
+      echo sprintf(_('%s to<br>%s (%sx)'), $row->first, $row->last, $row->times);
     }
     echo ("</td><td>".$row->Remarks."&nbsp;</td></tr>");
   }

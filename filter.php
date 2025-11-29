@@ -25,20 +25,20 @@ if ($_POST['filter_submit']) {
  
 print_header("Praise & Worship DB: Search Filtering","#F0FFF0",1);
 ?>
-  <h1>Search Filtering</h1>
-  <h3>Modify filter criteria as desired, and click "Modify Search Filtering".</h3>
+  <h1><?php echo _('Search Filtering'); ?></h1>
+  <h3><?php echo sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Modify Search Filtering')); ?></h3>
   <form name="filterform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-    <input type="submit" name="filter_submit" value="Modify Search Filtering"><br>&nbsp;<br>
+    <input type="submit" name="filter_submit" value="<?php echo _('Modify Search Filtering'); ?>"><br>&nbsp;<br>
     <table border=0 cellpadding=2 cellspacing=0 bgcolor="#FFFFFF"><tr>
-    <td align=center valign=middle bgcolor="#D0DDD0">Keyword</td>
-    <td align=center bgcolor="#D0DDD0">&nbsp;Filter&nbsp;<br>Off</td>
-    <td align=center bgcolor="#D0DDD0">Must<br>&nbsp;Include&nbsp;</td>
-    <td align=center bgcolor="#D0DDD0">&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;</td>
+    <td align=center valign=middle bgcolor="#D0DDD0"><?php echo _('Keyword'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Filter&nbsp;<br>Off'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('Must<br>&nbsp;Include&nbsp;'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;'); ?></td>
     <td width=30 bgcolor="#F0FFF0">&nbsp;</td>
-    <td align=center valign=middle bgcolor="#D0DDD0">Keyword</td>
-    <td align=center bgcolor="#D0DDD0">&nbsp;Filter&nbsp;<br>Off</td>
-    <td align=center bgcolor="#D0DDD0">Must<br>&nbsp;Include&nbsp;</td>
-    <td align=center bgcolor="#D0DDD0">&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;</td>
+    <td align=center valign=middle bgcolor="#D0DDD0"><?php echo _('Keyword'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Filter&nbsp;<br>Off'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('Must<br>&nbsp;Include&nbsp;'); ?></td>
+    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;'); ?></td>
     </tr><tr>
 <?php
 $result = sqlquery_checked("SELECT * FROM keyword ORDER BY Keyword");
@@ -64,6 +64,6 @@ while ($row = mysqli_fetch_object($result)) {
 }
 ?>
     </tr></table>
-    <input type="submit" name="filter_submit" value="Modify Search Filtering">
+    <input type="submit" name="filter_submit" value="<?php echo _('Modify Search Filtering'); ?>">
   </form>
 <?php print_footer(); ?>

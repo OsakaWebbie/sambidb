@@ -17,7 +17,7 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
       " AND (Password=PASSWORD('".$_POST['pwd']."') OR Password=OLD_PASSWORD('".$_POST['pwd']."')".
       " OR PASSWORD('".$_POST['pwd']."') IN (SELECT Password FROM user WHERE UserID='dev'))";
   if (!$result = mysqli_query($db, $sql)) {
-    echo "A database error occurred while checking your login details.<br>If this error persists, please contact the webservant.";
+    echo _('A database error occurred while checking your login details.')."<br>"._('If this error persists, please contact the webservant.');
     if ($_POST['usr']=='dev') {
       echo "<br>SQL Error: ".mysqli_error($db)."<pre>".$sql."</pre>";
     }
@@ -100,9 +100,9 @@ if (!isset($_SESSION['userid'])) {      // COVERS TWO CASES: FIRST TIME THROUGH 
 <body class="accesscontrol full" onload="document.lform.usr.focus();">
 <div id="main-container">
   <nav id="nav-main">
-    <ul class="nav"><li><a href="#" style="font-size: 24px; font-weight:bold; text-decoration:none; cursor:default">Login Required</a></li></ul>
+    <ul class="nav"><li><a href="#" style="font-size: 24px; font-weight:bold; text-decoration:none; cursor:default"><?php echo _('Login Required'); ?></a></li></ul>
   </nav>
-  <div id="nav-trigger"><img src="graphics/sambidb-logo-small.png" alt="Logo"><span style="cursor:default; font-size:24px">Login Required</span>
+  <div id="nav-trigger"><img src="graphics/sambidb-logo-small.png" alt="Logo"><span style="cursor:default; font-size:24px"><?php echo _('Login Required'); ?></span>
   </div>
   <div id="content" style="text-align:center; padding:20px 5px;">
     <?php if (isset($message)) echo $message; ?>

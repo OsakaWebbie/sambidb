@@ -3,14 +3,14 @@ ini_set("max_execution_time","120");
 set_time_limit(0);
 include("functions.php");
 include("accesscontrol.php");
-print_header("Editing Record...","#FFFFFF",0);
+print_header(_("Editing Record..."),"#FFFFFF",0);
 
-echo "<h3>Editing (or adding) record...</h3>";
+echo "<h3>"._('Editing (or adding) record...')."</h3>";
 
 if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
-	echo '<h2 style="color:red">The uploaded file was too large. You must upload a file smaller than '.ini_get("upload_max_filesize").".<br><br>\n";
-  echo "Sorry, but you will have to redo any other edits (or new song data) that you entered at the same time as the file upload.<br><br>\n";
-  echo "To edit again, hit your browser's Back button.</h2>";
+	echo '<h2 style="color:red">'.sprintf(_('The uploaded file was too large. You must upload a file smaller than %s.'), ini_get("upload_max_filesize"))."<br><br>\n";
+  echo _('Sorry, but you will have to redo any other edits (or new song data) that you entered at the same time as the file upload.')."<br><br>\n";
+  echo _('To edit again, hit your browser\'s Back button.')."</h2>";
   exit;
 }
 
@@ -33,7 +33,7 @@ if (!empty($_POST['sid'])) {
     exit;
   }
   if (mysqli_affected_rows($db) > 0) {
-    echo "The song record was updated<br>";
+    echo _('The song record was updated')."<br>";
   }
 } else {
   //echo "Creating a new record.<br>"; //debugging only
@@ -56,9 +56,9 @@ if (!empty($_POST['sid'])) {
   }
   if (mysqli_affected_rows($db) > 0) {
     $sid = mysqli_insert_id($db);
-    echo "The song record was inserted.<br>";
+    echo _('The song record was inserted.')."<br>";
   } else {
-    echo "No song record was inserted for some reason.<br>";
+    echo _('No song record was inserted for some reason.')."<br>";
     exit;
   }
 }
@@ -66,14 +66,14 @@ if (!empty($_POST['sid'])) {
 if (is_uploaded_file($_FILES['audiofile']['tmp_name'])) {
   //echo "There is a temp file called ".$_FILES['audiofile']['tmp_name'].".<br>"; //debugging only
   if (move_uploaded_file($_FILES['audiofile']['tmp_name'], CLIENT_PATH."/audio/s".$sid.".mp3")) {
-    echo "File is valid, and was successfully uploaded.<br>";
+    echo _('File is valid, and was successfully uploaded.')."<br>";
     $sql = "UPDATE song SET Audio=1 WHERE SongID=$sid LIMIT 1";
     if (!$result = mysqli_query($db,$sql)) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
       exit;
     }
   } else {
-    echo "File upload failed.  Here's some debugging info:\n";
+    echo _('File upload failed.  Here\'s some debugging info:')."\n";
     print_r($_FILES);
     exit;
   }
