@@ -240,9 +240,9 @@ if ($_SESSION['admin'] > 0) {
 }
 echo "<input type=hidden name=sid value=$sid></h3>";
 
-if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, s.SongID ".
-    "FROM keyword k LEFT JOIN songkeyword s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
-    "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword")) {
+if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, sk.SongID ".
+    "FROM keyword k LEFT JOIN songkey sk ON k.KeywordID=sk.KeywordID and sk.SongID=$sid ".
+    "ORDER BY case when sk.SongID is null then 1 else 0 end, k.Keyword")) {
   echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
 } else {
   echo '<div class="checkboxes">'."\n";

@@ -57,7 +57,7 @@ while ($song = mysqli_fetch_object($result)) {
       $html .= "    <li class='s".$song->SongID.$letter." ui-state-default stanza' title='".$stanzas[$i].
       "'>";
       $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"Turn printing on or off\">";
-      $html .= "<img src='graphics/".(preg_match('*\[[^rR]*ui',$stanzas[$i]) ? "guitar.gif' title='Turn chord printing on or off'" :
+      $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title='Turn chord printing on or off'" :
       "clear_pixel.gif' width='16'")." class='chords'>";
       $html .= "[".$letter."] ".$snippets[$i]."...(".(substr_count($stanzas[$i],"\n")+1).")";
       $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"Duplicate\"><img src=\"graphics/delete.gif\" class=\"delete\" title=\"Remove\"></div><div class=\"clear\"></div></li>\n";
@@ -314,8 +314,6 @@ while ($row = mysqli_fetch_object($result)) {
     }
     <?php } //end handling of multilingual song consolidation ?>
 
-  });
-
   $(".help").dialog({ autoOpen:false, width:450 });
   $("#pdf-help-btn").click(function() {
     $("#pdf-help").dialog("open");
@@ -514,4 +512,4 @@ while ($row = mysqli_fetch_object($result)) {
   })
 });
 </script>
-<?php print_footer(); ?>
+<?php footer(); ?>

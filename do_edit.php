@@ -21,7 +21,7 @@ if (!empty($_POST['sid'])) {
   "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
   "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
   "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
-  "SongKey='${_POST['songkey']}',Tempo='${_POST['tempo']}',Source='".mysqli_real_escape_string($db,trim($_POST['source']))."',".
+  "SongKey='{$_POST['songkey']}',Tempo='{$_POST['tempo']}',Source='".mysqli_real_escape_string($db,trim($_POST['source']))."',".
   "Lyrics='".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",rtrim($_POST['lyrics'])))."',".
   "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".
   "Instruction='".mysqli_real_escape_string($db,trim($_POST['instruction']))."',".
@@ -43,7 +43,7 @@ if (!empty($_POST['sid'])) {
   "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
   "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
   "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
-  "'${_POST['songkey']}','${_POST['tempo']}',".
+  "'{$_POST['songkey']}','{$_POST['tempo']}',".
   "'".mysqli_real_escape_string($db,trim($_POST['source']))."',".
   "'".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",trim($_POST['lyrics'])))."',".
   "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".

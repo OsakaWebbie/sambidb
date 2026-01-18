@@ -196,7 +196,7 @@ function chordsToRuby($unfmt){
     }
     //add old stuff with markup to formatted string (non-breaking space is to spread chords out - margin-right not honored in FF extension)
     if ($oldrb) $fmt .= $ruby."<rb>$oldrb</rb><rt><span class='chord'>$oldrt&nbsp;</span></rt></ruby>";
-    if ($insideword && (mb_substr($oldrb,mb_strlen($oldrb))==" " || mb_strpos($nonruby," ")==" ")) {  //found a space, so let it wrap
+    if ($insideword && (mb_substr($oldrb,-1)==" " || mb_strpos($nonruby," ") !== false)) {  //found a space, so let it wrap
       $fmt .= "</span>";
       $insideword = FALSE;
     }
@@ -235,7 +235,7 @@ function chordsToRuby($unfmt){
   }  //end of while loop that goes through each ruby group in the line
   //add final stuff left over (same as code inside for loop)
   if ($oldrb) $fmt .= "<ruby><rb>$oldrb</rb><rt><span class='chord'>$oldrt&nbsp;</span></rt></ruby>";
-  if ($insideword && (mb_substr($oldrb,mb_strlen($oldrb))==" " || mb_strpos($nonruby," ")==" ")) {  //found a space, so let it wrap
+  if ($insideword && (mb_substr($oldrb,-1)==" " || mb_strpos($nonruby," ") !== false)) {  //found a space, so let it wrap
     $fmt .= "</span>";
     $insideword = FALSE;
   }
