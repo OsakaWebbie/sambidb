@@ -243,7 +243,8 @@ while ($row = mysqli_fetch_object($result)) {
           <fieldset>
             <legend>Content Settings</legend>
             <label>Max lines per slide: <input name="pp_lines" value="8" style="width:2em"></label><br>
-            <label><input type="checkbox" name="pp_trim" checked>Trim leading spaces</label><br><br>
+            <label><input type="checkbox" name="pp_trim" checked>Trim leading spaces</label><br>
+            <label><input type="checkbox" name="pp_slidenum" checked>Include slide # ("[2/4]") after song title</label><br><br>
             <strong>Romaji</strong> (lines prefaced with "[r]")<strong>:</strong><br>
             <div class="indented"><label><input type="radio" id="ppromaji-all" name="pp_romaji" value="all" checked>Show all</div>
             <div class="indented"><label><input type="radio" id="ppromaji-hide" name="pp_romaji" value="hide">Hide romaji</label></div>
@@ -252,7 +253,7 @@ while ($row = mysqli_fetch_object($result)) {
           <fieldset>
             <legend>Compatibility Settings</legend>
             <label><input type="checkbox" name="pp_crlf" checked>Windows line endings</label><br>
-            <label><input type="checkbox" name="pp_sjis" checked>Convert to Shift-JIS</label><br>
+            <label><input type="checkbox" name="pp_ms" checked>Convert to UTF-16 LE (Microsoft)</label><br>
           </fieldset>
         </div>
       </div>
