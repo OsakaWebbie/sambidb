@@ -139,7 +139,7 @@ foreach ($steps as $step) {
     echo ($format->NumColumns>1) ? "\\columnbreak\n" : "\\newpage\n";
     $step = substr($step,3);
   }
-  preg_match('/s([0-9]*)(.)/',$step,$matches);
+  if (!preg_match('/s([0-9]*)(.)/',$step,$matches)) continue;
   //print_r($matches);
   $key = $matches[0];
   $songid = $matches[1];
@@ -248,12 +248,19 @@ ob_end_clean();
 
 // RUN TEX COMMANDS TO MAKE PDF
 
-exec("cd $tmppath;/usr/local/bin/uplatex -interaction=batchmode --output-directory=$tmppath $fileroot", $output, $return);
+if (is_file("/usr/bin/uplatex")) {
+  $commandpath = "/usr/bin/";
+} elseif (is_file("/usr/local/bin/uplatex")) {
+  $commandpath = "/usr/local/bin/";
+} else {
+  die("Error: cannot find needed commands (uplatex and dvipdfmx) in /usr/bin/ or /usr/local/bin/.");
+}
+exec("cd $tmppath;{$commandpath}uplatex -interaction=batchmode --output-directory=$tmppath $fileroot", $output, $return);
 if (!is_file("$tmppath$fileroot.dvi")) {
   die("Error processing '$tmppath$fileroot.tex':<br /><br /><pre>".print_r($output,TRUE)."</pre>");
 }
 //unlink("$tmppath$fileroot.tex");
-exec("cd $tmppath;/usr/local/bin/dvipdfmx $fileroot", $output, $return);
+exec("cd $tmppath;{$commandpath}dvipdfmx $fileroot", $output, $return);
 //unlink("$tmppath$fileroot.dvi");
 if (!is_file("$tmppath$fileroot.pdf")) {
   die("Error processing '$tmppath$fileroot.dvi':<br /><br /><pre>".print_r($output,TRUE)."</pre>");

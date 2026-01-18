@@ -39,7 +39,7 @@ $slidenum = 1; //just in case
 
 foreach ($steps as $step) {
   if (substr($step,0,3)=='br-')  $step = substr($step,3);  // Remove unused break indicator
-  preg_match('/s([0-9]*)(.)/',$step,$matches);
+  if (!preg_match('/s([0-9]*)(.)/',$step,$matches)) continue;
   //print_r($matches);
   $prev_key = empty($key) ? '' : $key;
   $key = $matches[0];

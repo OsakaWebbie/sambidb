@@ -45,7 +45,7 @@ if ($num_dates == 20) {  //there are 20 dates, so there might be more before thi
   if ($_GET['dateperiod'])   $url .= ",".$_GET['dateperiod'];
   echo "<td valign=middle><button onclick=\"window.location='{$url}';\"><< Earlier Dates</button></td>\n";
 }
-if ($row[0] != "") echo "<td align=center valign=middle width=100%><b>Event Description:</b> ".$row[0]."</td>\n";
+if ($row && $row[0] != "") echo "<td align=center valign=middle width=100%><b>Event Description:</b> ".$row[0]."</td>\n";
 if ($_GET['dateperiod']) {  //there are more after this
  /* for ($i = 0; $i < (count($period_array)-1); $i++) {
     $j = $i + 1;
@@ -102,7 +102,7 @@ for ($r=0; $r<$num_songs; $r++) {
       echo "<td nowrap><a href=\"song.php?sid=".$parray[$r][0]."\" target=\"_blank\">";
       echo $parray[$r][1]."</a></td>\n";
     }
-    if (($done == 0) && ($row[0] == $darray[$c][0])) {
+    if (($done == 0) && $row && ($row[0] == $darray[$c][0])) {
       echo "<td align=center bgcolor=#8080FF>*</td>";
       if (!$row = mysqli_fetch_row ($result)) $done = 1;
     } else {
