@@ -128,7 +128,7 @@ if ($kw_add_upd) {
       exit;
     }
     if (mysqli_affected_rows($db) == 1) {
-      $message = $message._('Event record successfully deleted.');
+      $message = $message._('Event successfully deleted.');
     }
   } else {
   //ask for confirmation

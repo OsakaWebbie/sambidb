@@ -15,7 +15,7 @@ if (!empty($_POST['save_kw'])) {
       $kwid = mysqli_insert_id($db);
       echo "<h3><font color=\"#449933\">"._('New keyword successfully added.')."</font></h3>";
     } else {
-      echo _('No keyword record was inserted for some reason.')."<br>";
+      echo _('The keyword was not added for some reason.')."<br>";
       exit;
     }
   }
@@ -40,7 +40,7 @@ if (!empty($_POST['save_kw'])) {
       }
     }
   }
-  echo "<h3><font color=\"#449933\">".sprintf(_('%s new records successfully added.'), ($num_sids - $num_previous));
+  echo "<h3><font color=\"#449933\">".sprintf(_('Keyword added to %s songs.'), ($num_sids - $num_previous));
   if ($num_previous > 0) {
     echo "<br>&nbsp; ".sprintf(_('(%s songs in this list already included this keyword.)'), $num_previous);
   }
