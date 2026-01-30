@@ -8,20 +8,35 @@ ini_set("upload_max_filesize","7M");
 include("functions.php");
 include("accesscontrol.php");
 
-if ($sid) {
+if (!empty($sid)) {  // SongID was passed, so we're editing an existing record
   $sql = "SELECT * FROM song WHERE SongID=$sid";
   if (!$result = mysqli_query($db,$sql)) {
     echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b> ($sql)");
     exit;
   }
   if (mysqli_num_rows($result) == 0) {
-    echo("<b>Failed to find a record for SongID $sid.</b>");
+    echo("<b>".sprintf(_('Song not found (ID: %s).'), $sid)."</b>");
     exit;
   }
   $rec = mysqli_fetch_object($result);
   print_header("Praise & Worship DB: Edit $rec->Title","#F8F8F8",1);
 } else {
   print_header("Praise & Worship DB: New Entry","#F8F8F8",1);
+  // Initialize empty record to avoid undefined property warnings
+  $rec = (object)[
+    'Title' => '',
+    'OrigTitle' => '',
+    'Composer' => '',
+    'Copyright' => '',
+    'SongKey' => '',
+    'Tempo' => '',
+    'Source' => '',
+    'Pattern' => '',
+    'Instruction' => '',
+    'Audio' => '',
+    'AudioComment' => '',
+    'Lyrics' => ''
+  ];
 }
 
 ?>
@@ -48,7 +63,7 @@ function validate() {
     return false;
   }
 <?php
-if (!$rec->Audio) {
+if (empty($rec->Audio)) {
   echo "  if ((!f.audiofile.value) && (f.audiocomment.value)) {\n";
   echo "    alert(\""._('Audio comments only make sense if there is an audio file to comment on.')."\");\n";
   echo "    f.audiofile.focus;\n";
@@ -68,7 +83,7 @@ if (!$rec->Audio) {
 </script>
 
 <form name=editform enctype="multipart/form-data" method=POST action="do_edit.php" onsubmit="return validate();">
-<input type=hidden name=sid value="<?php echo $sid; ?>">
+<input type=hidden name=sid value="<?php echo $sid ?? ''; ?>">
 <input type=hidden name=updated value=0>
 <table border=0 cellspacing=0 cellpadding=5><tr><td nowrap>
   <?php echo _('Title'); ?>: <input name=title type=text size=50 maxlength=50 value="<?php echo $rec->Title; ?>"
@@ -101,7 +116,7 @@ onchange="editform.updated.value=1;"><?php echo $rec->Source; ?></textarea></td>
     onchange="editform.updated.value=1;" style="ime-mode:disabled;"><br>
     <?php echo _('Instructions for playing (intro, etc.; put [brackets] around pattern description and other text that is unneeded when full pattern is printed)'); ?>:<br><textarea rows=3 name=instruction cols=30
     onchange="editform.updated.value=1;"><?php echo $rec->Instruction; ?></textarea><br />&nbsp;<br />
-    <?php echo _('Upload audio file (MP3 format only,'); ?> <span style="color:darkred;font-weight:bold"><?php echo _('no larger than'); ?> <?php echo ini_get("upload_max_filesize"); ?> <?php echo _('file size or you will lose other data you have edited!'); ?></span>):<br>
+    <?php echo sprintf(_('Upload audio file (MP3 format only, %sno larger than %s file size or you will lose other data you have edited!%s):'), '<span style="color:darkred;font-weight:bold">', ini_get("upload_max_filesize"), '</span>'); ?><br>
     <input name=audiofile type=file size=35 onchange="editform.updated.value=1;"><br />
     <input type=hidden name=audio value="<?php echo $rec->Audio; ?>">
 <?php if ($rec->Audio == "1") {
@@ -119,7 +134,7 @@ onchange="editform.updated.value=1;"><?php echo $rec->Source; ?></textarea></td>
 </form>
 
 <?php
-if ($sid) {
+if (!empty($sid)) {
   mysqli_free_result($result);
 }
 print_footer();

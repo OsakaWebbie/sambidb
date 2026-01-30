@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-18 08:01+0900\n"
-"PO-Revision-Date: 2022-11-18 20:40+0900\n"
+"POT-Creation-Date: 2026-01-29 23:32+0900\n"
+"PO-Revision-Date: 2026-01-30 11:39+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -13,11 +13,299 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 3.2\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: functions.php:42 index.php:85
+#: accesscontrol.php:20
+msgid "A database error occurred while checking your login details."
+msgstr "ログイン情報の確認中にデータベースエラーが発生しました。"
+
+#: accesscontrol.php:20
+msgid "If this error persists, please contact the webservant."
+msgstr "このエラーが続く場合は、管理者にお問い合わせください。"
+
+#: accesscontrol.php:103 accesscontrol.php:105
+msgid "Login Required"
+msgstr "ログインしてください"
+
+#: do_edit.php:6
+msgid "Saving..."
+msgstr "保存中..."
+
+#: do_edit.php:11
+#, php-format
+msgid ""
+"The uploaded file was too large. You must upload a file smaller than %s."
+msgstr ""
+"アップロードされたファイルが大きすぎます。%s未満のファイルをアップロードする"
+"必要があります。"
+
+#: do_edit.php:12
+msgid ""
+"Sorry, but you will have to redo any other edits (or new song data) that you "
+"entered at the same time as the file upload."
+msgstr ""
+"申し訳ありませんが、ファイルアップロードと同時に入力した他の編集（または新規"
+"曲データ）をやり直す必要があります。"
+
+#: do_edit.php:13
+msgid "To edit again, hit your browser's Back button."
+msgstr "再度編集するには、ブラウザの戻るボタンを押してください。"
+
+#: do_edit.php:36
+msgid "The song was updated."
+msgstr "曲が更新されました。"
+
+#: do_edit.php:59
+msgid "The song was added."
+msgstr "曲が追加されました。"
+
+#: do_edit.php:61
+msgid "The song was not added for some reason."
+msgstr "何らかの理由で曲が追加されませんでした。"
+
+#: do_edit.php:69
+msgid "File is valid, and was successfully uploaded."
+msgstr "ファイルは有効で、正常にアップロードされました。"
+
+#: do_edit.php:76
+msgid "File upload failed.  Here's some debugging info:"
+msgstr "ファイルのアップロードに失敗しました。デバッグ情報："
+
+#: do_maint.php:13
+msgid "Keyword successfully added."
+msgstr "キーワードが正常に追加されました。"
+
+#: do_maint.php:21
+msgid "Keyword successfully renamed."
+msgstr "キーワードの名前が正常に変更されました。"
+
+#: do_maint.php:45
+#, php-format
+msgid "%s songs removed from keyword."
+msgstr "キーワードが%s曲から外されました。"
+
+#: do_maint.php:53
+msgid "Keyword successfully deleted."
+msgstr "キーワードが正常に削除されました。"
+
+#: do_maint.php:57
+msgid "Please Confirm Keyword Delete"
+msgstr "キーワードの削除を確認してください"
+
+#: do_maint.php:58
+#, php-format
+msgid ""
+"The following songs are still associated with the %s keyword.&nbsp; If you "
+"are sure you want to delete these keyword associations, click the "
+"button.&nbsp; (If not, just press your browser's Back button.)"
+msgstr ""
+"次の曲は、まだ「%s」キーワードに関連付けられています。これらのキーワード関連"
+"付けを削除してもよろしければ、ボタンをクリックしてください。（そうでない場合"
+"は、ブラウザの戻るボタンを押してください。）"
+
+#: do_maint.php:63
+msgid "Yes, delete the keyword"
+msgstr "はい、キーワードを削除します"
+
+#: do_maint.php:65
+msgid "Songs with this keyword:"
+msgstr "このキーワードを持つ曲："
+
+#: do_maint.php:86
+msgid "New event successfully added."
+msgstr "新規イベントが正常に追加されました。"
+
+#: do_maint.php:94
+msgid "Event information successfully updated."
+msgstr "イベント情報が正常に更新されました。"
+
+#: do_maint.php:123
+#, php-format
+msgid "%s related history records deleted."
+msgstr "%s件の関連する履歴データが削除されました。"
+
+#: do_maint.php:131
+msgid "Event successfully deleted."
+msgstr "イベントが正常に削除されました。"
+
+#: do_maint.php:135
+msgid "Please Confirm Event Delete"
+msgstr "イベントの削除を確認してください"
+
+#: do_maint.php:136
+#, php-format
+msgid ""
+"There are %s history records for this event, during the time period %s thru "
+"%s.  In deleting the event, you will also delete all history data associated "
+"with it.  Are you sure you want to do this?  (If not, just press your "
+"browser's Back button.)"
+msgstr ""
+"このイベントには、%sから%sまでの期間に%s件の履歴データがあります。イベント"
+"を削除すると、それに関連するすべての履歴データも削除されます。本当にこれを"
+"実行しますか？（そうでない場合は、ブラウザの戻るボタンを押してください。）"
+
+#: do_maint.php:141
+msgid "Yes, delete the event and history records"
+msgstr "はい、イベントと履歴データを削除します"
+
+#: edit.php:18 song.php:32
+#, php-format
+msgid "Song not found (ID: %s)."
+msgstr "曲が見つかりません。（ID: %s）"
+
+#: edit.php:52
+msgid ""
+"No info was modified.  If you want to exit this page, just use your BACK "
+"button."
+msgstr ""
+"何も変更されていません。このページを終了するには、ブラウザの戻るボタンを押し"
+"てください。"
+
+#: edit.php:56
+msgid "Please enter the title!"
+msgstr "タイトルを入力してください！"
+
+#: edit.php:61
+msgid "Only MP3 files can be accepted for audio."
+msgstr "オーディオファイルはMP3形式のみ受け付けます。"
+
+#: edit.php:68
+msgid "Audio comments only make sense if there is an audio file to comment on."
+msgstr "オーディオについての備考は、オーディオファイルがある場合にのみ意味があります。"
+
+#: edit.php:89 list.php:144 ms_text.php:14
+msgid "Title"
+msgstr "曲名"
+
+#: edit.php:92 list.php:151 ms_text.php:15
+msgid "Original Title"
+msgstr "原曲名"
+
+#: edit.php:94
+msgid "(Fill in if song is translated)"
+msgstr "（翻訳曲の場合は記入）"
+
+#: edit.php:97 list.php:157 ms_text.php:18
+msgid "Composer"
+msgstr "作曲家"
+
+#: edit.php:99 list.php:158 ms_text.php:19
+msgid "Copyright"
+msgstr "著作権"
+
+#: edit.php:101 index.php:113 list.php:153 ms_text.php:17
+msgid "Key"
+msgstr "調"
+
+#: edit.php:103 index.php:105 list.php:152 ms_text.php:16
+msgid "Tempo"
+msgstr "テンポ"
+
+#: edit.php:105 index.php:108
+msgid "Fast"
+msgstr "早い"
+
+#: edit.php:106 index.php:109
+msgid "Medium"
+msgstr "中"
+
+#: edit.php:107 index.php:110
+msgid "Slow"
+msgstr "ゆっくり"
+
+#: edit.php:110 index.php:89 list.php:159 ms_text.php:20
+msgid "Source"
+msgstr "参照"
+
+#: edit.php:114
+msgid "  Save Changes  "
+msgstr "変更を保存"
+
+#: edit.php:115
+msgid "Pattern for printing (e.g. ABABB; sections are divided by blank lines)"
+msgstr "印刷用のパターン（例：ABABB、セクションは空行で区切られます）"
+
+#: edit.php:117
+msgid ""
+"Instructions for playing (intro, etc.; put [brackets] around pattern "
+"description and other text that is unneeded when full pattern is printed)"
+msgstr ""
+"指示（イントロなど；フルパターンを印刷する時に不要なパターン指示やその他のテ"
+"キストは［角括弧］で囲んでください）"
+
+#: edit.php:119
+#, php-format
+msgid ""
+"Upload audio file (MP3 format only, %sno larger than %s file size or you "
+"will lose other data you have edited!%s):"
+msgstr ""
+"オーディオファイルをアップロード（MP3形式のみ、%sファイルサイズは %s 以下でな"
+"いと、他の編集データが失われます！%s）："
+
+#: edit.php:123
+msgid ""
+"(This song already has audio uploaded, but you can replace it with a new "
+"file if you want.)"
+msgstr ""
+"（この曲にはすでにオーディオがアップロードされていますが、必要に応じて新しい"
+"ファイルに置き換えることができます。）"
+
+#: edit.php:126
+msgid "Audio Comment"
+msgstr "オーディオについての備考"
+
+#: edit.php:129 index.php:88 ms_text.php:22
+msgid "Lyrics"
+msgstr "歌詞"
+
+#: edit.php:130
+msgid ""
+"To add chords, enclose them in [brackets] just before the syllable they are "
+"played with."
+msgstr "コードを入力するには、一緒に歌う最初の音節の直前に入れて［角括弧］で囲んでください。"
+
+#: edit.php:130
+msgid ""
+"If there are parts that are only needed to print full pattern (like a chorus "
+"with a tag), precede them with a line with only hyphens (one or more - it "
+"doesn't matter how many), like \"---\"."
+msgstr ""
+"フルパターンの印刷時のみ必要な部分（タグ付きのコーラスなど）がある場合は、そ"
+"の前にハイフンのみの行（1つ以上、いくつでも構いません）を付けてください（例："
+"「---」）。"
+
+#: filter.php:28
+msgid "Search Filtering"
+msgstr "検索のフィルター設定"
+
+#: filter.php:29
+#, php-format
+msgid "Modify filter criteria as desired, and click \"%s\"."
+msgstr "必要に応じてフィルター条件を変更し、「%s」をクリックしてください。"
+
+#: filter.php:29 filter.php:31 filter.php:67
+msgid "Modify Search Filtering"
+msgstr "検索フィルターを変更"
+
+#: filter.php:33 filter.php:38
+msgid "Keyword"
+msgstr "キーワード"
+
+#: filter.php:34 filter.php:39
+msgid "&nbsp;Filter&nbsp;<br>Off"
+msgstr "&nbsp;フィルター&nbsp;<br>なし"
+
+#: filter.php:35 filter.php:40
+msgid "Must<br>&nbsp;Include&nbsp;"
+msgstr "含む必要"
+
+#: filter.php:36 filter.php:41
+msgid "&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;"
+msgstr "&nbsp;含んでは&nbsp;<br>&nbsp;ならない&nbsp;"
+
+#: functions.php:42 index.php:27 index.php:37 index.php:85
 msgid "Search"
 msgstr "検索"
 
@@ -99,7 +387,7 @@ msgid "Modify filter criteria"
 msgstr "フィルターを変更"
 
 #: index.php:59
-msgid "You are not currently filtering data (you are seeing all records)."
+msgid "You are not currently filtering data (you are seeing all songs)."
 msgstr "現在、フィルターは適用されていません（すべての曲が表示されます）。"
 
 #: index.php:61
@@ -118,14 +406,6 @@ msgstr "含まないキーワード：　"
 msgid "Title/Original Title"
 msgstr "曲名／原曲名"
 
-#: index.php:88
-msgid "Lyrics"
-msgstr "歌詞"
-
-#: index.php:89 list.php:159
-msgid "Source"
-msgstr "参照"
-
 #: index.php:90
 msgid "Composer/Copyright"
 msgstr "作曲家・著作権"
@@ -133,26 +413,6 @@ msgstr "作曲家・著作権"
 #: index.php:92
 msgid "Keyword(s)"
 msgstr "キーワード"
-
-#: index.php:105 list.php:152
-msgid "Tempo"
-msgstr "テンポ"
-
-#: index.php:108
-msgid "Fast"
-msgstr "早い"
-
-#: index.php:109
-msgid "Medium"
-msgstr "中"
-
-#: index.php:110
-msgid "Slow"
-msgstr "ゆっくり"
-
-#: index.php:113 list.php:153
-msgid "Key"
-msgstr "調"
 
 #: index.php:121
 msgid "Search!"
@@ -193,6 +453,10 @@ msgstr "調は「%s」を含んでいる"
 msgid "Contains one or more of these keywords: %s"
 msgstr "これらのキーワードが1つ以上含まれています： %s"
 
+#: list.php:82
+msgid "No songs found for this search."
+msgstr "この検索では曲が見つかりませんでした。"
+
 #: list.php:98
 msgid "Search Results"
 msgstr "検索の結果"
@@ -223,14 +487,6 @@ msgstr "タグされている"
 msgid "Tag"
 msgstr "タグ"
 
-#: list.php:144
-msgid "Title"
-msgstr "曲名"
-
-#: list.php:151
-msgid "Original Title"
-msgstr "原曲名"
-
 #: list.php:154
 msgid "First Line"
 msgstr "最初の行"
@@ -243,14 +499,6 @@ msgstr "最新の使用"
 msgid "# Uses"
 msgstr "使用数"
 
-#: list.php:157
-msgid "Composer"
-msgstr "作曲家"
-
-#: list.php:158
-msgid "Copyright"
-msgstr "著作権"
-
 #: list.php:178
 msgid "Tag All"
 msgstr "すべてにタグをつける"
@@ -259,11 +507,95 @@ msgstr "すべてにタグをつける"
 msgid "Untag All"
 msgstr "すべてにタグを消す"
 
-#: ms_history.php:21
+#: maintenance.php:75
+msgid "Keyword Management"
+msgstr "キーワード管理"
+
+#: maintenance.php:77
+msgid ""
+"Select a keyword to rename, and type its new name.&nbsp; Or select &quot;New "
+"Keyword&quot; and type a new keyword name.  Or select a keyword to delete, "
+"and press Delete."
+msgstr ""
+"名前を変更するキーワードを選択して、キーワード名をを編集してください。 または"
+"「新規キーワード」を選択して、新しいキーワード名を入力してください。または削"
+"除するキーワードを選択して、「削除」を押してください。"
+
+#: maintenance.php:82
+msgid "New Keyword..."
+msgstr "新規キーワード..."
+
+#: maintenance.php:94
+msgid "Keyword Name:"
+msgstr "キーワード："
+
+#: maintenance.php:95
+msgid "Add or Rename"
+msgstr "追加または名前変更"
+
+#: maintenance.php:96 maintenance.php:117
+msgid "Delete"
+msgstr "削除"
+
+#: maintenance.php:101
+msgid "Event Management"
+msgstr "イベント管理"
+
+#: maintenance.php:103
+msgid ""
+"Fill in the information to add a new event.  Or select an event, and modify "
+"its info (name, remarks, and/or active status).  Or select an event to "
+"delete and press Delete."
+msgstr ""
+"新規イベントを追加するための情報を入力してください。またはイベントを選択し"
+"て、その情報（名前、備考、現在開催中かどうか）を変更してください。または削除"
+"するイベントを選択して「削除」をクリックしてください。"
+
+#: maintenance.php:108
+msgid "New Event..."
+msgstr "新規イベント..."
+
+#: maintenance.php:111 ms_history.php:77
+msgid "Event:"
+msgstr "イベント："
+
+#: maintenance.php:113
+msgid "Currently Occurring Event"
+msgstr "現在開催中のイベント"
+
+#: maintenance.php:114
+msgid "Description:"
+msgstr "説明："
+
+#: maintenance.php:116
+msgid "Add or Update"
+msgstr "追加または更新"
+
+#: maintenance.php:125 user_settings.php:56
+msgid "Change My Password"
+msgstr "私のパスワードを変更"
+
+#: maintenance.php:127
+msgid "Old:"
+msgstr "現在のパスワード："
+
+#: maintenance.php:128
+msgid "New:"
+msgstr "新しいパスワード："
+
+#: maintenance.php:129
+msgid "New again:"
+msgstr "新しいパスワード（確認用）："
+
+#: maintenance.php:130 user_settings.php:60
+msgid "Change Password"
+msgstr "パスワードを変更"
+
+#: ms_history.php:22
 msgid "There are already songs recorded for this event and date."
 msgstr "このイベントと日付には、すでに収録されている曲があります。"
 
-#: ms_history.php:22
+#: ms_history.php:23
 msgid ""
 "The list is to the right. If you do not want to replace these songs with "
 "your selection, just select your browser's Back button."
@@ -271,11 +603,19 @@ msgstr ""
 "リストは右側にあります。これらの曲を選択した曲と入れ替えたくない場合は、ブラ"
 "ウザの戻るボタンを選択してください。"
 
-#: ms_history.php:47
+#: ms_history.php:29
+msgid "Yes, replace with new selected songs"
+msgstr "はい、新しく選択した曲に置き換えます"
+
+#: ms_history.php:30
+msgid "Previously recorded song session:"
+msgstr "以前に記録された曲セッション："
+
+#: ms_history.php:48
 msgid "Old history records deleted."
 msgstr "以前の使用記録を削除されました。"
 
-#: ms_history.php:51
+#: ms_history.php:52
 msgid ""
 "No new records added, as list was empty.<br>You must have just wanted to get "
 "rid of some old data (wink!)."
@@ -283,13 +623,173 @@ msgstr ""
 "リストが空だったため、新しい記録は追加されませんでした。<br>古いデータを削除"
 "したかっただけなのでしょう（ウィンク！）。"
 
-#: ms_history.php:105
+#: ms_history.php:64
+#, php-format
+msgid "%s new history records added."
+msgstr "%s件の新しい使用記録が追加されました。"
+
+#: ms_history.php:72
+msgid "Choose the event and pick the date:"
+msgstr "イベントを選択して日付を選んでください："
+
+#: ms_history.php:90
+msgid "Date Used:"
+msgstr "使用日："
+
+#: ms_history.php:91
+msgid "Save Data"
+msgstr "データを保存"
+
+#: ms_history.php:106
 msgid "You must enter a date."
 msgstr "日付が必要です。"
 
-#: ms_history.php:111
+#: ms_history.php:112
 msgid "Date is invalid."
 msgstr "日付は正しくありません。"
+
+#: ms_keyword.php:16
+msgid "New keyword successfully added."
+msgstr "新しいキーワードが正常に追加されました。"
+
+#: ms_keyword.php:18
+msgid "The keyword was not added for some reason."
+msgstr "キーワードが付けられませんでした（理由は不明です）。"
+
+#: ms_keyword.php:43
+#, php-format
+msgid "Keyword added to %s songs."
+msgstr "キーワードが%s曲に付けられました。"
+
+#: ms_keyword.php:45
+#, php-format
+msgid "(%s songs in this list already included this keyword.)"
+msgstr "（このリストの%s曲にはすでにこのキーワードが含まれています。）"
+
+#: ms_keyword.php:57
+msgid "You need to specify a name for the new keyword."
+msgstr "新しいキーワードの名前を入力してください。"
+
+#: ms_keyword.php:67
+msgid "Choose existing keyword, or choose New and fill in new keyword name:"
+msgstr ""
+"既存のキーワードを選択するか、「新規」を選択して新しいキーワード名を入力して"
+"ください："
+
+#: ms_keyword.php:72
+msgid "Keyword:"
+msgstr "キーワード："
+
+#: ms_keyword.php:74
+msgid "Select a keyword..."
+msgstr "キーワードを選択..."
+
+#: ms_keyword.php:75
+msgid "New Keyword (input name)"
+msgstr "新規キーワード（名前を入力）"
+
+#: ms_keyword.php:87
+msgid "New Keyword Name:"
+msgstr "新規キーワード名："
+
+#: ms_keyword.php:91
+msgid "Add This Keyword to These Songs"
+msgstr "このキーワードをこれらの曲に付ける"
+
+#: ms_text.php:12
+#, php-format
+msgid "Field %s:"
+msgstr "フィールド %s："
+
+#: ms_text.php:21
+msgid "Pattern"
+msgstr "パターン"
+
+#: ms_text.php:23
+msgid "Blank Line"
+msgstr "空行"
+
+#: ms_text.php:25
+msgid "Place it:"
+msgstr "配置場所："
+
+#: ms_text.php:26
+msgid "On a new line"
+msgstr "新しい行に"
+
+#: ms_text.php:27
+msgid "On same line, in parentheses"
+msgstr "同じ行に（括弧内）"
+
+#: ms_text.php:28
+msgid "On new line, in parentheses"
+msgstr "新しい行に（括弧内）"
+
+#: ms_text.php:29
+msgid "On new line, indented"
+msgstr "新しい行にインデント付きで"
+
+#: ms_text.php:35
+msgid "XML Format (\"Place It...\" option ignored)"
+msgstr "XML形式（「配置」オプションは無視されます）"
+
+#: ms_text.php:36
+msgid "Select fields to output and click the button..."
+msgstr "出力するフィールドを選択してボタンをクリックしてください..."
+
+#: ms_text.php:37
+msgid "Make Page to Copy or Print"
+msgstr "コピーまたは印刷用のページを作成"
+
+#: multiselect.php:4
+msgid "Multiple Selection"
+msgstr "複数選択"
+
+#: multiselect.php:13
+msgid ""
+"There are no tagged songs.  Please use the tools on the Top(Search) page to "
+"select songs for tagging, then use this page to put them in order and/or "
+"take actions."
+msgstr ""
+"タグされた曲がありません。トップ（検索）ページのツールを使用して曲にタグを付"
+"けてから、このページを使用して順序を設定したりアクションを実行したりしてくだ"
+"さい。"
+
+#: multiselect.php:31
+msgid ""
+"Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then "
+"choose an action from the buttons on the right."
+msgstr ""
+"曲をドラッグして並べ替え、必要に応じて「複製」または「削除」アイコンをクリッ"
+"クしてください。その後、右側のボタンからアクションを選択してください。"
+
+#: multiselect.php:54
+msgid "Duplicate"
+msgstr "複製"
+
+#: multiselect.php:55
+msgid "Remove"
+msgstr "削除"
+
+#: multiselect.php:65
+msgid "Choose an Action:"
+msgstr "アクションを選択："
+
+#: multiselect.php:66
+msgid "Record As Event Song Session"
+msgstr "イベントの曲セッションとして記録"
+
+#: multiselect.php:67
+msgid "Output Songs (PDF)"
+msgstr "曲を出力（PDF）"
+
+#: multiselect.php:68
+msgid "Output Songs (text)"
+msgstr "曲を出力（テキスト）"
+
+#: multiselect.php:69
+msgid "Add a Keyword"
+msgstr "キーワードを付ける"
 
 #: pdflayout.php:151
 msgid "Floating Guide for PDFs"
@@ -307,9 +807,99 @@ msgstr "ループ再生をオフにする"
 msgid "Play in loop"
 msgstr "ループ再生"
 
+#: song.php:148
+#, php-format
+msgid "(Click image to %s)"
+msgstr "（%sには画像をクリック）"
+
+#: song.php:148
+msgid "untag"
+msgstr "タグを消す"
+
+#: song.php:148
+msgid "tag"
+msgstr "タグをつける"
+
+#: song.php:153
+msgid "Show:"
+msgstr "表示："
+
+#: song.php:154
+msgid "Chords"
+msgstr "コード"
+
+#: song.php:155
+msgid "Romaji"
+msgstr "ローマ字"
+
+#: song.php:198
+msgid "Original Title:"
+msgstr "原曲名："
+
+#: song.php:199
+msgid "Key:"
+msgstr "調："
+
+#: song.php:200
+msgid "Tempo:"
+msgstr "テンポ："
+
+#: song.php:202
+msgid "Composer:"
+msgstr "作曲家："
+
+#: song.php:203
+msgid "Copyright:"
+msgstr "著作権："
+
+#: song.php:206
+msgid "Source(s):"
+msgstr "参照："
+
+#: song.php:211
+msgid "Pattern of Stanzas:"
+msgstr "節のパターン："
+
+#: song.php:214
+msgid "Instruction (intro, etc.):"
+msgstr "指示（イントロなど）："
+
+#: song.php:219
+msgid "Audio for learning:"
+msgstr "練習用オーディオ："
+
+#: song.php:227
+msgid "Comment about audio recording:"
+msgstr "オーディオ録音についての備考："
+
+#: song.php:230
+msgid "Edit This Song"
+msgstr "この曲を編集"
+
+#: song.php:237
+msgid "Keywords"
+msgstr "キーワード"
+
+#: song.php:239
+msgid "Save Keyword Changes"
+msgstr "キーワードの変更を保存"
+
+#: song.php:276
+msgid "No history records."
+msgstr "使用記録はありません。"
+
+#: song.php:279
+msgid "Usage History"
+msgstr "使用履歴"
+
+#: song.php:286
+#, php-format
+msgid "%s to<br>%s (%sx)"
+msgstr "%s〜<br>%s（%s回）"
+
 #: user_settings.php:11
 msgid "Language successfully changed."
-msgstr "原語を変更しました。"
+msgstr "言語を変更しました。"
 
 #: user_settings.php:19
 msgid "The old password entry was incorrect. Password was not changed."
@@ -345,10 +935,6 @@ msgstr "日本語"
 msgid "Save Changes"
 msgstr "変更を保存"
 
-#: user_settings.php:56
-msgid "Change My Password"
-msgstr "私のパスワードを変更"
-
 #: user_settings.php:57
 msgid "Old"
 msgstr "現在のパスワード"
@@ -360,10 +946,6 @@ msgstr "新しいパスワード"
 #: user_settings.php:59
 msgid "New again"
 msgstr "新しいパスワード（確認用）"
-
-#: user_settings.php:60
-msgid "Change Password"
-msgstr "パスワードを変更"
 
 #: user_settings.php:68
 msgid "You must enter your current password for validation."

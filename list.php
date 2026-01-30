@@ -2,7 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 
-$eid = !empty($_GET['eid'] ? $_GET['eid'] : $_SESSION['default_event']);
+$eid = !empty($_GET['eid']) ? $_GET['eid'] : $_SESSION['default_event'];
 $sql = "SELECT song.SongID, Tagged, Title, OrigTitle, Tempo, SongKey, stripchord(LEFT(Lyrics,INSTR(Lyrics,'\n')-1)) AS FirstLine, ".
     "MAX(UseDate) AS LastUse, COUNT(UseDate) AS NumUse, Composer, Copyright, Source, Audio, Lyrics REGEXP '\\\\[[^rR]' AS Chords ";
 $sql .= "FROM song LEFT JOIN history ON song.SongID=history.SongID AND history.EventID=$eid";
@@ -63,10 +63,10 @@ if (!empty($_GET['tagged'])) {
 }
 
 /* FILTERS */
-if ($_SESSION['inkeys']) {
+if (!empty($_SESSION['inkeys'])) {
   $where .= ($where?" AND ":"")."song.SongID IN (SELECT SongID FROM songkeyword WHERE KeywordID IN (".$_SESSION['inkeys']."))";
 }
-if ($_SESSION['exkeys']) {
+if (!empty($_SESSION['exkeys'])) {
   $where .= ($where?" AND ":"")."NOT song.SongID IN (SELECT SongID FROM songkeyword WHERE KeywordID IN (".$_SESSION['exkeys']."))";
 }
 
@@ -79,7 +79,7 @@ if ($_SESSION['exkeys']) {
 $result = sqlquery_checked($sql . (!empty($where)?' WHERE '.$where:'') . ' GROUP BY ' . $groupby . ' ORDER BY OrigTitle');
 $numrecords = mysqli_num_rows($result);
 if ($numrecords == 0) {
-  header("Location: index.php?text=".urlencode("Search resulted in no records.".(($_SESSION['admin'] == 2)?"<br>".$sql:"")));
+  header("Location: index.php?text=".urlencode(_('No songs found for this search.').(($_SESSION['admin'] == 2)?"<br>".$sql:"")));
   exit;
 } elseif ($numrecords == 1) {
   $single = mysqli_fetch_object($result);

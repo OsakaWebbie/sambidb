@@ -24,7 +24,7 @@ while ($row = mysqli_fetch_object($result)) {
   $keyword[$row->KeywordID] = $row->Keyword;
 }
 
-header1("Search");
+header1(_('Search'));
 header2(1); ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
@@ -34,7 +34,7 @@ header2(1); ?>
       'recordings, etc.) in it does not give you permission to use that material in ways that violate the copyright. '.
       'Users of the material bear their own responsibility for how they use the information stored here.')?>
 </div>
-<h1><?=(isset($_SESSION['dbtitle']) ? $_SESSION['dbtitle'].': ' : '')?>Search</h1>
+<h1><?=(isset($_SESSION['dbtitle']) ? $_SESSION['dbtitle'].': ' : '')._('Search')?></h1>
 <?php if ($_SESSION['admin'] == 0)  echo '<div style="font-weight:bold; margin:10px 20px 10px 0">'.
     _('Your user status is "read-only"; if you need editing privileges, ask the administrator.').'</div>';
 ?>
@@ -56,7 +56,7 @@ header2(1); ?>
   <?php
   $link = ' <a href="filter.php" class="nowrap" style="margin-left:2em; font-size:1.2em; font-style:italic;">'._('Modify filter criteria').'</a>';
   if (empty($_SESSION['inkeys']) && empty($_SESSION['exkeys'])) {
-    echo _("You are not currently filtering data (you are seeing all records).").$link;
+    echo _("You are not currently filtering data (you are seeing all songs).").$link;
   } else {
     echo _("You are currently filtering to see only songs whose keywords...").$link;
     if ($_SESSION['inkeys']) {

@@ -29,7 +29,7 @@ if (isset($_POST['newkeyword'])) {
 }
 
 $result = sqlquery_checked("SELECT * FROM song WHERE SongID=$sid");
-if (mysqli_num_rows($result) == 0) die("<b>Failed to find a record for SongID $sid.</b>");
+if (mysqli_num_rows($result) == 0) die("<b>".sprintf(_('Song not found (ID: %s).'), $sid)."</b>");
 $song = mysqli_fetch_object($result);
 $haschords = preg_match('/\[[^rR]/u',$song->Lyrics);
 $hasromaji = preg_match('/\[r\]/iu',$song->Lyrics);
@@ -227,7 +227,7 @@ if ($song->Audio) {
     echo "<br>\n    <b>"._('Comment about audio recording:')."</b> ".$song->AudioComment."\n";
   }
 }
-if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">"._('Edit This Record')."</a></h2>";
+if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">"._('Edit This Song')."</a></h2>";
 
 echo "  </td></tr></table>\n";
 

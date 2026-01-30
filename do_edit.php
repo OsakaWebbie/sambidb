@@ -3,9 +3,9 @@ ini_set("max_execution_time","120");
 set_time_limit(0);
 include("functions.php");
 include("accesscontrol.php");
-print_header(_("Editing Record..."),"#FFFFFF",0);
+print_header(_("Saving..."),"#FFFFFF",0);
 
-echo "<h3>"._('Editing (or adding) record...')."</h3>";
+echo "<h3>"._('Saving...')."</h3>";
 
 if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
 	echo '<h2 style="color:red">'.sprintf(_('The uploaded file was too large. You must upload a file smaller than %s.'), ini_get("upload_max_filesize"))."<br><br>\n";
@@ -33,7 +33,7 @@ if (!empty($_POST['sid'])) {
     exit;
   }
   if (mysqli_affected_rows($db) > 0) {
-    echo _('The song record was updated')."<br>";
+    echo _('The song was updated.')."<br>";
   }
 } else {
   //echo "Creating a new record.<br>"; //debugging only
@@ -56,9 +56,9 @@ if (!empty($_POST['sid'])) {
   }
   if (mysqli_affected_rows($db) > 0) {
     $sid = mysqli_insert_id($db);
-    echo _('The song record was inserted.')."<br>";
+    echo _('The song was added.')."<br>";
   } else {
-    echo _('No song record was inserted for some reason.')."<br>";
+    echo _('The song was not added for some reason.')."<br>";
     exit;
   }
 }
