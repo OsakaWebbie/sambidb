@@ -32,6 +32,8 @@ function header1($title='') {
 }
 
 function header2($nav=0) {
+  global $_nav_shown;
+  $_nav_shown = $nav;
   echo '<link rel="stylesheet" type="text/css" href="style.php">'."\n";
   echo "</head>\n";
   $fileroot = substr($_SERVER['PHP_SELF'],(strrpos($_SERVER['PHP_SELF'],"/")+1),(strrpos($_SERVER['PHP_SELF'],".")-strrpos($_SERVER['PHP_SELF'],"/")-1));
@@ -46,7 +48,7 @@ function header2($nav=0) {
     $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
     $navmarkup .= "  <li><a href='multiselect.php' target='_top'>"._("Tagged Song Actions")."</a></li>\n";
     $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
-    $navmarkup .= "  <li><a href='maintenance.php' target='_top'>"._("DB Settings")."</a></li>\n";
+    $navmarkup .= "  <li><a href='db_settings.php' target='_top'>"._("DB Settings")."</a></li>\n";
     if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
       $navmarkup .= "  <li><a href='sqlquery.php' target='_top'>"._("(Freeform SQL)")."</a></li>\n";
     }
@@ -66,47 +68,54 @@ function header2($nav=0) {
 
 // Function footer: sends final html
 function footer($nav=0) {
+  global $_nav_shown;
+  if ($_nav_shown) $nav = $_nav_shown;  // use value from header2() if set
   echo "  <div style='clear:both'></div>\n";
   echo "</div>\n"; //end of content div
   echo "</div>\n"; //end of main-container div
 
 ?>
+<?php if ($nav) { ?>
   <script>
-    if (window.jQuery) { //really simple files that don't have jQuery don't need this stuff either
-      $(function() {
-        $(window).scroll(function() {
-          if ($(this).scrollTop() > 150 && !$('#scrollnav').hasClass('visible')) {
-            $('#scrollnav').addClass('visible');
-          } else if ($(this).scrollTop() <= 150 && $('#scrollnav').hasClass('visible')) {
-            $('#scrollnav').removeClass('visible');
-          }
-        });
-
-        $("#nav-mobile").html($("#nav-main").html());
-        $("#scrollnav").html($("#nav-main").html());
-        $("#nav-trigger").click(function(){
-          if ($("nav#nav-mobile ul").hasClass("expanded")) {
-            $("nav#nav-mobile ul.expanded").removeClass("expanded").slideUp(250);
-            $(this).removeClass("open");
-          } else {
-            $("nav#nav-mobile ul").addClass("expanded").slideDown(250);
-            $(this).addClass("open");
-          }
-        });
-
-        $('.switchlang').click(function(event) {
-          event.preventDefault();
-          $.ajax({
-            type: "POST",
-            url: "ajax_actions.php?action=SwitchLang&lang=<?=$_SESSION['lang']=='en_US'?'ja_JP':'en_US' ?>",
-            success: function() {
-              location.reload(true);
-            }
-          });
-        });
-      });
+    if (!window.jQuery) {
+      document.write('<script src="https://code.jquery.com/jquery-3.2.1.min.js"><\/script>');
     }
   </script>
+  <script>
+    $(function() {
+      $(window).scroll(function() {
+        if ($(this).scrollTop() > 150 && !$('#scrollnav').hasClass('visible')) {
+          $('#scrollnav').addClass('visible');
+        } else if ($(this).scrollTop() <= 150 && $('#scrollnav').hasClass('visible')) {
+          $('#scrollnav').removeClass('visible');
+        }
+      });
+
+      $("#nav-mobile").html($("#nav-main").html());
+      $("#scrollnav").html($("#nav-main").html());
+      $("#nav-trigger").click(function(){
+        if ($("nav#nav-mobile ul").hasClass("expanded")) {
+          $("nav#nav-mobile ul.expanded").removeClass("expanded").slideUp(250);
+          $(this).removeClass("open");
+        } else {
+          $("nav#nav-mobile ul").addClass("expanded").slideDown(250);
+          $(this).addClass("open");
+        }
+      });
+
+      $('.switchlang').click(function(event) {
+        event.preventDefault();
+        $.ajax({
+          type: "POST",
+          url: "ajax_actions.php?action=SwitchLang&lang=<?=$_SESSION['lang']=='en_US'?'ja_JP':'en_US' ?>",
+          success: function() {
+            location.reload(true);
+          }
+        });
+      });
+    });
+  </script>
+<?php } ?>
   </body>
 </html>
 <?php
@@ -122,17 +131,29 @@ function print_header($title,$color,$nav) {
 //DEPRECATED
 function print_footer($nav=0) {
   echo "</td></tr></table>";
-  footer();
+  footer($nav);
 }
 
 // function sqlquery_checked: shorten the repeated checks for SQL errors
 function sqlquery_checked($sql) {
   global $db;
-  $result = mysqli_query($db, $sql);
-  if ($result === false ){
-    die("<pre style='font-size:15px;'><strong>SQL Error in file ".$_SERVER['PHP_SELF'].": ".mysqli_error($db)."</strong><br>$sql</pre>");
+
+  try {
+    $result = mysqli_query($db, $sql);
+
+    // Handle PHP 7.x where mysqli_query returns false on error
+    if ($result === false) {
+      throw new Exception(mysqli_error($db));
+    }
+
+    return $result;
+
+  } catch (Exception $e) {
+    // This catches both:
+    // - PHP 8.x: mysqli_sql_exception thrown automatically
+    // - PHP 7.x: our manually thrown Exception
+    die('<pre style="white-space:pre-wrap;font-size:15px;font-weight:bold">SQL Error in file '.$_SERVER['PHP_SELF'].': '.$e->getMessage().'</pre><pre style="white-space:pre-wrap">'.$sql.'</pre>');
   }
-  return $result;
 }
 
 // Function sql_single: expects SQL query that returns one row and one column and simply returns the resulting value

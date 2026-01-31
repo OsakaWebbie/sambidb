@@ -18,7 +18,7 @@ if (!$eid) {
 }
 //get the list of dates (column headings for table)
 $sql = "SELECT DISTINCT UseDate from history WHERE EventID = $eid";
-if ($_GET['dateperiod']) {  //this will not be the latest set of dates
+if (!empty($_GET['dateperiod'])) {  //this will not be the latest set of dates
   $period_array = explode(",",$_GET['dateperiod']);
   $sql .= " AND UseDate < '".$period_array[0]."'";
 }
@@ -26,6 +26,7 @@ $sql .= " ORDER BY UseDate DESC LIMIT 20";
 if (!$result = mysqli_query($db,$sql)) {
   exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
 }
+$darray = [];
 while ($darray[] = mysqli_fetch_row ($result));
 $num_dates = count($darray) - 1;
 $start_index = $num_dates - 1;
@@ -39,14 +40,14 @@ if (!$result = mysqli_query($db,$sql)) {
 $row = mysqli_fetch_row ($result);
 
 //write the description and any buttons needed for navigating to other date periods
-echo "<table border=0 cellspacing=0 cellpadding=0><tr>\n";
+echo "<table><tr>\n";
 if ($num_dates == 20) {  //there are 20 dates, so there might be more before this
   $url = $_SERVER['PHP_SELF']."?eid={$eid}&dateperiod={$startdate}";
-  if ($_GET['dateperiod'])   $url .= ",".$_GET['dateperiod'];
+  if (!empty($_GET['dateperiod']))   $url .= ",".$_GET['dateperiod'];
   echo "<td valign=middle><button onclick=\"window.location='{$url}';\"><< Earlier Dates</button></td>\n";
 }
 if ($row && $row[0] != "") echo "<td align=center valign=middle width=100%><b>Event Description:</b> ".$row[0]."</td>\n";
-if ($_GET['dateperiod']) {  //there are more after this
+if (!empty($_GET['dateperiod'])) {  //there are more after this
  /* for ($i = 0; $i < (count($period_array)-1); $i++) {
     $j = $i + 1;
     $passvar = $period_array[$j];
@@ -66,7 +67,7 @@ echo "</tr></table><br>\n";
 $sql = "SELECT DISTINCT history.SongID,Title from history LEFT JOIN song ".
     "ON history.SongID=song.SongID WHERE EventID = $eid";
 if ($startdate)  $sql .= " AND UseDate >= '{$startdate}'";
-if ($_GET['dateperiod'])  $sql .= " AND UseDate < '".$period_array[0]."'";
+if (!empty($_GET['dateperiod']))  $sql .= " AND UseDate < '".$period_array[0]."'";
 $sql .= " ORDER BY Title";
 if (!$result = mysqli_query($db,$sql)) {
   exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
@@ -90,7 +91,7 @@ for ($r=0; $r<$num_songs; $r++) {
   //query for this song's use data and correlate to dates
   $sql = "SELECT UseDate from history WHERE EventID=$eid AND SongID={$parray[$r][0]}";
   if ($startdate)  $sql .= " AND UseDate >= '{$startdate}'";
-  if ($_GET['dateperiod'])  $sql .= " AND UseDate < '".$period_array[0]."'";
+  if (!empty($_GET['dateperiod']))  $sql .= " AND UseDate < '".$period_array[0]."'";
   $sql .= " ORDER BY UseDate";
   if (!$result = mysqli_query($db,$sql)) {
     exit("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
