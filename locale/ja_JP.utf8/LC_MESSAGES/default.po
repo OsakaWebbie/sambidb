@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 11:09+0900\n"
-"PO-Revision-Date: 2026-01-31 11:09+0900\n"
+"POT-Creation-Date: 2026-01-31 23:28+0900\n"
+"PO-Revision-Date: 2026-01-31 23:38+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -43,16 +43,15 @@ msgstr "最後のログイン：%s"
 msgid "Total: %d"
 msgstr "合計：%d回"
 
-#: db_settings.php:5 db_settings.php:10 db_settings_temp.php:5
-#: db_settings_temp.php:155
+#: db_settings.php:5 db_settings.php:10
 msgid "Database Settings"
 msgstr "基本データ設定"
 
-#: db_settings.php:16 db_settings_temp.php:161
+#: db_settings.php:16
 msgid "Keyword Management"
 msgstr "キーワード管理"
 
-#: db_settings.php:17 db_settings_temp.php:162
+#: db_settings.php:17
 msgid ""
 "Select a keyword to rename, and type its new name.&nbsp; Or select &quot;New "
 "Keyword&quot; and type a new keyword name.  Or select a keyword to delete, "
@@ -62,28 +61,27 @@ msgstr ""
 "「新規キーワード」を選択して、新しいキーワード名を入力してください。または削"
 "除するキーワードを選択して、「削除」を押してください。"
 
-#: db_settings.php:19 db_settings_temp.php:164
+#: db_settings.php:19
 msgid "New Keyword..."
 msgstr "新規キーワード..."
 
-#: db_settings.php:25 db_settings_temp.php:170
+#: db_settings.php:25
 msgid "Keyword Name:"
 msgstr "キーワード："
 
-#: db_settings.php:27 db_settings_temp.php:172
+#: db_settings.php:27
 msgid "Add or Rename"
 msgstr "追加または名前変更"
 
 #: db_settings.php:28 db_settings.php:48 db_settings.php:87
-#: db_settings_temp.php:173 db_settings_temp.php:193 db_settings_temp.php:232
 msgid "Delete"
 msgstr "削除"
 
-#: db_settings.php:34 db_settings_temp.php:179
+#: db_settings.php:34
 msgid "Event Management"
 msgstr "イベント管理"
 
-#: db_settings.php:35 db_settings_temp.php:180
+#: db_settings.php:35
 msgid ""
 "Fill in the information to add a new event.  Or select an event, and modify "
 "its info (name, remarks, and/or active status).  Or select an event to "
@@ -93,32 +91,31 @@ msgstr ""
 "て、その情報（名前、備考、現在開催中かどうか）を変更してください。または削除"
 "するイベントを選択して「削除」をクリックしてください。"
 
-#: db_settings.php:37 db_settings_temp.php:182
+#: db_settings.php:37
 msgid "New Event..."
 msgstr "新規イベント..."
 
-#: db_settings.php:44 db_settings_temp.php:189 ms_history.php:77
+#: db_settings.php:44 event_use.php:125 ms_history.php:77
 msgid "Event:"
 msgstr "イベント："
 
-#: db_settings.php:45 db_settings_temp.php:190
+#: db_settings.php:45
 msgid "Currently Occurring Event"
 msgstr "現在開催中のイベント"
 
-#: db_settings.php:46 db_settings_temp.php:191
+#: db_settings.php:46
 msgid "Description:"
 msgstr "説明："
 
-#: db_settings.php:47 db_settings.php:86 db_settings_temp.php:192
-#: db_settings_temp.php:231
+#: db_settings.php:47 db_settings.php:86
 msgid "Add or Update"
 msgstr "追加または更新"
 
-#: db_settings.php:56 db_settings_temp.php:201
+#: db_settings.php:56
 msgid "User Management"
 msgstr "ユーザ（ログイン）管理"
 
-#: db_settings.php:57 db_settings_temp.php:202
+#: db_settings.php:57
 msgid ""
 "Fill in the information to add a new user. Or select an existing user to "
 "make changes or delete. NOTE: You cannot see the existing password, but you "
@@ -128,83 +125,83 @@ msgstr ""
 "除するには、そのユーザを選択してください。注：既存のパスワードは表示されませ"
 "んが、ユーザがパスワードを忘れた場合は新しいパスワードを入力できます。"
 
-#: db_settings.php:59 db_settings_temp.php:204
+#: db_settings.php:59
 msgid "New User..."
 msgstr "新規ユーザ…"
 
-#: db_settings.php:66 db_settings_temp.php:211
+#: db_settings.php:66
 msgid "Name"
 msgstr "名前"
 
-#: db_settings.php:68 db_settings_temp.php:213
+#: db_settings.php:68
 msgid "UserID (to log in)"
 msgstr "UserID （ログインする時に使う）"
 
-#: db_settings.php:70 db_settings_temp.php:215
+#: db_settings.php:70
 msgid "(max. 16 characters, no spaces)"
 msgstr "（最大16文字、スペースなし）"
 
-#: db_settings.php:71 db_settings_temp.php:216
+#: db_settings.php:71
 msgid "Language for Interface"
 msgstr "インタフェースの言語"
 
-#: db_settings.php:72 db_settings_temp.php:217 user_settings.php:47
+#: db_settings.php:72 user_settings.php:47
 msgid "English"
 msgstr "英語"
 
-#: db_settings.php:73 db_settings_temp.php:218 user_settings.php:48
+#: db_settings.php:73 user_settings.php:48
 msgid "Japanese"
 msgstr "日本語"
 
-#: db_settings.php:75 db_settings_temp.php:220
+#: db_settings.php:75
 msgid "Access Level"
 msgstr "アクセス権限"
 
-#: db_settings.php:76 db_settings_temp.php:221
+#: db_settings.php:76
 msgid "Read-only"
 msgstr "読み取り専用"
 
-#: db_settings.php:77 db_settings_temp.php:222
+#: db_settings.php:77
 msgid "Standard (can edit)"
 msgstr "標準（編集可能）"
 
-#: db_settings.php:78 db_settings_temp.php:223
+#: db_settings.php:78
 msgid "Admin"
 msgstr "管理者"
 
-#: db_settings.php:80 db_settings_temp.php:225
+#: db_settings.php:80
 msgid "New Password"
 msgstr "新しいパスワード"
 
-#: db_settings.php:82 db_settings_temp.php:227
+#: db_settings.php:82
 msgid "(leave blank if not changing password)"
 msgstr "（パスワード変更しない場合、空けておいてください。）"
 
-#: db_settings.php:83 db_settings_temp.php:228
+#: db_settings.php:83
 msgid "New Password again"
 msgstr "新しいパスワード（確認用）"
 
-#: db_settings.php:210 db_settings_temp.php:126
+#: db_settings.php:210
 msgid "Keyword name cannot be blank."
 msgstr "キーワード名を入力してください。"
 
-#: db_settings.php:216 db_settings_temp.php:132
+#: db_settings.php:216
 msgid "Event name cannot be blank."
 msgstr "イベント名を入力してください。"
 
-#: db_settings.php:222 db_settings_temp.php:138
+#: db_settings.php:222
 msgid "User Name cannot be blank."
 msgstr "ユーザ名を入力してください。"
 
-#: db_settings.php:225 db_settings_temp.php:141
+#: db_settings.php:225
 msgid "UserID cannot be blank."
 msgstr "ユーザIDを入力してください。"
 
-#: db_settings.php:228 db_settings_temp.php:144
+#: db_settings.php:228
 msgid "You must enter a password for a new user."
 msgstr "新規ユーザのために、パスワードの入力は必要です。"
 
-#: db_settings.php:231 db_settings_temp.php:147
+#: db_settings.php:231
 msgid "The two password entries don't match."
 msgstr "入力された二つのパスワードは異なります。"
 
@@ -386,11 +383,11 @@ msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:89 list.php:144 ms_text.php:14
+#: edit.php:89 event_use.php:147 list.php:144 ms_text.php:14
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:92 list.php:151 ms_text.php:15
+#: edit.php:92 event_use.php:146 list.php:151 ms_text.php:15
 msgid "Original Title"
 msgstr "原曲名"
 
@@ -489,9 +486,41 @@ msgstr ""
 "の前にハイフンのみの行（1つ以上、いくつでも構いません）を付けてください（例："
 "「---」）。"
 
-#: event_use.php:5 functions.php:50
+#: event_use.php:115 event_use.php:122 functions.php:50
 msgid "Song Use Chart"
 msgstr "曲使用の表"
+
+#: event_use.php:126
+msgid "Select an event..."
+msgstr "イベントを選択..."
+
+#: event_use.php:134
+msgid "current"
+msgstr "現在"
+
+#: event_use.php:134
+msgid "archive"
+msgstr "過去"
+
+#: event_use.php:145
+msgid "Sort by:"
+msgstr "並び順："
+
+#: event_use.php:148
+msgid "Usage Count"
+msgstr "使用数"
+
+#: event_use.php:150 event_use.php:274
+msgid "Load Earlier Dates"
+msgstr "以前の日付を読み込む"
+
+#: event_use.php:245
+msgid "Loading..."
+msgstr "読み込み中..."
+
+#: event_use.php:327
+msgid "Song (Count)"
+msgstr "曲名（使用数）"
 
 #: filter.php:28
 msgid "Search Filtering"
@@ -1083,6 +1112,11 @@ msgstr "確証のため、現在のパスワードを入力してください。
 #: user_settings.php:72
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#, fuzzy
+#~| msgid "Event:"
+#~ msgid "Event"
+#~ msgstr "イベント："
 
 #~ msgid "Old"
 #~ msgstr "現在のパスワード"
