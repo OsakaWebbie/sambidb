@@ -478,6 +478,77 @@ body.sqlquery form {
 }
 body.sqlquery #mainTable tbody td { vertical-align:top; }
 
+/* specific to event_use.php (usage chart) */
+.chart-controls {
+  margin: 10px 0;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.chart-controls .sort-controls {
+  margin: 5px;
+}
+.chart-controls .sort-btn {
+  margin: 0 5px;
+}
+.use-chart-container {
+  max-height: 70vh;
+  overflow: auto;
+  position: relative;
+  border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
+}
+.use-chart {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: auto;
+}
+.use-chart thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: <?=(!empty($tableheaderbg)?$tableheaderbg:"#d7e4f9")?>;
+  border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
+  padding: 5px;
+  font-size: 0.85em;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+.use-chart .sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: <?=(!empty($tableheaderbg)?$tableheaderbg:"#d7e4f9")?>;
+  border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
+  padding: 5px;
+  font-size: 0.85em;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 2px 0 2px -1px rgba(0, 0, 0, 0.4);
+}
+.use-chart .sticky-corner {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  background: <?=(!empty($tableheaderbg)?$tableheaderbg:"#d7e4f9")?>;
+  border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
+  padding: 5px;
+  font-weight: bold;
+  box-shadow: 2px 2px 2px -1px rgba(0, 0, 0, 0.4);
+}
+.use-chart tbody td {
+  border: 1px solid <?=(!empty($mainborder)?$mainborder:"Black")?>;
+  padding: 5px;
+  text-align: center;
+}
+.use-chart tbody td.used {
+  background-color: #8080FF;
+  font-weight: bold;
+}
+
 @media print {
   body.full {
     background:none;
