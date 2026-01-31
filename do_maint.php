@@ -1,158 +1,219 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-print_header("Maintenance Processing","#FFFFFF",0);
+header1(_("Processing..."));
+header2(0);
 
-if ($kw_add_upd) {
-  if ($kw_select == "new") {
-    $sql = "INSERT INTO keyword (Keyword) VALUES ('$keyword')";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+// Helper function for escaping (alias for mysqli_real_escape_string)
+function h2d($text) {
+  global $db;
+  return mysqli_real_escape_string($db, $text);
+}
+
+// ********** KEYWORD ADD/UPDATE **********
+if (!empty($_POST['kw_add_upd'])) {
+  $keyword_escaped = h2d($_POST['keyword']);
+  if ($_POST['kwid'] == "new") {
+    sqlquery_checked("INSERT INTO keyword (Keyword) VALUES ('$keyword_escaped')");
     $message = _('Keyword successfully added.');
-
   } else {
-    $sql = "UPDATE keyword SET Keyword='$keyword' WHERE KeywordID=$kw_select";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+    $kwid = intval($_POST['kwid']);
+    sqlquery_checked("UPDATE keyword SET Keyword='$keyword_escaped' WHERE KeywordID=$kwid");
     $message = _('Keyword successfully renamed.');
   }
-  
-} elseif ($kw_del) {
 
-  // if first time around, check for songkeyword records - if none, don't need confirmation
-  if (!$confirmed) {
-    $sql = "SELECT Title FROM songkeyword LEFT JOIN song ON songkeyword.SongID=song.SongID ".
-    "WHERE KeywordID=$kw_select ORDER BY Title";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+// ********** KEYWORD DELETE **********
+} elseif (!empty($_POST['kw_del'])) {
+  $kwid = intval($_POST['kwid']);
+
+  // if first time around, check for songkey records - if none, don't need confirmation
+  if (empty($_POST['confirmed'])) {
+    $result = sqlquery_checked("SELECT Title FROM songkey LEFT JOIN song ON songkey.SongID=song.SongID ".
+        "WHERE KeywordID=$kwid ORDER BY Title");
     if (mysqli_num_rows($result) == 0) {
-      $confirmed = "yes";
+      $_POST['confirmed'] = 1;
     }
   }
-  if ($confirmed) {
-    $sql = "DELETE FROM songkeyword WHERE KeywordID=$kw_select";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
-    if (mysqli_affected_rows($db) > 0) {
-      $message = sprintf(_('%s songs removed from keyword.'), mysqli_affected_rows($db))."\\n";
-    }
-    $sql = "DELETE FROM keyword WHERE KeywordID=$kw_select LIMIT 1";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+  if (!empty($_POST['confirmed'])) {
+    $affected = 0;
+    $result = sqlquery_checked("DELETE FROM songkey WHERE KeywordID=$kwid");
+    $affected = mysqli_affected_rows($db);
+    sqlquery_checked("DELETE FROM keyword WHERE KeywordID=$kwid LIMIT 1");
     if (mysqli_affected_rows($db) == 1) {
-      $message = $message._('Keyword successfully deleted.');
+      $message = ($affected > 0 ? sprintf(_('%s songs removed from keyword.'), $affected)."\\n" : "").
+                 _('Keyword successfully deleted.');
     }
   } else {
-  //already did query for the keyword's members - now tell the user and ask for confirmation
-    echo "<h3><font color=red>"._('Please Confirm Keyword Delete')."</font></h3>\n";
-    echo sprintf(_('The following songs are still associated with the %s keyword.&nbsp; If you are sure you want to delete these keyword associations, click the button.&nbsp; (If not, just press your browser\'s Back button.)'), $keyword)."\n";
-    echo "<form action={$_SERVER['PHP_SELF']} method=post>\n";
-    echo "  <input type=hidden name=kw_select value=\"$kw_select\">\n";
-    echo "  <input type=hidden name=kw_del value=\"$kw_del\">\n";
-    echo "  <input type=hidden name=confirmed value=\"yes\">\n";
-    echo "  <input type=submit value=\""._('Yes, delete the keyword')."\">\n";
-    echo "</form>\n";
-    echo _('Songs with this keyword:')."<br><font size=2>\n";
+    // Show confirmation form
+    echo "<h3 class=\"alert\">"._('Please Confirm Keyword Delete')."</h3>\n<p>";
+    printf(_('The following songs are still associated with the %s keyword.&nbsp; If you are sure you want to delete these keyword associations, click the button.&nbsp; (If not, just press your browser\'s Back button.)'), $_POST['keyword'] ?? '');
+    echo "</p>\n";
+?>
+<form action="<?=$_SERVER['PHP_SELF']?>" method="post">
+  <input type="hidden" name="kwid" value="<?=$kwid?>">
+  <input type="hidden" name="keyword" value="<?=htmlspecialchars($_POST['keyword'] ?? '')?>">
+  <input type="hidden" name="kw_del" value="1">
+  <input type="hidden" name="confirmed" value="1">
+  <input type="submit" value="<?=_("Yes, delete the keyword")?>">
+</form>
+<p><?=_('Songs with this keyword:')?>
+<?php
     while ($row = mysqli_fetch_object($result)) {
-      echo "&nbsp;&nbsp;&nbsp;".$row->Title."<br>\n";
+      echo "<br>&nbsp;&nbsp;&nbsp;".htmlspecialchars($row->Title)."\n";
     }
-    echo "</font>";
+    echo "</p>";
     $need_confirmation = 1;
   }
-  
-} elseif ($event_add_upd) {
 
-  if ($active) {
-    $active = "1";
-  } else {
-    $active = "0";
-  }
-  if ($event_list == "new") {
-    $sql = "INSERT INTO event (Event,Active,Remarks) VALUES ('$event','$active','$remarks')";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+// ********** EVENT ADD/UPDATE **********
+} elseif (!empty($_POST['event_add_upd'])) {
+  $event_escaped = h2d($_POST['event']);
+  $remarks_escaped = h2d($_POST['remarks']);
+  $active = !empty($_POST['active']) ? 1 : 0;
+
+  if ($_POST['eventid'] == "new") {
+    sqlquery_checked("INSERT INTO event (Event,Active,Remarks) VALUES ('$event_escaped',$active,'$remarks_escaped')");
     $message = _('New event successfully added.');
   } else {
-    $sql = "UPDATE event SET Active=$active,Event='$event',".
-      "Remarks='$remarks' WHERE EventID=$event_id";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+    $eventid = intval($_POST['eventid']);
+    sqlquery_checked("UPDATE event SET Event='$event_escaped',Active=$active,Remarks='$remarks_escaped' WHERE EventID=$eventid");
     $message = _('Event information successfully updated.');
   }
 
-} elseif ($event_del) {
+// ********** EVENT DELETE **********
+} elseif (!empty($_POST['event_del'])) {
+  $eventid = intval($_POST['eventid']);
 
   // if first time around, check for history records - if none, don't need confirmation
-  if (!$confirmed) {
-    $sql = "SELECT count(UseDate) AS num, min(UseDate) AS first, max(UseDate) AS last ".
-    "FROM history WHERE EventID=$event_id";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+  if (empty($_POST['confirmed'])) {
+    $result = sqlquery_checked("SELECT count(UseDate) AS num, min(UseDate) AS first, max(UseDate) AS last ".
+        "FROM history WHERE EventID=$eventid");
     $row = mysqli_fetch_object($result);
     if ($row->num == 0) {
-      $confirmed = "yes";
+      $_POST['confirmed'] = 1;
     } else {
       $use_num = $row->num;
       $use_first = $row->first;
       $use_last = $row->last;
     }
   }
-  if ($confirmed) {
-    $sql = "DELETE FROM history WHERE EventID=$event_id";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
-    if (mysqli_affected_rows($db) > 0) {
-      $message = sprintf(_('%s related history records deleted.'), mysqli_affected_rows($db))."\\n";
-    }
-    $sql = "DELETE FROM event WHERE EventID=$event_id LIMIT 1";
-    if (!$result = mysqli_query($db,$sql)) {
-      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
-      exit;
-    }
+  if (!empty($_POST['confirmed'])) {
+    sqlquery_checked("DELETE FROM history WHERE EventID=$eventid");
+    $affected = mysqli_affected_rows($db);
+    sqlquery_checked("DELETE FROM event WHERE EventID=$eventid LIMIT 1");
     if (mysqli_affected_rows($db) == 1) {
-      $message = $message._('Event successfully deleted.');
+      $message = ($affected > 0 ? sprintf(_('%s related history records deleted.'), $affected)."\\n" : "").
+                 _('Event successfully deleted.');
     }
   } else {
-  //ask for confirmation
-    echo "<h3><font color=red>"._('Please Confirm Event Delete')."</font></h3>\n";
-    echo sprintf(_('There are %s history records for this event, during the time period %s thru %s.  In deleting the event, you will also delete all history data associated with it.  Are you sure you want to do this?  (If not, just press your browser\'s Back button.)'), $use_num, $use_first, $use_last)."\n";
-    echo "<form action={$_SERVER['PHP_SELF']} method=post>\n";
-    echo "  <input type=hidden name=event_id value=\"$event_id\">\n";
-    echo "  <input type=hidden name=event_del value=\"$event_del\">\n";
-    echo "  <input type=hidden name=confirmed value=\"yes\">\n";
-    echo "  <input type=submit value=\""._('Yes, delete the event and history records')."\">\n";
-    echo "</form>\n";
+    // Show confirmation form
+    echo "<h3 class=\"alert\">"._('Please Confirm Event Delete')."</h3>\n<p>";
+    printf(_('There are %1$s history records for this event, during the time period %2$s thru %3$s.  In deleting the event, you will also delete all history data associated with it.  Are you sure you want to do this?  (If not, just press your browser\'s Back button.)'),
+        $use_num, $use_first, $use_last);
+    echo "</p>\n";
+?>
+<form action="<?=$_SERVER['PHP_SELF']?>" method="post">
+  <input type="hidden" name="eventid" value="<?=$eventid?>">
+  <input type="hidden" name="event_del" value="1">
+  <input type="hidden" name="confirmed" value="1">
+  <input type="submit" value="<?=_("Yes, delete the event and history records")?>">
+</form>
+<?php
     $need_confirmation = 1;
   }
 
-}
-
-if (!$need_confirmation) {
-  echo "<SCRIPT FOR=window EVENT=onload LANGUAGE=\"Javascript\">\n";
-  if ($message) {
-    echo "alert(\"".$message."\");\n";
+// ********** USER ADD/UPDATE (admin only) **********
+} elseif (!empty($_POST['user_add_upd'])) {
+  if ($_SESSION['admin'] != 2) {
+    $message = _('Access denied.');
+  } else {
+    $adminlevel = intval($_POST['adminlevel']);
+    if ($_POST['userid'] == "new") {
+      // Check if UserID already exists
+      $new_userid = h2d($_POST['new_userid']);
+      $result = sqlquery_checked("SELECT UserName FROM user WHERE UserID='$new_userid'");
+      if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_object($result);
+        $message = sprintf(_("UserID '%s' is already in use by %s. Please choose a different UserID."),
+            $_POST['new_userid'], $row->UserName);
+      } else {
+        sqlquery_checked("INSERT INTO user (UserID,UserName,Password,Admin,Language) ".
+            "VALUES ('$new_userid','".h2d($_POST['username'])."',PASSWORD('".h2d($_POST['new_pw1'])."'),$adminlevel,".
+            "'".h2d($_POST['language'])."')");
+        if (mysqli_affected_rows($db) == 1) {
+          $message = _("New user successfully added.");
+        }
+      }
+    } else { // update
+      $new_userid = h2d($_POST['new_userid']);
+      $old_userid = h2d($_POST['old_userid']);
+      // Check if new UserID already exists (if changing)
+      if ($new_userid != $old_userid) {
+        $result = sqlquery_checked("SELECT UserName FROM user WHERE UserID='$new_userid'");
+        if (mysqli_num_rows($result) > 0) {
+          $row = mysqli_fetch_object($result);
+          $message = sprintf(_("UserID '%s' is already in use by %s. Please choose a different UserID."),
+              $_POST['new_userid'], $row->UserName);
+        }
+      }
+      if (empty($message)) {
+        $sql = 'UPDATE user SET ';
+        if ($new_userid != $old_userid) {
+          $sql .= "UserID='$new_userid',";
+        }
+        $sql .= "UserName='".h2d($_POST['username'])."',";
+        if (!empty($_POST['new_pw1'])) {
+          $sql .= "Password=PASSWORD('".h2d($_POST['new_pw1'])."'),";
+        }
+        $sql .= "Admin=$adminlevel,Language='".h2d($_POST['language'])."' WHERE UserID='$old_userid'";
+        sqlquery_checked($sql);
+        if (mysqli_affected_rows($db) >= 0) {
+          // Update session if editing self
+          if ($old_userid == $_SESSION['userid']) {
+            $_SESSION['userid'] = $_POST['new_userid'];
+            $_SESSION['username'] = $_POST['username'];
+            $_SESSION['admin'] = $adminlevel;
+            $_SESSION['lang'] = $_POST['language'];
+          }
+          $message = _("User information successfully updated.");
+        }
+      }
+    }
   }
-  echo "window.location = \"maintenance.php\";\n";
-  echo "</SCRIPT>\n";
+
+// ********** USER DELETE (admin only) **********
+} elseif (!empty($_POST['user_del'])) {
+  if ($_SESSION['admin'] != 2) {
+    $message = _('Access denied.');
+  } else {
+    $old_userid = h2d($_POST['old_userid']);
+    // Prevent deleting yourself
+    if ($old_userid == $_SESSION['userid']) {
+      $message = _("You cannot delete your own account while logged in.");
+    } else {
+      sqlquery_checked("DELETE FROM user WHERE UserID='$old_userid'");
+      if (mysqli_affected_rows($db) == 1) {
+        $message = _("User successfully deleted.");
+      }
+    }
+  }
+
+// ********** CATCH ALL **********
+} else {
+  $message = "No match for type of update in do_maint.php. Programming bug!";
 }
 
-print_footer();
+// Redirect back to settings page
+if (empty($need_confirmation)) {
+?>
+<script>
+<?php if (!empty($message)) { ?>
+  alert("<?=$message?>");
+<?php } ?>
+  window.location = "db_settings.php";
+</script>
+<?php
+}
+
+footer();
 ?>

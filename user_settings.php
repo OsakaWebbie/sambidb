@@ -54,9 +54,9 @@ header1(_("User Settings"));
 
 <form method="post" name="pwform" autocomplete="off" onsubmit="return validate('pwd');">
   <fieldset><legend><?=_("Change My Password")?></legend>
-  <label class="label-n-input"><?=_("Old")?>: <input type="password" id="old_pw" name="old_pw" style="width:8em"></label>
-  <label class="label-n-input"><?=_("New")?>: <input type="password" id="new_pw1" name="new_pw1" style="width:8em"></label>
-  <label class="label-n-input"><?=_("New again")?>: <input type="password" id="new_pw2" name="new_pw2" style="width:8em"></label>
+  <label class="label-n-input"><?=_("Old:")?> <input type="password" id="old_pw" name="old_pw" style="width:8em"></label>
+  <label class="label-n-input"><?=_("New:")?> <input type="password" id="new_pw1" name="new_pw1" style="width:8em"></label>
+  <label class="label-n-input"><?=_("New again:")?> <input type="password" id="new_pw2" name="new_pw2" style="width:8em"></label>
   <input type="submit" name="user_pwd_upd" value="<?=_("Change Password")?>">
 </fieldset></form>
 
