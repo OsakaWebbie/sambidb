@@ -94,6 +94,45 @@ switch($_REQUEST['action']) {
     }
     break;
 
+  case 'HistoryData':
+    $eventid = intval($_REQUEST['eventid'] ?? 0);
+    if ($eventid < 1) {
+        die(json_encode(array('error' => 'Invalid event ID.')));
+    }
+    $result = sqlquery_checked("SELECT SongID, MAX(UseDate) AS LastUse, COUNT(UseDate) AS NumUse FROM history WHERE EventID=$eventid GROUP BY SongID");
+    die(json_encode(mysqli_fetch_all($result, MYSQLI_ASSOC)));
+    break;
+
+  case 'UpdateTags':
+    if ($_SESSION['admin'] < 1) {
+        die(json_encode(array('error' => _('Access denied.'))));
+    }
+    $sid_list = $_REQUEST['sid_list'] ?? '';
+    $tagged_list = $_REQUEST['tagged_list'] ?? '';
+
+    if (empty($sid_list)) {
+        die(json_encode(array('error' => 'No songs specified.')));
+    }
+
+    $all_sids = array_filter(array_map('intval', explode(',', $sid_list)));
+    $tagged_sids = $tagged_list ? array_filter(array_map('intval', explode(',', $tagged_list))) : [];
+
+    if (empty($all_sids)) {
+        die(json_encode(array('error' => 'Invalid song IDs.')));
+    }
+
+    $all_ids = implode(',', $all_sids);
+    sqlquery_checked("UPDATE song SET Tagged=0 WHERE SongID IN ($all_ids)");
+
+    if (!empty($tagged_sids)) {
+        $tagged_ids = implode(',', $tagged_sids);
+        sqlquery_checked("UPDATE song SET Tagged=1 WHERE SongID IN ($tagged_ids)");
+    }
+
+    $totalTagged = mysqli_fetch_row(mysqli_query($db, "SELECT COUNT(SongID) FROM song WHERE Tagged=1"))[0];
+    die(json_encode(array('success' => true, 'totalTagged' => $totalTagged)));
+    break;
+
   default:
     die("Programming error: NO ACTION RECOGNIZED");
 }

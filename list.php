@@ -96,6 +96,10 @@ $jsondata = str_replace("\u0022","\\\\\"",$jsondata);
 //$jsondata = str_replace("'",'&#39;',$jsondata);
 
 header1(_("Search Results"));
+?>
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/fc-3.2.5/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+<?php
 header2(1);
 
 if (!empty($_GET['tagged'])) {
@@ -106,109 +110,149 @@ if (!empty($_GET['tagged'])) {
 }
 if ($_SESSION['admin']>1) echo '<p style="font-size:10px">'.$sql . (!empty($where)?'<br> WHERE '.$where:'') . '<br> GROUP BY ' . $groupby . ' ORDER BY OrigTitle</p>';
 ?>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/fc-3.2.5/fh-3.1.4/r-2.2.2/sl-1.2.6/datatables.min.css"/>
 
-<label>Show history data for: </label>
-<select id="event" name="event">
+<div style="margin: 10px 0;">
+  <button id="updateTags" class="ui-button"><?=_('Update tags according to checkboxes below')?></button>
+  <button id="actionpage" class="ui-button"><?=_('Go to action page with this list in this order')?></button>
+</div>
+
 <?php
+$eventOptions = '';
 $events = sqlquery_checked('SELECT * FROM event WHERE Active=1 ORDER BY '.
 (isset($_SESSION['default_event'])?'IF (EventID='.$_SESSION['default_event'].',0,1), ':'').'Event');
 while ($ev = mysqli_fetch_object($events)) {
-  echo "  <option value='".$ev->EventID."'>".$ev->Event."</option>\n";
+  $eventOptions .= "  <option value='".$ev->EventID."'>".$ev->Event."</option>\n";
 }
+echo sprintf(_('Show usage history for: %s'), "<select id=\"event\" name=\"event\">\n$eventOptions</select>");
 ?>
-</select>
 
-<button id="actionpage" class="ui-button"><?=_('Go to action page with this list in this order')?></button>
+<table id="songlist" class="order-column cell-border hover stripe"></table>
 
-<table id="songlist" class="order-column cell-border hover stripe"></table></table>
-
-<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/jquery.ui.touch-punch.min.js"></script>
-<script src="//cdn.datatables.net/v/ju/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/fc-3.2.5/fh-3.1.4/r-2.2.2/sl-1.2.6/datatables.js"></script>
+<script src="//cdn.datatables.net/v/ju/dt-1.10.18/fc-3.2.5/fh-3.1.4/r-2.2.2/datatables.js"></script>
 
 <script>
 
 var dataSet = JSON.parse('<?=$jsondata?>');
 
 $(document).ready(function() {
+  $('#updateTags, #actionpage').button();
+
   var table = $('#songlist').DataTable( {
     data: dataSet,
     columns: [
-      {name:'SongID', className:'songid', title:'<?=_('ID')?>', type:'num', visible:false},
-      {name:'Tagged', className:'tagged', title:'<?=_('Tagged')?>', type:'num', visible:false},
-//      {name:'SongID', className:'songid', title:'<?=_('ID')?>', type:'num'},
-//      {name:'Tagged', className:'tagged', title:'<?=_('Tag')?>', type:'num'},
-      {name:'Title', className:'title dt-nowrap', title:'<?=_('Title')?>', type:'text',
+      {name:'SongID', className:'songid', data:0, visible:false},
+      {name:'Tagged', className:'tagged', data:1, visible:false},
+      {name:'Title', className:'title dt-nowrap', title:'<?=_('Title')?>', type:'text', data:2,
         render: function(data, type, row, meta) {
           return '<a href="song.php?sid='+row[0]+'">'+data+'</a>' +
               (row[12] ? '&nbsp;<img src="graphics/audio.gif" height=16 width=16>' : '') +
               (row[13] ? '&nbsp;<img src="graphics/guitar.gif" height=16 width=16>' : '');
         }
       },
-      {name:'OrigTitle', className:'origtitle dt-nowrap', title:'<?=_('Original Title')?>', type:'text'},
-      {name:'Tempo', className:'tempo', title:'<?=_('Tempo')?>', type:'text'},
-      {name:'SongKey', className:'songkey dt-nowrap', title:'<?=_('Key')?>', type:'text'},
-      {name:'FirstLine', className:'firstline', title:'<?=_('First Line')?>', type:'text'},
-      {name:'LastUse', className:'lastuse', title:'<?=_('Last Use')?>', type:'date'},
-      {name:'NumUse', className:'numuse', title:'<?=_('# Uses')?>', type:'num'},
-      {name:'Composer', className:'composer', title:'<?=_('Composer')?>', type:'text'},
-      {name:'Copyright', className:'copyright', title:'<?=_('Copyright')?>', type:'text'},
-      {name:'Source', className:'source', title:'<?=_('Source')?>', type:'text'}
-    ],
-    order: [[3, 'asc']],  //OrigTitle
-    buttons: [
-      'selectAll',
-      'selectNone'
-    ],
-
-    language: {
-<?php if($_SESSION['lang']=='ja_JP') { ?>      url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json",
-      select: {
-        rows: {
-          _: "%d曲が選択されています。",
-          0: "選択するには、行をクリックしてください",
-          1: "1曲が選択されています。"
+      {name:'Select', className:'select-checkbox', orderable:false, data:1,
+        title:'<input type="checkbox" id="selectAll" class="song-tag-cb" title="<?=_('Select All')?>">',
+        render: function(data, type, row) {
+          return '<input type="checkbox" class="song-tag-cb" data-sid="'+row[0]+'"'+(row[1]==1?' checked':'')+' title="<?=_('Tag/Untag')?>">';
         }
       },
+      {name:'OrigTitle', className:'origtitle dt-nowrap', title:'<?=_('Original Title')?>', type:'text', data:3},
+      {name:'Tempo', className:'tempo dt-nowrap', title:'<?=_('Tempo')?>', type:'text', data:4},
+      {name:'SongKey', className:'songkey dt-nowrap', title:'<?=_('Key')?>', type:'text', data:5},
+      {name:'FirstLine', className:'firstline', title:'<?=_('First Line')?>', type:'text', data:6},
+      {name:'LastUse', className:'lastuse', title:'<?=_('Last Use')?>', type:'date', data:7},
+      {name:'NumUse', className:'numuse', title:'<?=_('# Uses')?>', type:'num', data:8},
+      {name:'Composer', className:'composer', title:'<?=_('Composer')?>', type:'text', data:9},
+      {name:'Copyright', className:'copyright', title:'<?=_('Copyright')?>', type:'text', data:10},
+      {name:'Source', className:'source', title:'<?=_('Source')?>', type:'text', data:11}
+    ],
+    order: [[4, 'asc']],  //OrigTitle
+
+    language: {
+      info: '<?=_("Showing _TOTAL_ entries")?>',
+      infoFiltered: '<?=_(" (filtered from _MAX_ total)")?>'
+<?php if($_SESSION['lang']=='ja_JP') { ?>,
+      search: '検索：',
+      zeroRecords: '該当するデータがありません。',
+      infoEmpty: 'データがありません'
 <?php } ?>
-      buttons: {
-        selectAll: "<?=_('Tag All')?>",
-        selectNone: "<?=_('Untag All')?>"
-      }
     },
     responsive: true,
     paging: false,
-    select: {
-      items: 'row',
-      style: 'multi'
-    },
-    dom: 'fBit'
+    dom: 'fit'
   } );
 
-  //pre-select the rows of tagged songs
-  table.rows( function(idx, data, node) {
-    return data[1] == 1;
-  }).select();
+  // Select All checkbox in header
+  $('#songlist').on('click', '#selectAll', function() {
+    $('.song-tag-cb').prop('checked', $(this).is(':checked'));
+  });
 
-  //update tag status in DB when selected
-  table.on( 'select', function ( e, dt, type, indexes ) {
-    var addtags = table.rows( indexes ).data().pluck( 'SongID' );
-    //console.log(JSON.stringify(addtags));
-  } );
-  //clear tag status in DB when deselected
-  table.on( 'deselect', function ( e, dt, type, indexes ) {
-    var removetags = table.rows( indexes ).data().pluck( 'SongID' );
-    //console.log(JSON.stringify(removetags));
-  } );
-  //go to action page
-  $('#actionpage').click( function ( e, dt, type, indexes ) {
-      sids = table.columns(0).data().eq(0).join(',');
-    console.log('SIDs:'+sids);
-    //location='multiselect.php?sid_list='+sids;
-  } );
+  // Bind directly to each checkbox (not delegated) so stopPropagation fires
+  // before the event reaches td.control and triggers the accordion toggle.
+  // Must rebind after every draw because checkboxes are recreated.
+  function bindCheckboxEvents() {
+    $('#songlist tbody .song-tag-cb').off('click.cbfix').on('click.cbfix', function(e) {
+      e.stopPropagation();
+    });
+  }
+  bindCheckboxEvents();
+  table.on('draw', bindCheckboxEvents);
+
+  // Update Tags button - commits checkbox state to database
+  $('#updateTags').click(function() {
+    var allSids = [];
+    var taggedSids = [];
+
+    table.rows().every(function() {
+      allSids.push(this.data()[0]);
+      if ($(this.node()).find('.song-tag-cb').is(':checked')) {
+        taggedSids.push(this.data()[0]);
+      }
+    });
+
+    $.post('ajax_actions.php', {
+      action: 'UpdateTags',
+      sid_list: allSids.join(','),
+      tagged_list: taggedSids.join(',')
+    }, function(response) {
+      if (response.success) {
+        $('.tagcount').text(response.totalTagged);
+      } else {
+        alert(response.error || '<?=_('Error updating tags.')?>');
+      }
+    }, 'json').fail(function() {
+      alert('<?=_('Error updating tags.')?>');
+    });
+  });
+
+  // Go to action page - sends ALL songs in current display order
+  $('#actionpage').click(function() {
+    var sids = [];
+    table.rows({order:'current'}).every(function() {
+      sids.push(this.data()[0]);
+    });
+    location.href = 'multiselect.php?sid_list=' + sids.join(',');
+  });
+
+  // Event dropdown - AJAX update of LastUse/NumUse columns
+  $('#event').on('change', function() {
+    $.getJSON('ajax_actions.php', {action: 'HistoryData', eventid: $(this).val()}, function(data) {
+      var map = {};
+      $.each(data, function(i, row) {
+        map[row.SongID] = row;
+      });
+      table.rows().every(function() {
+        var d = this.data();
+        var h = map[d[0]];
+        d[7] = h ? h.LastUse : '';
+        d[8] = h ? h.NumUse : 0;
+        this.invalidate();
+      });
+      table.draw(false);
+    });
+  }).val('<?=$eid?>');
 
 } );
 </script>

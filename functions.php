@@ -44,7 +44,7 @@ function header2($nav=0) {
     $navmarkup .= "  <li><a href='index.php' target='_top'>"._("Search")."</a></li>\n";
     $navmarkup .= "  <li><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
     $numtags = sql_single("SELECT COUNT(SongID) FROM song WHERE Tagged=1");
-    $navmarkup .= "  <li>".($numtags>0?"<a href='list.php?tagged=1' target='_top'>":'')._('List Tagged')." ($numtags)".($numtags>0?"</a>":'')."</li>\n";
+    $navmarkup .= "  <li>".($numtags>0?"<a href='list.php?tagged=1' target='_top'>":'')._('List Tagged')." (<span class='tagcount'>$numtags</span>)".($numtags>0?"</a>":'')."</li>\n";
     $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
     $navmarkup .= "  <li><a href='multiselect.php' target='_top'>"._("Tagged Song Actions")."</a></li>\n";
     $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
