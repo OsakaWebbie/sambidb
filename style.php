@@ -55,7 +55,7 @@ table { background-color: White;}
   min-height: 53px;
 }
 #nav-main ul, #scrollnav ul {
-  background-color:<?=(!empty($navbg)?$navbg:"rgb(88,57,7)")?>;
+  background-color:<?=(!empty($navbg)?$navbg:"#51579A")?>;
   list-style-type: none;
   margin:10px 10px 0 58px;
   padding:3px 0 5px 0;
@@ -77,7 +77,7 @@ table { background-color: White;}
 }
 #nav-main li.menu-usersettings a span { font-weight:normal; white-space:wrap; }
 #nav-main a:hover {
-  background-color: <?=(!empty($navbghover)?$navbghover:"rgb(132,78,12)")?>;
+  background-color: <?=(!empty($navbghover)?$navbghover:"#85001f")?>;
   color: <?=(!empty($navlinkhover)?$navlinkhover:"White")?>;
 }
 
@@ -90,7 +90,7 @@ table { background-color: White;}
   z-index: 9999;
 }
 #scrollnav ul {
-  background-color: <?=(!empty($navbg)?rgba($navbg,"0.7"):rgba("#2C2C2C","0.7"))?>;
+  background-color: <?=(!empty($navbg)?rgba($navbg,"0.7"):rgba("#51579A","0.7"))?>;
   margin:0;
   padding:5px;
   -moz-border-radius: 0;
@@ -108,7 +108,7 @@ table { background-color: White;}
 #nav-trigger {
   display: none;
   text-align: center;
-  background-color:<?=(!empty($navbg)?$navbg:"rgb(88,57,7)")?>;
+  background-color:<?=(!empty($navbg)?$navbg:"#51579A")?>;
 }
 #nav-trigger img {
   float:left;
@@ -121,7 +121,7 @@ table { background-color: White;}
 #nav-trigger span {
   display: inline-block;
   padding: 10px 30px;
-  color: <?=(!empty($navlink)?$navlink:"LightSteelBlue")?>;
+  color: <?=(!empty($navlink)?$navlink:"White")?>;
   cursor: pointer;
   font-family: arial, helvetica, sans-serif;
   font-size: 120%;
@@ -135,10 +135,10 @@ table { background-color: White;}
   height: 10px;
   content: "";
   border-left: solid 10px transparent;
-  border-top: solid 10px <?=(!empty($navlink)?$navlink:"LightSteelBlue")?>;
+  border-top: solid 10px <?=(!empty($navlink)?$navlink:"White")?>;
   border-right: solid 10px transparent;
 }
-#nav-trigger.open { background-color: <?=(!empty($navbghover)?$navbghover:"rgb(132,78,12)")?>; }
+#nav-trigger.open { background-color: <?=(!empty($navbghover)?$navbghover:"#85001f")?>; }
 #nav-trigger.open span { color:<?=(!empty($navlinkhover)?$navlinkhover:"White")?>; }
 #nav-trigger.open span:after {
   border-left: solid 10px transparent;
@@ -163,18 +163,18 @@ table { background-color: White;}
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  background-color: <?=(!empty($navbg)?$navbg:"rgb(88,57,7)")?>;
+  background-color: <?=(!empty($navbg)?$navbg:"#51579A")?>;
 }
 #nav-mobile li {
   display: block;
   padding: 5px 0;
   margin: 0 5px;
-  border-bottom: solid 1px <?=(!empty($primarymedium)?$primarymedium:"SteelBlue")?>;
+  border-bottom: solid 1px <?=(!empty($primarymedium)?$primarymedium:"#51579A")?>;
 }
 nav#nav-mobile li:last-child { border-bottom: none; }
 nav#nav-mobile a {
   display: block;
-  color: <?=(!empty($navlink)?$navlink:"LightSteelBlue")?>;
+  color: <?=(!empty($navlink)?$navlink:"White")?>;
   padding: 8px 0;
   font-family: arial, helvetica, sans-serif;
   font-size: 120%;
@@ -182,7 +182,7 @@ nav#nav-mobile a {
 }
 nav#nav-mobile li.menu-usersettings a span { font-weight:normal; white-space:wrap; }
 nav#nav-mobile a:hover {
-  background-color: <?=(!empty($navbghover)?$navbghover:"#583907")?>;
+  background-color: <?=(!empty($navbghover)?$navbghover:"#85001f")?>;
   color: <?=(!empty($navlinkhover)?$navlinkhover:"White")?>;
 }
 
@@ -197,13 +197,13 @@ h1 {
   font-size: 1.8em;
   line-height:1;
   font-weight:bold;
-  color: <?=(!empty($h1)?$h1:"#CC9944")?>;
+  color: <?=(!empty($h1)?$h1:"#da0033")?>;
 }
 h2 {
   text-align:left;
   font-size: 1.5em;
   line-height:1.1;
-  color: <?=(!empty($h2)?$h2:"SteelBlue")?>;
+  color: <?=(!empty($h2)?$h2:"#51579A")?>;
   font-weight:bold;
 }
 h3 {
@@ -218,7 +218,7 @@ h3 {
   text-align:left;
   font-size: 1.2em;
   font-weight:bold;
-  color: <?=(!empty($h4)?$h4:"DarkRed")?>;
+  color: <?=(!empty($h4)?$h4:"#85001f")?>;
   margin:5px 0 3px 0;
   }
 a:link,a:visited { color:<?=(!empty($link)?$link:"#333399")?>; }
@@ -235,13 +235,13 @@ a.more { cursor:pointer; color:<?=(!empty($linkmore)?$linkmore:"Black")?>; text-
 .clear { clear:both; }
 .nowrap { white-space:nowrap; }
 button, submit {
-  background-color:<?=(!empty($buttonbg)?$buttonbg:"LightSteelBlue")?>;
+  background-color:<?=(!empty($buttonbg)?$buttonbg:"#d7e4f9")?>;
 }
 .bigbutton {
   font-size:1.5em;
   font-weight:bold;
   padding:0.5em;
-  background-color:<?=(!empty($buttonbg)?$buttonbg:"LightSteelBlue")?>;
+  background-color:<?=(!empty($buttonbg)?$buttonbg:"#d7e4f9")?>;
 }
 
 /*forms*/
@@ -262,14 +262,14 @@ div#actions form { display:inline; margin:2px 15px; }
 
 section  {
   margin: 15px 0 15px 0;
-  border: 2px solid <?=(!empty($sectionborder)?$sectionborder:"DarkRed")?>;
+  border: 2px solid <?=(!empty($sectionborder)?$sectionborder:"#85001f")?>;
   padding: 5px;
   background-color: White;
 }
 .section-title {
   margin:0 0 3px 5px;
   padding:2px 7px 2px 7px;
-  border: 2px solid <?=(!empty($sectiontitleborder)?$sectiontitleborder:"DarkRed")?>;
+  border: 2px solid <?=(!empty($sectiontitleborder)?$sectiontitleborder:"#85001f")?>;
   text-align:left;
   display:inline;
   position:relative;
@@ -278,11 +278,11 @@ section  {
   font-weight:bold;
   font-style:italic;
   color: <?=(!empty($sectiontitle)?$sectiontitle:"White")?>;
-  background-color: <?=(!empty($sectiontitlebg)?$sectiontitlebg:"DarkRed")?>;
+  background-color: <?=(!empty($sectiontitlebg)?$sectiontitlebg:"#85001f")?>;
 }
 fieldset {
   margin: 15px 0 15px 0;
-  border: 2px solid <?=(!empty($fieldsetborder)?$fieldsetborder:"DarkRed")?>;
+  border: 2px solid <?=(!empty($fieldsetborder)?$fieldsetborder:"#85001f")?>;
   padding: 5px 10px;
   background-color: White;
 }
@@ -293,7 +293,7 @@ fieldset legend {
   font-weight:bold;
   font-style:italic;
   color: <?=(!empty($legend)?$legend:"White")?>;
-  background-color: <?=(!empty($legendbg)?$legendbg:"DarkRed")?>;
+  background-color: <?=(!empty($legendbg)?$legendbg:"#85001f")?>;
 }
 
 h1#title {
@@ -305,7 +305,7 @@ h1#title {
 
 span.inlinelabel {
   font-weight: bold;
-  color: <?=(!empty($inlinelabel)?$inlinelabel:"DarkRed")?>;
+  color: <?=(!empty($inlinelabel)?$inlinelabel:"#85001f")?>;
 }
 
 option.active. li.active { background-color:<?=(!empty($activeeventbg)?$activeeventbg:"White")?>; }
@@ -358,7 +358,7 @@ body.index span.radiogroup, body.index span.inputgroup {
   vertical-align: middle;
 }
 body.index h2 span.radiogroup {
-  border:1px solid <?=(!empty($h2)?$h2:"SteelBlue")?>;
+  border:1px solid <?=(!empty($h2)?$h2:"#51579A")?>;
   font-size: 0.8em;
 }
 body.index h2 span.radiogroup label { display:inline-block; margin:3px 5px; }
@@ -415,6 +415,65 @@ body.list ul#criteria {
 }
 body.list table { margin-right:auto; margin-left:auto; }
 body.list td.categories { white-space:nowrap; }
+body.list .select-checkbox {
+  text-align: center;
+}
+/* DataTables sort arrows - enlarge and recolor the existing jQuery UI icon spans */
+body.list table.dataTable thead th div.DataTables_sort_wrapper span {
+  transform: scale(1.5);
+  filter: brightness(0);  /* gray sprite → black, visible on light background */
+}
+body.list table.dataTable thead th.sorting_asc div.DataTables_sort_wrapper span,
+body.list table.dataTable thead th.sorting_desc div.DataTables_sort_wrapper span {
+  filter: brightness(0) invert(1);  /* black → white, visible on colored background */
+}
+body.list table.dataTable thead th.sorting_asc,
+body.list table.dataTable thead th.sorting_desc {
+  background-color: #980023 !important;
+  color: white !important;
+}
+body.list .song-tag-cb {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+/* Override DataTables responsive expand/collapse icon (dtr-inline mode) */
+body.list table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child {
+  padding-left: 24px;
+}
+body.list table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before {
+  content: '▶';
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  color: #980023;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  height: auto;
+  font-size: 1.3em;
+  line-height: 1;
+}
+body.list table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before {
+  content: '▼';
+}
+/* Columns that must always remain visible (even if table overflows) */
+body.list table#songlist td.title,
+body.list table#songlist th.title,
+body.list table#songlist td.select-checkbox,
+body.list table#songlist th.select-checkbox {
+  display: table-cell !important;
+}
+/* Fix DataTables responsive overflow */
+body.list #songlist_wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+body.list table#songlist {
+  width: 100% !important;
+}
 
 /* specific to edit.php */
 body.edit input { margin-top:5px;}
@@ -436,31 +495,6 @@ body.edit #duplicates .dup { border:2px solid LightGray; padding:5px;margin:3px 
 body.edit #duplicates .name { font-size:1.2em; font-weight:bold; }
 body.edit #duplicates .button_section { white-space:nowrap; }
 body.edit #duplicates .button_section form { display:inline; }
-
-/* specific to attendance charts (also used in dashboards, so "body" omitted to allow div also) */
-body.attend_detail.full div#main-container { width:auto; }
-body.attend_detail .weekdaydate, body.attend_datesums .weekdaydate {
-  white-space:nowrap;
-  background-color: <?=(!empty($weekdaybg)?$weekdaybg:"#FFFFD0")?>;
-  font-size:0.8em;
-  text-align:center;
-}
-body.attend_detail .saturdaydate, body.attend_datesums .saturdaydate {
-  white-space:nowrap;
-  background-color: <?=(!empty($saturdaybg)?$saturdaybg:"#C0C0E0")?>;
-  font-size:0.8em;
-  text-align:center;
-}
-body.attend_detail .sundaydate, body.attend_datesums .sundaydate {
-  white-space:nowrap;
-  background-color: <?=(!empty($sundaybg)?$sundaybg:"#FF8080")?>;
-  font-size:0.8em;
-  text-align:center;
-}
-body.attend_detail td.photocell, body.attend_detail .photohead {
-  text-align:center;
-  background-color: <?=(!empty($photocellbg)?$photocellbg:"#FFFFD0")?>;
-}
 
 /* specific to sqlquery.php */
 body.sqlquery h2 {

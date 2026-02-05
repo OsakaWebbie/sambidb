@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 23:28+0900\n"
-"PO-Revision-Date: 2026-01-31 23:38+0900\n"
+"POT-Creation-Date: 2026-02-04 22:36+0900\n"
+"PO-Revision-Date: 2026-02-04 23:07+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -42,6 +42,10 @@ msgstr "最後のログイン：%s"
 #, php-format
 msgid "Total: %d"
 msgstr "合計：%d回"
+
+#: ajax_actions.php:108 do_maint.php:128 do_maint.php:187
+msgid "Access denied."
+msgstr "アクセスが拒否されました。"
 
 #: db_settings.php:5 db_settings.php:10
 msgid "Database Settings"
@@ -251,7 +255,7 @@ msgstr "ファイルのアップロードに失敗しました。デバッグ情
 
 #: do_maint.php:4
 msgid "Processing..."
-msgstr ""
+msgstr "処理中..."
 
 #: do_maint.php:18
 msgid "Keyword successfully added."
@@ -330,10 +334,6 @@ msgstr ""
 msgid "Yes, delete the event and history records"
 msgstr "はい、イベントと履歴データを削除します"
 
-#: do_maint.php:128 do_maint.php:187
-msgid "Access denied."
-msgstr "アクセスが拒否されました。"
-
 #: do_maint.php:137 do_maint.php:155
 #, php-format
 msgid "UserID '%s' is already in use by %s. Please choose a different UserID."
@@ -383,11 +383,11 @@ msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:89 event_use.php:147 list.php:144 ms_text.php:14
+#: edit.php:89 event_use.php:147 list.php:148 ms_text.php:14
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:92 event_use.php:146 list.php:151 ms_text.php:15
+#: edit.php:92 event_use.php:146 list.php:161 ms_text.php:15
 msgid "Original Title"
 msgstr "原曲名"
 
@@ -395,19 +395,19 @@ msgstr "原曲名"
 msgid "(Fill in if song is translated)"
 msgstr "（翻訳曲の場合は記入）"
 
-#: edit.php:97 list.php:157 ms_text.php:18
+#: edit.php:97 list.php:167 ms_text.php:18
 msgid "Composer"
 msgstr "作曲家"
 
-#: edit.php:99 list.php:158 ms_text.php:19
+#: edit.php:99 list.php:168 ms_text.php:19
 msgid "Copyright"
 msgstr "著作権"
 
-#: edit.php:101 index.php:113 list.php:153 ms_text.php:17
+#: edit.php:101 index.php:113 list.php:163 ms_text.php:17
 msgid "Key"
 msgstr "調"
 
-#: edit.php:103 index.php:105 list.php:152 ms_text.php:16
+#: edit.php:103 index.php:105 list.php:162 ms_text.php:16
 msgid "Tempo"
 msgstr "テンポ"
 
@@ -423,7 +423,7 @@ msgstr "中"
 msgid "Slow"
 msgstr "ゆっくり"
 
-#: edit.php:110 index.php:89 list.php:159 ms_text.php:20
+#: edit.php:110 index.php:89 list.php:169 ms_text.php:20
 msgid "Source"
 msgstr "参照"
 
@@ -609,16 +609,16 @@ msgstr ""
 
 #: index.php:46
 msgid "Currently there are no tagged songs."
-msgstr "今タグ曲はありません。"
+msgstr "今タグされている曲はありません。"
 
 #: index.php:48
 msgid "Currently there is 1 tagged song."
-msgstr "今 1曲はタグされています。"
+msgstr "今 1曲がタグされています。"
 
 #: index.php:49
 #, php-format
 msgid "Currently there are %s tagged songs."
-msgstr "今 %s曲はタグされています。"
+msgstr "今 %s曲がタグされています。"
 
 #: index.php:51
 msgid "Clear All Tags"
@@ -703,51 +703,60 @@ msgstr "この検索では曲が見つかりませんでした。"
 msgid "Search Results"
 msgstr "検索の結果"
 
-#: list.php:102
+#: list.php:106
 #, php-format
 msgid "%d Tagged Songs"
-msgstr "%d曲はタグされている"
+msgstr "タグされている%d曲"
 
-#: list.php:104
+#: list.php:108
 #, php-format
 msgid "%d results of these criteria:"
 msgstr "この条件の結果（%d項目）："
 
-#: list.php:123
+#: list.php:115
+msgid "Update tags according to checkboxes below"
+msgstr "以下のチェックボックスに合わせてタグを更新する"
+
+#: list.php:116
 msgid "Go to action page with this list in this order"
 msgstr "これらの曲をこの順番でアクションページに移動する"
 
-#: list.php:140 list.php:142
-msgid "ID"
-msgstr "ID"
+#: list.php:126
+#, php-format
+msgid "Show usage history for: %s"
+msgstr "%sの使用履歴を表示"
 
-#: list.php:141
-msgid "Tagged"
-msgstr "タグされている"
+#: list.php:156
+msgid "Select All"
+msgstr "全部を選択"
 
-#: list.php:143
-msgid "Tag"
-msgstr "タグ"
+#: list.php:158
+msgid "Tag/Untag"
+msgstr "タグを付ける/消す"
 
-#: list.php:154
+#: list.php:164
 msgid "First Line"
 msgstr "最初の行"
 
-#: list.php:155
+#: list.php:165
 msgid "Last Use"
 msgstr "最新の使用"
 
-#: list.php:156
+#: list.php:166
 msgid "# Uses"
 msgstr "使用数"
 
-#: list.php:178
-msgid "Tag All"
-msgstr "すべてにタグをつける"
+#: list.php:174
+msgid "Showing _TOTAL_ entries"
+msgstr "_TOTAL_件を表示中"
 
-#: list.php:179
-msgid "Untag All"
-msgstr "すべてにタグを消す"
+#: list.php:175
+msgid " (filtered from _MAX_ total)"
+msgstr "（全_MAX_件から絞り込み中）"
+
+#: list.php:223 list.php:226
+msgid "Error updating tags."
+msgstr "タグの更新中にエラーが発生しました。"
 
 #: ms_history.php:22
 msgid "There are already songs recorded for this event and date."
@@ -909,9 +918,9 @@ msgid ""
 "select songs for tagging, then use this page to put them in order and/or "
 "take actions."
 msgstr ""
-"タグされた曲がありません。トップ（検索）ページのツールを使用して曲にタグを付"
-"けてから、このページを使用して順序を設定したりアクションを実行したりしてくだ"
-"さい。"
+"タグされている曲がありません。トップ（検索）ページのツールを使用して曲にタグ"
+"を付けてから、このページを使用して順序を設定したりアクションを実行したりして"
+"ください。"
 
 #: multiselect.php:31
 msgid ""
@@ -1112,6 +1121,21 @@ msgstr "確証のため、現在のパスワードを入力してください。
 #: user_settings.php:72
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Tagged"
+#~ msgstr "タグされている"
+
+#~ msgid "Tag"
+#~ msgstr "タグ"
+
+#~ msgid "Tag All"
+#~ msgstr "すべてにタグをつける"
+
+#~ msgid "Untag All"
+#~ msgstr "すべてにタグを消す"
 
 #, fuzzy
 #~| msgid "Event:"
