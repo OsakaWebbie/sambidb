@@ -476,25 +476,95 @@ body.list table#songlist {
 }
 
 /* specific to edit.php */
-body.edit input { margin-top:5px;}
-body.edit div#name_section,body.edit div#furigana_section,body.edit div#title_section {
-  float:left;
-  vertical-align:top;
-  margin:0 15px 10px 0;
+body.edit .edit-form-grid {
+  display: grid;
+  gap: 8px 20px;
+  align-items: start;
 }
-body.edit #submit_button,body.edit #remarks_label { display:inline-block; vertical-align:top; margin-top:5px; }
-body.edit #remarks { width:420px; height:6em; vertical-align:top; margin-bottom:5px; }
-body.edit #submit_button {
-  margin:20px;
-  padding:5px 15px;
-  font-size: 1.3em;
-  font-weight:bold;
-} 
-body.edit #duplicates { text-align:left; }
-body.edit #duplicates .dup { border:2px solid LightGray; padding:5px;margin:3px 0; }
-body.edit #duplicates .name { font-size:1.2em; font-weight:bold; }
-body.edit #duplicates .button_section { white-space:nowrap; }
-body.edit #duplicates .button_section form { display:inline; }
+body.edit .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+body.edit .form-group label {
+  font-weight: bold;
+  color: <?=(!empty($inlinelabel)?$inlinelabel:"#85001f")?>;
+}
+body.edit .form-group input[type="text"],
+body.edit .form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+}
+body.edit .form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+body.edit .audio-section { margin-top: 12px; }
+body.edit .audio-section label { display: block; }
+body.edit .audio-section input[type="file"] { margin-top: 3px; }
+
+/* help icons and tooltips (click-triggered, used on multiple fields) */
+body.edit .help-icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+  text-align: center;
+  border-radius: 50%;
+  background: steelblue;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 4px;
+  vertical-align: middle;
+  user-select: none;
+  position: relative;
+  overflow: visible;
+}
+body.edit .help-icon:hover { background: #3a7bc8; }
+body.edit .help-tooltip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: normal;
+  width: 220px;
+  text-align: left;
+  white-space: normal;
+  z-index: 200;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+body.edit .help-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 5px solid #333;
+}
+
+/* lyrics help floating dialog (jQuery UI creates wrapper dynamically) */
+body.edit .ui-dialog { font-family: Arial, sans-serif; }
+body.edit .ui-dialog .ui-dialog-content {
+  font-size: 0.88em;
+  text-align: left;
+}
+body.edit .ui-dialog .ui-dialog-content p { margin: 6px 0; }
+body.edit .ui-dialog .ui-dialog-content code {
+  background: #f5f5f5;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
 
 /* specific to sqlquery.php */
 body.sqlquery h2 {
