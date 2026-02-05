@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 22:36+0900\n"
-"PO-Revision-Date: 2026-02-04 23:07+0900\n"
+"POT-Creation-Date: 2026-02-06 00:38+0900\n"
+"PO-Revision-Date: 2026-02-06 00:41+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -209,11 +209,11 @@ msgstr "新規ユーザのために、パスワードの入力は必要です。
 msgid "The two password entries don't match."
 msgstr "入力された二つのパスワードは異なります。"
 
-#: do_edit.php:6 do_edit.php:8
+#: do_edit.php:10 do_edit.php:11 edit.php:302
 msgid "Saving..."
 msgstr "保存中..."
 
-#: do_edit.php:11
+#: do_edit.php:18
 #, php-format
 msgid ""
 "The uploaded file was too large. You must upload a file smaller than %s."
@@ -221,7 +221,7 @@ msgstr ""
 "アップロードされたファイルが大きすぎます。%s未満のファイルをアップロードする"
 "必要があります。"
 
-#: do_edit.php:12
+#: do_edit.php:19
 msgid ""
 "Sorry, but you will have to redo any other edits (or new song data) that you "
 "entered at the same time as the file upload."
@@ -229,27 +229,31 @@ msgstr ""
 "申し訳ありませんが、ファイルアップロードと同時に入力した他の編集（または新規"
 "曲データ）をやり直す必要があります。"
 
-#: do_edit.php:13
+#: do_edit.php:20
 msgid "To edit again, hit your browser's Back button."
 msgstr "再度編集するには、ブラウザの戻るボタンを押してください。"
 
-#: do_edit.php:36
+#: do_edit.php:45
 msgid "The song was updated."
 msgstr "曲が更新されました。"
 
-#: do_edit.php:59
+#: do_edit.php:69
 msgid "The song was added."
 msgstr "曲が追加されました。"
 
-#: do_edit.php:61
+#: do_edit.php:71 do_edit.php:72
 msgid "The song was not added for some reason."
 msgstr "何らかの理由で曲が追加されませんでした。"
 
-#: do_edit.php:69
+#: do_edit.php:79
 msgid "File is valid, and was successfully uploaded."
 msgstr "ファイルは有効で、正常にアップロードされました。"
 
-#: do_edit.php:76
+#: do_edit.php:88
+msgid "File upload failed."
+msgstr "ファイルのアップロードが失敗しました。"
+
+#: do_edit.php:89
 msgid "File upload failed.  Here's some debugging info:"
 msgstr "ファイルのアップロードに失敗しました。デバッグ情報："
 
@@ -356,103 +360,108 @@ msgstr "ログイン中に自分のアカウントを削除することはでき
 msgid "User successfully deleted."
 msgstr "ユーザを削除しました。"
 
-#: edit.php:18 song.php:32
+#: edit.php:17 song.php:32
 #, php-format
 msgid "Song not found (ID: %s)."
 msgstr "曲が見つかりません。（ID: %s）"
 
-#: edit.php:52
-msgid ""
-"No info was modified.  If you want to exit this page, just use your BACK "
-"button."
-msgstr ""
-"何も変更されていません。このページを終了するには、ブラウザの戻るボタンを押し"
-"てください。"
+#: edit.php:39 functions.php:48
+msgid "New Song"
+msgstr "新規の曲"
 
-#: edit.php:56
-msgid "Please enter the title!"
-msgstr "タイトルを入力してください！"
+#: edit.php:39
+#, php-format
+msgid "Edit: %s"
+msgstr "「%s」を編集"
 
-#: edit.php:61
-msgid "Only MP3 files can be accepted for audio."
-msgstr "オーディオファイルはMP3形式のみ受け付けます。"
+#: edit.php:40
+msgid "Save Song"
+msgstr "新規曲を保存"
 
-#: edit.php:68
-msgid "Audio comments only make sense if there is an audio file to comment on."
-msgstr ""
-"オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
-"す。"
+#: edit.php:40 user_settings.php:50
+msgid "Save Changes"
+msgstr "変更を保存"
 
-#: edit.php:89 event_use.php:147 list.php:148 ms_text.php:14
+#: edit.php:69 event_use.php:147 list.php:143 ms_text.php:14
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:92 event_use.php:146 list.php:161 ms_text.php:15
+#: edit.php:75 event_use.php:146 list.php:156 ms_text.php:15
 msgid "Original Title"
 msgstr "原曲名"
 
-#: edit.php:94
-msgid "(Fill in if song is translated)"
-msgstr "（翻訳曲の場合は記入）"
+#: edit.php:76
+msgid "Fill in if the song is a translation from another language."
+msgstr "歌詞が他の言語から翻訳された場合は記入する"
 
-#: edit.php:97 list.php:167 ms_text.php:18
-msgid "Composer"
-msgstr "作曲家"
-
-#: edit.php:99 list.php:168 ms_text.php:19
-msgid "Copyright"
-msgstr "著作権"
-
-#: edit.php:101 index.php:113 list.php:163 ms_text.php:17
+#: edit.php:85 index.php:113 list.php:158 ms_text.php:17
 msgid "Key"
 msgstr "調"
 
-#: edit.php:103 index.php:105 list.php:162 ms_text.php:16
+#: edit.php:91 index.php:105 list.php:157 ms_text.php:16
 msgid "Tempo"
 msgstr "テンポ"
 
-#: edit.php:105 index.php:108
+#: edit.php:94 index.php:108
 msgid "Fast"
 msgstr "早い"
 
-#: edit.php:106 index.php:109
+#: edit.php:95 index.php:109
 msgid "Medium"
 msgstr "中"
 
-#: edit.php:107 index.php:110
+#: edit.php:96 index.php:110
 msgid "Slow"
 msgstr "ゆっくり"
 
-#: edit.php:110 index.php:89 list.php:169 ms_text.php:20
-msgid "Source"
+#: edit.php:107 list.php:162 ms_text.php:18
+msgid "Composer"
+msgstr "作曲家"
+
+#: edit.php:113 list.php:163 ms_text.php:19
+msgid "Copyright"
+msgstr "著作権"
+
+#: edit.php:125 ms_text.php:21
+msgid "Pattern"
+msgstr "パターン"
+
+#: edit.php:126
+msgid ""
+"Print pattern for PDF output, e.g. ABABB. Sections in the lyrics are divided "
+"by blank lines."
+msgstr "印刷PDF用のパターン（例：ABABB、セクションは空行で区切られます）"
+
+#: edit.php:132
+msgid "Instructions"
+msgstr "指示"
+
+#: edit.php:133
+msgid ""
+"Notes for playing (intro, etc.). Put [brackets] around pattern descriptions "
+"and other text not needed when the full pattern is printed."
+msgstr ""
+"イントロなど。フルパターンを印刷する時に不要なパターン指示やその他のテキスト"
+"は［角括弧］で囲んでください。"
+
+#: edit.php:137
+msgid "Sources"
 msgstr "参照"
 
-#: edit.php:114
-msgid "  Save Changes  "
-msgstr "変更を保存"
+#: edit.php:138
+msgid "Albums, videos, sheet music, web pages, etc. used as references"
+msgstr "アルバム、動画、楽譜、ウェブページなどの参照資料"
 
-#: edit.php:115
-msgid "Pattern for printing (e.g. ABABB; sections are divided by blank lines)"
-msgstr "印刷用のパターン（例：ABABB、セクションは空行で区切られます）"
+#: edit.php:143
+msgid "Upload Audio"
+msgstr "オーディオファイルをアップロード"
 
-#: edit.php:117
-msgid ""
-"Instructions for playing (intro, etc.; put [brackets] around pattern "
-"description and other text that is unneeded when full pattern is printed)"
-msgstr ""
-"指示（イントロなど；フルパターンを印刷する時に不要なパターン指示やその他のテ"
-"キストは［角括弧］で囲んでください）"
-
-#: edit.php:119
+#: edit.php:144
 #, php-format
-msgid ""
-"Upload audio file (MP3 format only, %sno larger than %s file size or you "
-"will lose other data you have edited!%s):"
-msgstr ""
-"オーディオファイルをアップロード（MP3形式のみ、%sファイルサイズは %s 以下でな"
-"いと、他の編集データが失われます！%s）："
+msgid "MP3 format only. Maximum file size: %s."
+msgstr "MP3形式のみ、%s 以下のファイルサイズ"
 
-#: edit.php:123
+#: edit.php:149
 msgid ""
 "(This song already has audio uploaded, but you can replace it with a new "
 "file if you want.)"
@@ -460,31 +469,80 @@ msgstr ""
 "（この曲にはすでにオーディオがアップロードされていますが、必要に応じて新しい"
 "ファイルに置き換えることができます。）"
 
-#: edit.php:126
+#: edit.php:152
 msgid "Audio Comment"
 msgstr "オーディオについての備考"
 
-#: edit.php:129 index.php:88 ms_text.php:22
-msgid "Lyrics"
-msgstr "歌詞"
+#: edit.php:160
+msgid "Lyrics & Chords"
+msgstr "歌詞とコード"
 
-#: edit.php:130
+#: edit.php:170
+msgid "Chord Formatting Help"
+msgstr "コード記法ヘルプ"
+
+#: edit.php:171
 msgid ""
-"To add chords, enclose them in [brackets] just before the syllable they are "
-"played with."
+"Chords go in [square brackets] just before the syllable where the chord is "
+"played:"
 msgstr ""
 "コードを入力するには、一緒に歌う最初の音節の直前に入れて［角括弧］で囲んでく"
-"ださい。"
+"ださい。例："
 
-#: edit.php:130
+#: edit.php:173
 msgid ""
-"If there are parts that are only needed to print full pattern (like a chorus "
-"with a tag), precede them with a line with only hyphens (one or more - it "
-"doesn't matter how many), like \"---\"."
+"If a kanji character represents multiple syllables and the chord is not "
+"played with the first one, you can use spaces to control the location:"
 msgstr ""
-"フルパターンの印刷時のみ必要な部分（タグ付きのコーラスなど）がある場合は、そ"
-"の前にハイフンのみの行（1つ以上、いくつでも構いません）を付けてください（例："
-"「---」）。"
+"漢字が複数の音節を表す場合で、コードが最初の音節ではないときは、スペースで位"
+"置を調整できます。例："
+
+#: edit.php:175
+msgid "To indicate Japanese lyrics written in romaji, start the line with [r]:"
+msgstr ""
+"日本語の歌詞をローマ字で書く場合は、行の先頭に[r]を入れてください。例："
+
+#: edit.php:177
+msgid ""
+"To mark a section that is only needed when the full pattern is printed (e.g. "
+"chorus with repeated line for the song ending), precede it with a line "
+"containing only hyphens:"
+msgstr ""
+"フルパターンの印刷時のみ必要な部分（例：曲の終わりにコーラスの最後の行を繰り"
+"返す部分など）には、その前にハイフンのみの行を置いてください："
+
+#: edit.php:211
+msgid "Please enter the title!"
+msgstr "タイトルを入力してください！"
+
+#: edit.php:216
+msgid "Only MP3 files can be accepted for audio."
+msgstr "オーディオファイルはMP3形式のみ受け付けます。"
+
+#: edit.php:221 edit.php:262
+#, php-format
+msgid ""
+"The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
+"file."
+msgstr ""
+"選択されたファイルが大きすぎます（%1$s、上限：%2$s）。より小さいファイルを選"
+"んでください。"
+
+#: edit.php:228
+msgid "Audio comments only make sense if there is an audio file to comment on."
+msgstr ""
+"オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
+"す。"
+
+#: edit.php:318
+msgid "Saved!"
+msgstr "保存しました。"
+
+#: edit.php:328
+#, php-format
+msgid "Upload failed. The file may exceed the %s limit."
+msgstr ""
+"アップロードに失敗しました。ファイルが%sの上限を超えている可能性があります。"
 
 #: event_use.php:115 event_use.php:122 functions.php:50
 msgid "Song Use Chart"
@@ -562,10 +620,6 @@ msgstr "(クイック検索)"
 #: functions.php:47
 msgid "List Tagged"
 msgstr "タグ曲をリスト"
-
-#: functions.php:48
-msgid "New Song"
-msgstr "新規の曲"
 
 #: functions.php:49
 msgid "Tagged Song Actions"
@@ -648,6 +702,14 @@ msgstr "含まないキーワード：　"
 msgid "Title/Original Title"
 msgstr "曲名／原曲名"
 
+#: index.php:88 ms_text.php:22
+msgid "Lyrics"
+msgstr "歌詞"
+
+#: index.php:89 list.php:164 ms_text.php:20
+msgid "Source"
+msgstr "参照"
+
 #: index.php:90
 msgid "Composer/Copyright"
 msgstr "作曲家・著作権"
@@ -695,66 +757,66 @@ msgstr "調は「%s」を含んでいる"
 msgid "Contains one or more of these keywords: %s"
 msgstr "これらのキーワードが1つ以上含まれています： %s"
 
-#: list.php:82
+#: list.php:77
 msgid "No songs found for this search."
 msgstr "この検索では曲が見つかりませんでした。"
 
-#: list.php:98
+#: list.php:93
 msgid "Search Results"
 msgstr "検索の結果"
 
-#: list.php:106
+#: list.php:101
 #, php-format
 msgid "%d Tagged Songs"
 msgstr "タグされている%d曲"
 
-#: list.php:108
+#: list.php:103
 #, php-format
 msgid "%d results of these criteria:"
 msgstr "この条件の結果（%d項目）："
 
-#: list.php:115
+#: list.php:110
 msgid "Update tags according to checkboxes below"
 msgstr "以下のチェックボックスに合わせてタグを更新する"
 
-#: list.php:116
+#: list.php:111
 msgid "Go to action page with this list in this order"
 msgstr "これらの曲をこの順番でアクションページに移動する"
 
-#: list.php:126
+#: list.php:121
 #, php-format
 msgid "Show usage history for: %s"
 msgstr "%sの使用履歴を表示"
 
-#: list.php:156
+#: list.php:151
 msgid "Select All"
 msgstr "全部を選択"
 
-#: list.php:158
+#: list.php:153
 msgid "Tag/Untag"
 msgstr "タグを付ける/消す"
 
-#: list.php:164
+#: list.php:159
 msgid "First Line"
 msgstr "最初の行"
 
-#: list.php:165
+#: list.php:160
 msgid "Last Use"
 msgstr "最新の使用"
 
-#: list.php:166
+#: list.php:161
 msgid "# Uses"
 msgstr "使用数"
 
-#: list.php:174
+#: list.php:169
 msgid "Showing _TOTAL_ entries"
 msgstr "_TOTAL_件を表示中"
 
-#: list.php:175
+#: list.php:170
 msgid " (filtered from _MAX_ total)"
 msgstr "（全_MAX_件から絞り込み中）"
 
-#: list.php:223 list.php:226
+#: list.php:218 list.php:221
 msgid "Error updating tags."
 msgstr "タグの更新中にエラーが発生しました。"
 
@@ -867,10 +929,6 @@ msgstr "このキーワードをこれらの曲に付ける"
 #, php-format
 msgid "Field %s:"
 msgstr "フィールド %s："
-
-#: ms_text.php:21
-msgid "Pattern"
-msgstr "パターン"
 
 #: ms_text.php:23
 msgid "Blank Line"
@@ -1090,10 +1148,6 @@ msgstr "私のユーザ設定"
 msgid "Default Language"
 msgstr "初期の言語"
 
-#: user_settings.php:50
-msgid "Save Changes"
-msgstr "変更を保存"
-
 #: user_settings.php:56
 msgid "Change My Password"
 msgstr "私のパスワードを変更"
@@ -1121,6 +1175,33 @@ msgstr "確証のため、現在のパスワードを入力してください。
 #: user_settings.php:72
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#~ msgid ""
+#~ "No info was modified.  If you want to exit this page, just use your BACK "
+#~ "button."
+#~ msgstr ""
+#~ "何も変更されていません。このページを終了するには、ブラウザの戻るボタンを押"
+#~ "してください。"
+
+#~ msgid "  Save Changes  "
+#~ msgstr "変更を保存"
+
+#, php-format
+#~ msgid ""
+#~ "Upload audio file (MP3 format only, %sno larger than %s file size or you "
+#~ "will lose other data you have edited!%s):"
+#~ msgstr ""
+#~ "オーディオファイルをアップロード（MP3形式のみ、%sファイルサイズは %s 以下"
+#~ "でないと、他の編集データが失われます！%s）："
+
+#~ msgid ""
+#~ "If there are parts that are only needed to print full pattern (like a "
+#~ "chorus with a tag), precede them with a line with only hyphens (one or "
+#~ "more - it doesn't matter how many), like \"---\"."
+#~ msgstr ""
+#~ "フルパターンの印刷時のみ必要な部分（タグ付きのコーラスなど）がある場合は、"
+#~ "その前にハイフンのみの行（1つ以上、いくつでも構いません）を付けてください"
+#~ "（例：「---」）。"
 
 #~ msgid "ID"
 #~ msgstr "ID"

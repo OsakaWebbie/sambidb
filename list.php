@@ -33,11 +33,11 @@ if (!empty($_GET['tagged'])) {
     $where .= ($where ? " AND " : "") . "LOWER(stripchord(Lyrics)) LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['lyrics']) . "%'";
   }
   if (!empty($_GET['source'])) {
-    $criteria .= "<li>" . sprintf(_('Source contains "%s" (ignoring punctuation)'), stripslashes($source)) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Source contains "%s" (ignoring punctuation)'), stripslashes($_GET['source'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "Source LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['source']) . "%'";
   }
   if (!empty($_GET['credit'])) {
-    $criteria .= "<li>" . sprintf(_('Composer/Copyright contains "%s" (ignoring punctuation)'), stripslashes($credit)) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Composer/Copyright contains "%s" (ignoring punctuation)'), stripslashes($_GET['credit'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "(Composer LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['credit']) . "%' ".
     "OR Copyright LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['credit']) . "%')";
   }
@@ -71,11 +71,6 @@ if (!empty($_SESSION['exkeys'])) {
 }
 
 /* PUT IT ALL TOGETHER */
-/*  header1("List dry run");
-  header2(1);
-  echo $sql . (!empty($where)?' WHERE '.$where:'') . ' GROUP BY ' . $groupby . ' ORDER BY OrigTitle';
-  exit;*/
-
 $result = sqlquery_checked($sql . (!empty($where)?' WHERE '.$where:'') . ' GROUP BY ' . $groupby . ' ORDER BY OrigTitle');
 $numrecords = mysqli_num_rows($result);
 if ($numrecords == 0) {
