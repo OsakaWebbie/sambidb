@@ -7,7 +7,7 @@ if ((!isset($_GET['sid']) && !isset($_POST['sid'])) || !(is_numeric($_GET['sid']
 }
 $sid = isset($_POST['sid']) ? $_POST['sid'] : $_GET['sid'];
 
-//Song to be tagged or untagged
+//Song to be tagged or untagged (legacy GET-based toggle)
 if (isset($_GET['tag'])) {
   sqlquery_checked("UPDATE song SET Tagged=1 WHERE SongID=$sid");
 } elseif (isset($_GET['untag'])) {
@@ -17,14 +17,14 @@ if (isset($_GET['tag'])) {
 //Keyword changes
 if (isset($_POST['newkeyword'])) {
   $result = sqlquery_checked("SELECT k.KeywordID, k.Keyword, s.SongID ".
-      "FROM keyword k LEFT JOIN songkeyword s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
+      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
       "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword");
   while ($row = mysqli_fetch_object($result)) {
     $keyid = $row->KeywordID;
-    if ($row->SongID && !($_POST[$keyid])) sqlquery_checked("DELETE from songkeyword WHERE KeywordID=$keyid and SongID=$sid");
-    elseif (!$row->SongID && ($_POST[$keyid])) sqlquery_checked("INSERT INTO songkeyword(KeywordID,SongID) VALUES($keyid,$sid)");
+    if ($row->SongID && empty($_POST[$keyid])) sqlquery_checked("DELETE from songkey WHERE KeywordID=$keyid and SongID=$sid");
+    elseif (!$row->SongID && !empty($_POST[$keyid])) sqlquery_checked("INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,$sid)");
   }
-  header("Location: song.php?sid=".$_POST['sid']);
+  header("Location: song.php?sid=".$sid);
   exit;
 }
 
@@ -33,9 +33,75 @@ if (mysqli_num_rows($result) == 0) die("<b>".sprintf(_('Song not found (ID: %s).
 $song = mysqli_fetch_object($result);
 $haschords = preg_match('/\[[^rR]/u',$song->Lyrics);
 $hasromaji = preg_match('/\[r\]/iu',$song->Lyrics);
-header1("Song: ".$song->Title);
+
+// Display preferences: GET params override session
+$showChords = isset($_GET['chords']) ? !empty($_GET['chords']) : (!empty($_SESSION['show_chords']) ? true : false);
+$showRomaji = isset($_GET['romaji']) ? !empty($_GET['romaji']) : (!empty($_SESSION['show_romaji']) ? true : false);
+
+header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 ?>
+<link rel="stylesheet" href="css/jquery-ui.css">
 <style>
+/* Main layout grid */
+.song-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.song-header h1 {
+  margin: 10px 0;
+  flex: 1 1 auto;
+}
+
+/* Tag toggle button */
+#tag-toggle {
+  margin: 10px auto 0;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid #51579A;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+#tag-toggle.tagged {
+  background-color: #51579A;
+  color: white;
+}
+
+#tag-toggle:not(.tagged) {
+  background-color: #d7e4f9;
+  color: #51579A;
+}
+
+#tag-toggle:hover {
+  opacity: 0.85;
+}
+
+
+/* Content grid */
+.song-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* Lyrics panel */
+.lyrics-panel {
+  border: 2px solid #51579A;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
 .lyrics {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
@@ -45,21 +111,20 @@ header1("Song: ".$song->Title);
   padding-left: 30px;
   white-space: pre-wrap;
 }
+
 .chordlyrics {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   margin: 6px 0 0 0;
   white-space: pre-wrap;
-  *margin-top: 0;  /* IE spreads out too much */
   text-indent: -30px;
   padding-left: 30px;
-/* Note: Hanging indent messes up Ruby in IE */
-  *text-indent: 0;
-  *padding-left: 0;
 }
+
 .chordlyrics ruby {
   ruby-align: start;
 }
+
 .chordlyrics rt span {
   font-size: 13px;
   font-weight: bold;
@@ -68,227 +133,328 @@ header1("Song: ".$song->Title);
   width: 1px;
   top: 2px;
 }
+
 .smallspace {
   font-size: 9px;
   margin-bottom: 0;
   margin-top: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 <?php
-if ($_GET['chords']) {
-  echo ".chordshidden { display:none; }\n";
-} else {
+if (!$showChords) {
   echo ".chordlyrics, .chords { display:none; }\n";
+} else {
+  echo ".chordshidden { display:none; }\n";
 }
-if (!$_GET['romaji']) {
+if (!$showRomaji) {
   echo ".romaji { display:none; }\n";
 }
 ?>
-form#keywordform { padding:0; margin:0; }
-div#keywordsection { border:2px solid gray; padding:5px; text-align:center; }
-div.checkboxes { border-top:2px solid gray; padding:5px; margin-top:3px; text-align:left; } 
-label.keyword { white-space:nowrap; margin-right:2em; }
 
-#audioplayer { vertical-align:middle; }
-#audioloop {
-  font-size: 20px;
-  cursor: pointer;
-  vertical-align: middle;
+
+/* Audio loop toggle states */
+#audioloop.enabled {
+  position: relative;
 }
-#audioloop.enabled { position: relative; }
+
 #audioloop.enabled:after {
   content: "✔";
   color: red;
   font-weight: bold;
   position: absolute;
   right: -7px;
+  top: 0;
+}
+
+.checkboxes {
+  border-top: 2px solid #85001f;
+  padding: 10px;
+  text-align: left;
+}
+
+label.keyword {
+  white-space: nowrap;
+  margin-right: 2em;
+  display: inline-block;
+}
+
+/* Mobile responsive */
+@media (max-width: 900px) {
+  .song-content {
+    grid-template-columns: 1fr;
+  }
+
+  .lyrics-panel {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .info-sidebar {
+    margin-top: 20px;
+  }
 }
 </style>
+<?php header2(1); ?>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
-<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
-<script type="text/Javascript">
-$(document).ready(function(){
-  $('audio').bind('contextmenu',function() { return false; });
+<div class="song-header">
+  <h1><?=d2h($song->Title)?></h1>
+  <div>
+    <button type="button" id="tag-toggle" class="<?=($song->Tagged ? 'tagged' : '')?>" data-sid="<?=$sid?>">
+      <span id="tag-icon" style="font-size: 18px; font-weight: bold;"><?=($song->Tagged ? '✓' : '☐')?></span>
+      <span id="tag-label"><?=($song->Tagged ? _('Tagged') : _('Not Tagged'))?></span>
+    </button>
+    <div style="font-size: 0.75em; color: #666; text-align: center; margin-top: 2px;"><?=_('Click to toggle')?></div>
+  </div>
+</div>
 
-  $('#showchords, #showromaji').change(function() {
-    if ($('#showchords').prop("checked") && $('#showromaji').prop("checked")) {
-      $('.chordlyrics, .lyrics, .chords').show();
-      $('.chordshidden').hide();
-    } else if ($('#showchords').prop("checked") && !$('#showromaji').prop("checked")) {
-      $('.chordlyrics, .lyrics, .chords').show();
-      $('.chordshidden, .romaji').hide();
-    } else if (!$('#showchords').prop("checked") && $('#showromaji').prop("checked")) {
-      $('.lyrics').show();
-      $('.chordlyrics, .chords').hide();
-    } else {  // no chords or romaji
-      $('.lyrics').show();
-      $('.chordlyrics, .chords, .romaji').hide();
-    }
-  });
-  $("#audioloop").click(function(){
-    var player = $("#audioplayer")[0];
-    player.loop =!player.loop;
-    $(this).toggleClass('enabled', player.loop)
-        .prop('title',player.loop?'<?=_('Disable looping')?>':'<?=_('Play in loop')?>');
-  });
-});
-</script>
+<div class="song-content">
+  <div>
+    <?php if ($haschords || $hasromaji) { ?>
+    <div style="margin-bottom: 15px; font-weight: bold;">
+      <?=_('Show:')?>
+      <?php if ($haschords) { ?>
+        <label style="margin-right: 15px; cursor: pointer;"><input type="checkbox" id="showchords" <?=($showChords ? 'checked' : '')?>><?=_('Chords')?></label>
+      <?php } ?>
+      <?php if ($hasromaji) { ?>
+        <label style="margin-right: 15px; cursor: pointer;"><input type="checkbox" id="showromaji" <?=($showRomaji ? 'checked' : '')?>><?=_('Romaji')?></label>
+      <?php } ?>
+    </div>
+    <?php } ?>
+
+    <div class="lyrics-panel">
 <?php
-header2(1);
-?>
-<table width="735" border="0" cellpadding="0" cellspacing="0"><tr><td>
-  <table width="730" border="0" cellpadding="0" cellspacing="0"><tr><td align="center" valign="middle">
-    <h1 style="color:#0000C0"><?=$song->Title?></h1>
-  </td><td width="132" align="center" valign="middle">
-    <a href="song.php?sid=<?=$_GET['sid']?>&<?=($song->Tagged?'untag':'tag')?>=1">
-      <img src="graphics/<?=($song->Tagged?'tagged':'not_tagged')?>.gif" height="52" width="132" border="0">
-    </a><br>
-    <span style="font-size:0.8em; color:<?=($song->Tagged?'black':'red')?>"><?php echo sprintf(_('(Click image to %s)'), ($song->Tagged?_('untag'):_('tag'))); ?></span>
-  </td></tr></table>
-</td></tr><tr><td>
-  <table border="0" cellspacing="0" cellpadding="5"><tr><td valign="top">
-<?php if ($haschords || $hasromaji) {
-  echo '    <div style="font-weight:bold">'._('Show:');
-  if ($haschords) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showchords" '.($_GET['chords']?' checked':'').'>'._('Chords').'</label>';
-  if ($hasromaji) echo '&nbsp;&nbsp;<label><input type="checkbox" id="showromaji" '.($_GET['romaji']?' checked':'').'>'._('Romaji').'</label>';
-  echo '</div>';
-}
-?>
-    <div style="border: 2px solid #000080; width:350px; padding:5px;">
-<?php
-$lines = preg_split("/\r\n|\n\r\|\n|\r/", $song->Lyrics);
-$lyrics = "";
+$lines = preg_split("/\r\n|\n\r|\n|\r/", $song->Lyrics);
 foreach ($lines as $line) {
   $romajiclass = preg_match('/\[r\]/iu',$line) ? ' romaji' : '';
   $line = preg_replace('/\[r\]/iu','',$line);
   if ($line == "") {  //blank line
     echo "      <div class='smallspace".$romajiclass."'>&nbsp;</div>\n";
   } elseif (strpos($line, "[")===FALSE) {  //no chords in this line
-    echo '      <div class="lyrics'.$romajiclass.'">'.$line."</div>\n";
-  } elseif (substr_count($line,"[")==1 && substr($line,0,1)=="[" && substr($line,strlen($line),1)=="]") {  //chords only in this line
-    echo '      <div class="chords">'.substr($line,1,strlen($line)-2)."</div>\n";
+    echo '      <div class="lyrics'.$romajiclass.'">'.htmlspecialchars($line, ENT_QUOTES, 'UTF-8')."</div>\n";
+  } elseif (substr_count($line,"[")==1 && substr($line,0,1)=="[" && substr($line,strlen($line)-1,1)=="]") {  //chords only in this line
+    echo '      <div class="chords">'.htmlspecialchars(substr($line,1,strlen($line)-2), ENT_QUOTES, 'UTF-8')."</div>\n";
   } else {
     echo '      <div class="chordlyrics'.$romajiclass.'">'.chordsToRuby($line)."</div>\n";
-    echo '      <div class="lyrics chordshidden'.$romajiclass.'">'.preg_replace('/\[[^\[]*\]/u','',$line)."</div>\n";
+    echo '      <div class="lyrics chordshidden'.$romajiclass.'">'.htmlspecialchars(preg_replace('/\[[^\[]*\]/u','',$line), ENT_QUOTES, 'UTF-8')."</div>\n";
   }
 }
 ?>
-    </div>  
-  
-<?php
-/*} else {  //no chords
-  echo "<font color=#0000C0><b>Lyrics:</b></font>";
-  if (preg_match('/\[[^rR]/u',$song->Lyrics)) {
-    echo "&nbsp;&nbsp;<a href=\"song.php?sid=$sid&chords=yes\"><font color=#E00000>";
-    echo "<b>(Click here to show chords)</b></font></a>";
-  }
-  echo "<br>\n<table border=1 bordercolor=#000080 cellspacing=0 cellpadding=5 width=350>";
-  $lyrics = ereg_replace("\[[^\[]*\]","",$song->Lyrics);
-  $lyrics = str_replace("  ","&nbsp;&nbsp;",$lyrics);
-  $lyrics = ereg_replace("\r\n|\n\r","</div><div class=lyrics>",$lyrics); //catch occurrences of the pair (Win)
-  $lyrics = ereg_replace("[\n\r]","</div><div class=lyrics>",$lyrics); //catch occurrences of either (Unix/Mac)
-  $lyrics = "<div class=lyrics>" . $lyrics . "</div>";
-  $lyrics = str_replace("<div class=lyrics></div>","<div class=smallspace>&nbsp;</div>",$lyrics);
-  $lyrics = str_replace("</div>","</div>\n",$lyrics);
-  echo "<tr><td align=left>{$lyrics}</td></tr></table>\n";
-}*/
-echo "  <td>\n<td valign=top><b>";
-if ($song->Title != $song->OrigTitle) echo ("    "._('Original Title:')." ".$song->OrigTitle."<br>&nbsp;<br>\n");
-echo "    "._('Key:')." <span style='color:#00C000'>".($song->SongKey ? $song->SongKey : "?")."</span>";
-if ($song->Tempo) echo (" &nbsp;&nbsp;"._('Tempo:')." <span style='color:#C00000'>".$song->Tempo."</span>");
-echo "<br>\n";
-if ($song->Composer) echo ("    "._('Composer:')." ".$song->Composer);
-if ($song->Copyright) echo ("<br>\n    "._('Copyright:')." ".$song->Copyright);
-echo "</b>";
-if ($song->Source) {
-  echo "<br>\n    <b>"._('Source(s):')."</b>";
-  echo '<table border=0 cellspacing=0 cellpadding=0><tr><td width=20></td>';
-  echo "<td align=left>".url2link(d2h($song->Source))."</td></tr></table>\n";
-}
-if ($song->Pattern) {
-  echo "<br>\n    <b>"._('Pattern of Stanzas:')."&nbsp;</b>$song->Pattern\n";
-}
-if ($song->Instruction) {
-  echo "<br>\n    <b>"._('Instruction (intro, etc.):')."&nbsp;</b>$song->Instruction\n";
-}
-if ($song->Audio) {
-  ?>
-    <br>
-    <div><b><?php echo _('Audio for learning:'); ?></b><br>
-    <audio id="audioplayer" controls controlsList="nodownload">
-      <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
-    </audio>
-    <span id="audioloop" title="<?=_('Play in loop')?>">&#x1f501;</span>
     </div>
-  <?php
-  if ($song->AudioComment) {
-    echo "<br>\n    <b>"._('Comment about audio recording:')."</b> ".$song->AudioComment."\n";
-  }
-}
-if ($_SESSION['admin'] > 0)  echo "<br>\n    <h2><a href=\"edit.php?sid=".$_GET['sid']."\">"._('Edit This Song')."</a></h2>";
+  </div>
 
-echo "  </td></tr></table>\n";
+  <div class="info-sidebar">
+    <?php if ($song->Title != $song->OrigTitle) { ?>
+      <b><?=_('Original Title:')?></b> <?=d2h($song->OrigTitle)?><br><br>
+    <?php } ?>
 
-// ********** KEYWORDS **********
+    <b><?=_('Key:')?></b> <span style="color: #00C000;"><?=($song->SongKey ? d2h($song->SongKey) : "?")?></span>
+    <?php if ($song->Tempo) { ?>
+      &nbsp;&nbsp;<b><?=_('Tempo:')?></b> <span style="color: #C00000;"><?=$song->Tempo?></span>
+    <?php } ?>
+    <br>
 
-echo '<form id="keywordsform" action="song.php" method="POST"><div id="keywordsection">';
-echo '<h3 style="margin-bottom:0; color:#0000C0;"><b><i>'._('Keywords').'</i></b>';
-if ($_SESSION['admin'] > 0) {
-  echo '&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit value="'._('Save Keyword Changes').'" name=newkeyword>';
-}
-echo "<input type=hidden name=sid value=$sid></h3>";
+    <?php if ($song->Composer) { ?>
+      <b><?=_('Composer:')?></b> <?=d2h($song->Composer)?><br>
+    <?php } ?>
 
-if (!$result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, sk.SongID ".
-    "FROM keyword k LEFT JOIN songkey sk ON k.KeywordID=sk.KeywordID and sk.SongID=$sid ".
-    "ORDER BY case when sk.SongID is null then 1 else 0 end, k.Keyword")) {
-  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
-} else {
-  echo '<div class="checkboxes">'."\n";
-  while ($row = mysqli_fetch_object($result)) {
-    if (!($row->SongID)) {
-      if ($_SESSION['admin'] > 0) {
-        echo '<div class="clear"></div></div><div class="checkboxes">'."\n".
-            '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>'."\n";
+    <?php if ($song->Copyright) { ?>
+      <b><?=_('Copyright:')?></b> <?=d2h($song->Copyright)?><br>
+    <?php } ?>
+
+    <?php if ($song->Source) { ?>
+      <br><b><?=_('Source(s):')?></b>
+      <div style="margin-left: 20px;"><?=url2link(d2h($song->Source))?></div>
+    <?php } ?>
+
+    <?php if ($song->Pattern) { ?>
+      <br><b><?=_('Pattern of Stanzas:')?></b> <?=d2h($song->Pattern)?>
+    <?php } ?>
+
+    <?php if ($song->Instruction) { ?>
+      <br><b><?=_('Instruction (intro, etc.):')?></b> <?=d2h($song->Instruction)?>
+    <?php } ?>
+
+    <?php if ($song->Audio) { ?>
+      <br><br>
+      <b><?=_('Audio for learning:')?></b><br>
+      <div style="display: flex; align-items: center; gap: 5px; max-width: 500px;">
+        <audio id="audioplayer" controls controlsList="nodownload" style="flex: 1 1 auto; min-width: 0;">
+          <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
+        </audio>
+        <span id="audioloop" title="<?=_('Play in loop')?>" style="font-size: 20px; cursor: pointer; flex-shrink: 0;">&#x1f501;</span>
+      </div>
+
+      <?php if ($song->AudioComment) { ?>
+        <br><br><b><?=_('Comment about audio recording:')?></b> <?=d2h($song->AudioComment)?>
+      <?php } ?>
+    <?php } ?>
+
+    <?php if ($_SESSION['admin'] > 0) { ?>
+      <div style="margin-top: 15px;">
+        <button type="button" class="ui-button" onclick="window.location='edit.php?sid=<?=$sid?>'">
+          <?=_('Edit This Song')?>
+        </button>
+      </div>
+    <?php } ?>
+  </div>
+</div>
+
+<!-- Keywords Section -->
+<form action="song.php" method="POST">
+  <section>
+    <h2 class="section-title"><?=_('Keywords')?></h2>
+    <?php if ($_SESSION['admin'] > 0) { ?>
+      <input type="submit" value="<?=_('Save Keyword Changes')?>" name="newkeyword" class="ui-button" style="margin:0 0 0 20px;">
+    <?php } ?>
+    <input type="hidden" name="sid" value="<?=$sid?>">
+
+    <?php
+    $result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, sk.SongID ".
+        "FROM keyword k LEFT JOIN songkey sk ON k.KeywordID=sk.KeywordID and sk.SongID=$sid ".
+        "ORDER BY case when sk.SongID is null then 1 else 0 end, k.Keyword");
+    if (!$result) {
+      echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
+    } else {
+      echo '<div class="checkboxes" style="margin-top:10px;">'."\n";
+      while ($row = mysqli_fetch_object($result)) {
+        if (!($row->SongID)) {
+          if ($_SESSION['admin'] > 0) {
+            echo '<div class="clear"></div></div><div class="checkboxes">'."\n".
+                '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'">'.d2h($row->Keyword).'</label>'."\n";
+          }
+          break;
+        }
+        echo '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'" checked>'.d2h($row->Keyword).'</label>'."\n";
       }
-      break;
+      if ($_SESSION['admin'] > 0) {
+        while ($row = mysqli_fetch_object($result)) {
+          echo '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'">'.d2h($row->Keyword).'</label>'."\n";
+        }
+      }
+      echo '<div class="clear"></div></div>';
     }
-    echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'" checked>'.$row->Keyword.'</label>'."\n";
-  }
-  if ($_SESSION['admin'] > 0) {
-    while ($row = mysqli_fetch_object($result)) {
-      echo '<label class="keyword"><input type=checkbox name="'.$row->KeywordID.'">'.$row->Keyword.'</label>'."\n";
-    }
-  }
-  echo '<div class="clear"></div></div>';
-}
-echo '</td></tr></table></form>';
+    ?>
+  </section>
+</form>
 
-// ********** USAGE **********
-
+<!-- Usage History -->
+<?php
 $sql = "SELECT e.Event, min(u.UseDate) AS first, max(u.UseDate) AS last,".
     " COUNT(u.UseDate) AS times, e.Remarks FROM event e, history u WHERE e.EventID = u.EventID".
-    " AND u.SongID = ".$_GET['sid']." GROUP BY e.Event ORDER BY last";
-if (!$result = mysqli_query($db,$sql)) {
+    " AND u.SongID = ".$sid." GROUP BY e.Event ORDER BY last";
+$result = mysqli_query($db,$sql);
+if (!$result) {
   echo ("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)");
 } elseif (mysqli_num_rows($result) == 0) {
-  echo ("<p>"._('No history records.')."<br>&nbsp;</p>");
+  echo ("<p>"._('No history records.')."</p>");
 } else {
-  echo "<table width=735 border=2 cellpadding=5 cellspacing=0 bgcolor=#F0F0FF>";
-  echo "<tr><td align=center><h3 style=\"margin-bottom:0; color:#0000C0;\"><b><i>"._('Usage History')."</i></b></h3>";
-  echo ("<table width=730 border=1 cellspacing=0 cellpadding=2 bgcolor=#FFFFFF>");
-  while ($row = mysqli_fetch_object($result)) {
-    echo ("<tr><td nowrap>".$row->Event."</td><td nowrap>");
-    if ($row->first == $row->last) {
-      echo ($row->first);
-    } else {
-      echo sprintf(_('%s to<br>%s (%sx)'), $row->first, $row->last, $row->times);
-    }
-    echo ("</td><td>".$row->Remarks."&nbsp;</td></tr>");
-  }
-  echo "  </table></table>&nbsp;<br>";
-}
-
-print_footer();
 ?>
+  <section>
+    <h2 class="section-title"><?=_('Usage History')?></h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <?php while ($row = mysqli_fetch_object($result)) { ?>
+        <tr>
+          <td nowrap style="border: 1px solid #ccc; padding: 5px;"><?=d2h($row->Event)?></td>
+          <td nowrap style="border: 1px solid #ccc; padding: 5px;">
+            <?php if ($row->first == $row->last) {
+              echo $row->first;
+            } else {
+              echo sprintf(_('%s to<br>%s (%sx)'), $row->first, $row->last, $row->times);
+            } ?>
+          </td>
+          <td style="border: 1px solid #ccc; padding: 5px;"><?=d2h($row->Remarks)?>&nbsp;</td>
+        </tr>
+      <?php } ?>
+    </table>
+  </section>
+<?php } ?>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script>
+$(document).ready(function(){
+  // Style buttons with jQuery UI
+  $('.ui-button').button();
+
+  // Audio player context menu prevention
+  $('audio').bind('contextmenu',function() { return false; });
+
+  // Tag toggle
+  $('#tag-toggle').click(function() {
+    var $btn = $(this);
+    var sid = $btn.data('sid');
+    var isTagged = $btn.hasClass('tagged');
+
+    $.ajax({
+      url: 'ajax_actions.php',
+      type: 'POST',
+      data: { action: 'TagSong', sid: sid },
+      dataType: 'json',
+      success: function(response) {
+        if (response.success) {
+          if (response.tagged) {
+            $btn.addClass('tagged');
+            $btn.find('#tag-icon').text('✓');
+            $btn.find('#tag-label').text('<?=addslashes(_('Tagged'))?>');
+          } else {
+            $btn.removeClass('tagged');
+            $btn.find('#tag-icon').text('☐');
+            $btn.find('#tag-label').text('<?=addslashes(_('Not Tagged'))?>');
+          }
+          // Update tag count in menu
+          $('.tagcount').text(response.totalTagged);
+        } else if (response.error) {
+          alert(response.error);
+        }
+      },
+      error: function() {
+        alert('<?=addslashes(_('Error updating tag status.'))?>');
+      }
+    });
+  });
+
+  // Chords/Romaji display toggle
+  $('#showchords, #showromaji').change(function() {
+    var showChords = $('#showchords').prop("checked");
+    var showRomaji = $('#showromaji').prop("checked");
+
+    // Update display
+    if (showChords && showRomaji) {
+      $('.chordlyrics, .lyrics, .chords').show();
+      $('.chordshidden').hide();
+    } else if (showChords && !showRomaji) {
+      $('.chordlyrics, .lyrics, .chords').show();
+      $('.chordshidden, .romaji').hide();
+    } else if (!showChords && showRomaji) {
+      $('.lyrics').show();
+      $('.chordlyrics, .chords').hide();
+    } else {  // no chords or romaji
+      $('.lyrics').show();
+      $('.chordlyrics, .chords, .romaji').hide();
+    }
+
+    // Save preference via AJAX (fire and forget)
+    $.ajax({
+      url: 'ajax_actions.php',
+      type: 'POST',
+      data: {
+        action: 'SetDisplayPref',
+        show_chords: showChords ? '1' : '0',
+        show_romaji: showRomaji ? '1' : '0'
+      },
+      dataType: 'json'
+    });
+  });
+
+  // Audio loop toggle
+  $("#audioloop").click(function(){
+    var player = $("#audioplayer")[0];
+    player.loop = !player.loop;
+    $(this).toggleClass('enabled', player.loop)
+        .prop('title', player.loop ? '<?=addslashes(_('Disable looping'))?>' : '<?=addslashes(_('Play in loop'))?>');
+  });
+});
+</script>
+
+<?php footer(); ?>

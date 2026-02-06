@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 00:38+0900\n"
-"PO-Revision-Date: 2026-02-06 00:41+0900\n"
+"POT-Creation-Date: 2026-02-06 19:37+0900\n"
+"PO-Revision-Date: 2026-02-06 20:08+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -209,7 +209,7 @@ msgstr "新規ユーザのために、パスワードの入力は必要です。
 msgid "The two password entries don't match."
 msgstr "入力された二つのパスワードは異なります。"
 
-#: do_edit.php:10 do_edit.php:11 edit.php:302
+#: do_edit.php:10 do_edit.php:11 edit.php:297
 msgid "Saving..."
 msgstr "保存中..."
 
@@ -386,57 +386,57 @@ msgstr "変更を保存"
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:75 event_use.php:146 list.php:156 ms_text.php:15
+#: edit.php:74 event_use.php:146 list.php:156 ms_text.php:15
 msgid "Original Title"
 msgstr "原曲名"
 
-#: edit.php:76
+#: edit.php:75
 msgid "Fill in if the song is a translation from another language."
 msgstr "歌詞が他の言語から翻訳された場合は記入する"
 
-#: edit.php:85 index.php:113 list.php:158 ms_text.php:17
+#: edit.php:83 index.php:113 list.php:158 ms_text.php:17
 msgid "Key"
 msgstr "調"
 
-#: edit.php:91 index.php:105 list.php:157 ms_text.php:16
+#: edit.php:89 index.php:105 list.php:157 ms_text.php:16
 msgid "Tempo"
 msgstr "テンポ"
 
-#: edit.php:94 index.php:108
+#: edit.php:92 index.php:108
 msgid "Fast"
 msgstr "早い"
 
-#: edit.php:95 index.php:109
+#: edit.php:93 index.php:109
 msgid "Medium"
 msgstr "中"
 
-#: edit.php:96 index.php:110
+#: edit.php:94 index.php:110
 msgid "Slow"
 msgstr "ゆっくり"
 
-#: edit.php:107 list.php:162 ms_text.php:18
+#: edit.php:105 list.php:162 ms_text.php:18
 msgid "Composer"
 msgstr "作曲家"
 
-#: edit.php:113 list.php:163 ms_text.php:19
+#: edit.php:110 list.php:163 ms_text.php:19
 msgid "Copyright"
 msgstr "著作権"
 
-#: edit.php:125 ms_text.php:21
+#: edit.php:121 ms_text.php:21
 msgid "Pattern"
 msgstr "パターン"
 
-#: edit.php:126
+#: edit.php:122
 msgid ""
 "Print pattern for PDF output, e.g. ABABB. Sections in the lyrics are divided "
 "by blank lines."
 msgstr "印刷PDF用のパターン（例：ABABB、セクションは空行で区切られます）"
 
-#: edit.php:132
+#: edit.php:127
 msgid "Instructions"
 msgstr "指示"
 
-#: edit.php:133
+#: edit.php:128
 msgid ""
 "Notes for playing (intro, etc.). Put [brackets] around pattern descriptions "
 "and other text not needed when the full pattern is printed."
@@ -444,24 +444,24 @@ msgstr ""
 "イントロなど。フルパターンを印刷する時に不要なパターン指示やその他のテキスト"
 "は［角括弧］で囲んでください。"
 
-#: edit.php:137
+#: edit.php:132
 msgid "Sources"
 msgstr "参照"
 
-#: edit.php:138
+#: edit.php:133
 msgid "Albums, videos, sheet music, web pages, etc. used as references"
 msgstr "アルバム、動画、楽譜、ウェブページなどの参照資料"
 
-#: edit.php:143
+#: edit.php:138
 msgid "Upload Audio"
 msgstr "オーディオファイルをアップロード"
 
-#: edit.php:144
+#: edit.php:139
 #, php-format
 msgid "MP3 format only. Maximum file size: %s."
 msgstr "MP3形式のみ、%s 以下のファイルサイズ"
 
-#: edit.php:149
+#: edit.php:144
 msgid ""
 "(This song already has audio uploaded, but you can replace it with a new "
 "file if you want.)"
@@ -469,19 +469,19 @@ msgstr ""
 "（この曲にはすでにオーディオがアップロードされていますが、必要に応じて新しい"
 "ファイルに置き換えることができます。）"
 
-#: edit.php:152
+#: edit.php:147
 msgid "Audio Comment"
 msgstr "オーディオについての備考"
 
-#: edit.php:160
+#: edit.php:155
 msgid "Lyrics & Chords"
 msgstr "歌詞とコード"
 
-#: edit.php:170
+#: edit.php:165
 msgid "Chord Formatting Help"
 msgstr "コード記法ヘルプ"
 
-#: edit.php:171
+#: edit.php:166
 msgid ""
 "Chords go in [square brackets] just before the syllable where the chord is "
 "played:"
@@ -489,7 +489,7 @@ msgstr ""
 "コードを入力するには、一緒に歌う最初の音節の直前に入れて［角括弧］で囲んでく"
 "ださい。例："
 
-#: edit.php:173
+#: edit.php:168
 msgid ""
 "If a kanji character represents multiple syllables and the chord is not "
 "played with the first one, you can use spaces to control the location:"
@@ -497,12 +497,12 @@ msgstr ""
 "漢字が複数の音節を表す場合で、コードが最初の音節ではないときは、スペースで位"
 "置を調整できます。例："
 
-#: edit.php:175
+#: edit.php:170
 msgid "To indicate Japanese lyrics written in romaji, start the line with [r]:"
 msgstr ""
 "日本語の歌詞をローマ字で書く場合は、行の先頭に[r]を入れてください。例："
 
-#: edit.php:177
+#: edit.php:172
 msgid ""
 "To mark a section that is only needed when the full pattern is printed (e.g. "
 "chorus with repeated line for the song ending), precede it with a line "
@@ -511,15 +511,15 @@ msgstr ""
 "フルパターンの印刷時のみ必要な部分（例：曲の終わりにコーラスの最後の行を繰り"
 "返す部分など）には、その前にハイフンのみの行を置いてください："
 
-#: edit.php:211
+#: edit.php:206
 msgid "Please enter the title!"
 msgstr "タイトルを入力してください！"
 
-#: edit.php:216
+#: edit.php:211
 msgid "Only MP3 files can be accepted for audio."
 msgstr "オーディオファイルはMP3形式のみ受け付けます。"
 
-#: edit.php:221 edit.php:262
+#: edit.php:216 edit.php:257
 #, php-format
 msgid ""
 "The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
@@ -528,17 +528,17 @@ msgstr ""
 "選択されたファイルが大きすぎます（%1$s、上限：%2$s）。より小さいファイルを選"
 "んでください。"
 
-#: edit.php:228
+#: edit.php:223
 msgid "Audio comments only make sense if there is an audio file to comment on."
 msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:318
+#: edit.php:313
 msgid "Saved!"
 msgstr "保存しました。"
 
-#: edit.php:328
+#: edit.php:323
 #, php-format
 msgid "Upload failed. The file may exceed the %s limit."
 msgstr ""
@@ -1024,103 +1024,106 @@ msgstr "PDF作成のガイドを表示する"
 msgid "Floating Guide for Powerpoint"
 msgstr "Powerpoint作成のガイドを表示する"
 
-#: song.php:134
-msgid "Disable looping"
-msgstr "ループ再生をオフにする"
+#: song.php:205 song.php:399
+msgid "Tagged"
+msgstr "タグ付き"
 
-#: song.php:134 song.php:223
-msgid "Play in loop"
-msgstr "ループ再生"
+#: song.php:205 song.php:403
+msgid "Not Tagged"
+msgstr "タグなし"
 
-#: song.php:148
-#, php-format
-msgid "(Click image to %s)"
-msgstr "（%sには画像をクリック）"
+#: song.php:207
+msgid "Click to toggle"
+msgstr "クリックで切り替え"
 
-#: song.php:148
-msgid "untag"
-msgstr "タグを消す"
-
-#: song.php:148
-msgid "tag"
-msgstr "タグをつける"
-
-#: song.php:153
+#: song.php:215
 msgid "Show:"
 msgstr "表示："
 
-#: song.php:154
+#: song.php:217
 msgid "Chords"
 msgstr "コード"
 
-#: song.php:155
+#: song.php:220
 msgid "Romaji"
 msgstr "ローマ字"
 
-#: song.php:198
+#: song.php:248
 msgid "Original Title:"
 msgstr "原曲名："
 
-#: song.php:199
+#: song.php:251
 msgid "Key:"
 msgstr "調："
 
-#: song.php:200
+#: song.php:253
 msgid "Tempo:"
 msgstr "テンポ："
 
-#: song.php:202
+#: song.php:258
 msgid "Composer:"
 msgstr "作曲家："
 
-#: song.php:203
+#: song.php:262
 msgid "Copyright:"
 msgstr "著作権："
 
-#: song.php:206
+#: song.php:266
 msgid "Source(s):"
 msgstr "参照："
 
-#: song.php:211
+#: song.php:271
 msgid "Pattern of Stanzas:"
 msgstr "節のパターン："
 
-#: song.php:214
+#: song.php:275
 msgid "Instruction (intro, etc.):"
 msgstr "指示（イントロなど）："
 
-#: song.php:219
+#: song.php:280
 msgid "Audio for learning:"
 msgstr "練習用オーディオ："
 
-#: song.php:227
+#: song.php:285 song.php:455
+msgid "Play in loop"
+msgstr "ループ再生"
+
+#: song.php:289
 msgid "Comment about audio recording:"
 msgstr "オーディオ録音についての備考："
 
-#: song.php:230
+#: song.php:296
 msgid "Edit This Song"
 msgstr "この曲を編集"
 
-#: song.php:237
+#: song.php:306
 msgid "Keywords"
 msgstr "キーワード"
 
-#: song.php:239
+#: song.php:308
 msgid "Save Keyword Changes"
 msgstr "キーワードの変更を保存"
 
-#: song.php:276
+#: song.php:350
 msgid "No history records."
 msgstr "使用記録はありません。"
 
-#: song.php:279
+#: song.php:354
 msgid "Usage History"
 msgstr "使用履歴"
 
-#: song.php:286
+#: song.php:363
 #, php-format
 msgid "%s to<br>%s (%sx)"
 msgstr "%s〜<br>%s（%s回）"
+
+#: song.php:412
+msgid "Error updating tag status."
+msgstr "タグの更新中にエラーが発生しました。"
+
+#: song.php:455
+msgid "Disable looping"
+msgstr "ループ再生をオフにする"
 
 #: user_settings.php:11
 msgid "Language successfully changed."
@@ -1176,6 +1179,16 @@ msgstr "確証のため、現在のパスワードを入力してください。
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
 
+#, php-format
+#~ msgid "(Click image to %s)"
+#~ msgstr "（%sには画像をクリック）"
+
+#~ msgid "untag"
+#~ msgstr "タグを消す"
+
+#~ msgid "tag"
+#~ msgstr "タグをつける"
+
 #~ msgid ""
 #~ "No info was modified.  If you want to exit this page, just use your BACK "
 #~ "button."
@@ -1205,9 +1218,6 @@ msgstr "入力された二つのパスワードは異なります。"
 
 #~ msgid "ID"
 #~ msgstr "ID"
-
-#~ msgid "Tagged"
-#~ msgstr "タグされている"
 
 #~ msgid "Tag"
 #~ msgstr "タグ"
