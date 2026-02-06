@@ -133,6 +133,39 @@ switch($_REQUEST['action']) {
     die(json_encode(array('success' => true, 'totalTagged' => $totalTagged)));
     break;
 
+  case 'SetDisplayPref':
+    if (isset($_REQUEST['show_chords'])) {
+      $_SESSION['show_chords'] = ($_REQUEST['show_chords'] == '1') ? 1 : 0;
+    }
+    if (isset($_REQUEST['show_romaji'])) {
+      $_SESSION['show_romaji'] = ($_REQUEST['show_romaji'] == '1') ? 1 : 0;
+    }
+    die(json_encode(array('success' => true)));
+    break;
+
+  case 'TagSong':
+    if (!isset($_REQUEST['sid']) || !is_numeric($_REQUEST['sid'])) {
+      die(json_encode(array('error' => 'Invalid song ID.')));
+    }
+    $sid = intval($_REQUEST['sid']);
+
+    // Get current state
+    $result = sqlquery_checked("SELECT Tagged FROM song WHERE SongID=$sid");
+    if (mysqli_num_rows($result) == 0) {
+      die(json_encode(array('error' => 'Song not found.')));
+    }
+    $song = mysqli_fetch_object($result);
+
+    // Toggle state
+    $newState = $song->Tagged ? 0 : 1;
+    sqlquery_checked("UPDATE song SET Tagged=$newState WHERE SongID=$sid");
+
+    // Get total tagged count
+    $totalTagged = mysqli_fetch_row(mysqli_query($db, "SELECT COUNT(SongID) FROM song WHERE Tagged=1"))[0];
+
+    die(json_encode(array('success' => true, 'tagged' => $newState, 'totalTagged' => $totalTagged)));
+    break;
+
   default:
     die("Programming error: NO ACTION RECOGNIZED");
 }
