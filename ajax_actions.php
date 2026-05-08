@@ -14,13 +14,13 @@ switch($_REQUEST['action']) {
     setlocale(LC_ALL, $_SESSION['lang'].".utf8");
     break;
 
-  case 'Keyword':
-    if (isset($_REQUEST['kwid']) && $_REQUEST['kwid']!="") {
-      $kwid = mysqli_real_escape_string($db, $_REQUEST['kwid']);
-      $result = sqlquery_checked("SELECT * FROM keyword WHERE KeywordID=".$kwid);
+  case 'Tag':
+    if (isset($_REQUEST['tagid']) && $_REQUEST['tagid']!="") {
+      $tagid = intval($_REQUEST['tagid']);
+      $result = sqlquery_checked("SELECT * FROM tag WHERE TagID=".$tagid);
       if (mysqli_num_rows($result)>0) {
         $row = mysqli_fetch_object($result);
-        $arr = array('kwid' => $row->KeywordID, 'keyword' => $row->Keyword);
+        $arr = array('tagid' => $row->TagID, 'tag' => $row->Tag);
         die(json_encode($arr));
       } else {
         die(json_encode(array('alert' => 'Record not found.')));
@@ -103,34 +103,37 @@ switch($_REQUEST['action']) {
     die(json_encode(mysqli_fetch_all($result, MYSQLI_ASSOC)));
     break;
 
-  case 'UpdateTags':
-    if ($_SESSION['admin'] < 1) {
-        die(json_encode(array('error' => _('Access denied.'))));
-    }
-    $sid_list = $_REQUEST['sid_list'] ?? '';
-    $tagged_list = $_REQUEST['tagged_list'] ?? '';
+  case 'BasketAdd':
+    $sid_list = $_REQUEST['sid_list'] ?? $_REQUEST['sid'] ?? '';
+    $sids = array_filter(array_map('intval', explode(',', $sid_list)));
+    $_SESSION['basket'] = array_values(array_unique(array_merge($_SESSION['basket'], $sids)));
+    saveBasket();
+    die(json_encode(array('success' => true, 'basketCount' => count($_SESSION['basket']))));
+    break;
 
-    if (empty($sid_list)) {
-        die(json_encode(array('error' => 'No songs specified.')));
-    }
+  case 'BasketRemove':
+    $sid_list = $_REQUEST['sid_list'] ?? $_REQUEST['sid'] ?? '';
+    $sids = array_filter(array_map('intval', explode(',', $sid_list)));
+    $_SESSION['basket'] = array_values(array_diff($_SESSION['basket'], $sids));
+    saveBasket();
+    die(json_encode(array('success' => true, 'basketCount' => count($_SESSION['basket']))));
+    break;
 
-    $all_sids = array_filter(array_map('intval', explode(',', $sid_list)));
-    $tagged_sids = $tagged_list ? array_filter(array_map('intval', explode(',', $tagged_list))) : [];
+  case 'BasketUpdate':
+    // Additive/subtractive on the visible rows only — songs not mentioned are untouched.
+    // Used by list.php's "Update Basket" button so off-screen basket members aren't wiped.
+    $checked = array_filter(array_map('intval', explode(',', $_REQUEST['checked_ids'] ?? '')));
+    $unchecked = array_filter(array_map('intval', explode(',', $_REQUEST['unchecked_ids'] ?? '')));
+    $_SESSION['basket'] = array_values(array_unique(array_merge($_SESSION['basket'], $checked)));
+    $_SESSION['basket'] = array_values(array_diff($_SESSION['basket'], $unchecked));
+    saveBasket();
+    die(json_encode(array('success' => true, 'basketCount' => count($_SESSION['basket']))));
+    break;
 
-    if (empty($all_sids)) {
-        die(json_encode(array('error' => 'Invalid song IDs.')));
-    }
-
-    $all_ids = implode(',', $all_sids);
-    sqlquery_checked("UPDATE song SET Tagged=0 WHERE SongID IN ($all_ids)");
-
-    if (!empty($tagged_sids)) {
-        $tagged_ids = implode(',', $tagged_sids);
-        sqlquery_checked("UPDATE song SET Tagged=1 WHERE SongID IN ($tagged_ids)");
-    }
-
-    $totalTagged = mysqli_fetch_row(mysqli_query($db, "SELECT COUNT(SongID) FROM song WHERE Tagged=1"))[0];
-    die(json_encode(array('success' => true, 'totalTagged' => $totalTagged)));
+  case 'BasketEmpty':
+    $_SESSION['basket'] = [];
+    saveBasket();
+    die(json_encode(array('success' => true, 'basketCount' => 0)));
     break;
 
   case 'SetDisplayPref':
@@ -141,29 +144,6 @@ switch($_REQUEST['action']) {
       $_SESSION['show_romaji'] = ($_REQUEST['show_romaji'] == '1') ? 1 : 0;
     }
     die(json_encode(array('success' => true)));
-    break;
-
-  case 'TagSong':
-    if (!isset($_REQUEST['sid']) || !is_numeric($_REQUEST['sid'])) {
-      die(json_encode(array('error' => 'Invalid song ID.')));
-    }
-    $sid = intval($_REQUEST['sid']);
-
-    // Get current state
-    $result = sqlquery_checked("SELECT Tagged FROM song WHERE SongID=$sid");
-    if (mysqli_num_rows($result) == 0) {
-      die(json_encode(array('error' => 'Song not found.')));
-    }
-    $song = mysqli_fetch_object($result);
-
-    // Toggle state
-    $newState = $song->Tagged ? 0 : 1;
-    sqlquery_checked("UPDATE song SET Tagged=$newState WHERE SongID=$sid");
-
-    // Get total tagged count
-    $totalTagged = mysqli_fetch_row(mysqli_query($db, "SELECT COUNT(SongID) FROM song WHERE Tagged=1"))[0];
-
-    die(json_encode(array('success' => true, 'tagged' => $newState, 'totalTagged' => $totalTagged)));
     break;
 
   default:
