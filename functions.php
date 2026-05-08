@@ -40,14 +40,18 @@ function header2($nav=0) {
   echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
 
   if ($nav) {
+    $numbasket = count($_SESSION['basket'] ?? []);
     $navmarkup = "<ul class='nav'>\n";
     $navmarkup .= "  <li><a href='index.php' target='_top'>"._("Search")."</a></li>\n";
-    $navmarkup .= "  <li><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
-    $numbasket = count($_SESSION['basket'] ?? []);
-    $navmarkup .= "  <li><a href='list.php?basket=1' class='basketlink' target='_top'>"._('Show Basket')." (<span class='basketcount'>$numbasket</span>)</a></li>\n";
-    $navmarkup .= "  <li class='emptybasket-li' style='".($numbasket>0?'':"display:none;")."'><a href='#' class='emptybasket'>"._('Empty Basket')."</a></li>\n";
+    $navmarkup .= "  <li class='not-on-scroll'><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
     $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
-    $navmarkup .= "  <li><a href='task.php' target='_top'>"._("Tasks")."</a></li>\n";
+    $navmarkup .= "  <li class='hassub'>\n";
+    $navmarkup .= "    <a href='#'>"._('Basket/Tasks')." (<span class='basketcount'>$numbasket</span>) &#x25BC;</a>\n";
+    $navmarkup .= "    <ul class='nav-sub'>\n";
+    $navmarkup .= "      <li><a href='list.php?basket=1' target='_top' class='basket-list'>"._('List Basket')."</a></li>\n";
+    $navmarkup .= "      <li><a href='task.php' target='_top' class='basket-tasks'>"._("Tasks")."</a></li>\n";
+    $navmarkup .= "      <li><a href='#' class='emptybasket basket-empty'>"._('Empty Basket')."</a></li>\n";
+    $navmarkup .= "    </ul>\n  </li>\n";
     $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
     $navmarkup .= "  <li><a href='db_settings.php' target='_top'>"._("DB Settings")."</a></li>\n";
     if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
@@ -55,10 +59,14 @@ function header2($nav=0) {
     }
     $navmarkup .= "  <li><a class='switchlang' href='#'>".
         ($_SESSION['lang']=='en_US'?'日本語':'English')."</a></li>\n";
-    $navmarkup .= "  <li class='menu-usersettings'><a href='user_settings.php' target='_top'>"._("User Settings")."<span> (".$_SESSION['username'].")</span></a></li>\n";
-    $navmarkup .= "  <li><a href='index.php?logout=1' target='_top'>"._("Log Out")."</a></li>\n</ul>\n";
+    $navmarkup .= "  <li class='hassub menu-usersettings'>\n";
+    $navmarkup .= "    <a href='#'>"._('User')."<span class='username'>: ".$_SESSION['username']."</span> &#x25BC;</a>\n";
+    $navmarkup .= "    <ul class='nav-sub'>\n";
+    $navmarkup .= "      <li><a href='user_settings.php' target='_top'>"._("User Settings")."</a></li>\n";
+    $navmarkup .= "      <li><a href='index.php?logout=1' target='_top'>"._("Log Out")."</a></li>\n";
+    $navmarkup .= "    </ul>\n  </li>\n";
+    $navmarkup .= "</ul>\n";
     echo "<nav id='scrollnav'></nav>\n";  //only appears when scrolled
-
     echo "<div id='main-container'>\n";
     echo "<nav id='nav-main'>\n$navmarkup</nav>\n";  //main nav for large screens
     echo "<div id='nav-trigger'><img src='graphics/sambidb-logo.png' alt='Logo'><span>Menu</span></div>\n";  //button for narrow screens
@@ -94,6 +102,9 @@ function footer($nav=0) {
 
       $("#nav-mobile").html($("#nav-main").html());
       $("#scrollnav").html($("#nav-main").html());
+      $("#nav-mobile li.not-on-scroll").remove();
+      $("#scrollnav li.not-on-scroll").remove();
+
       $("#nav-trigger").click(function(){
         if ($("nav#nav-mobile ul").hasClass("expanded")) {
           $("nav#nav-mobile ul.expanded").removeClass("expanded").slideUp(250);
@@ -115,14 +126,35 @@ function footer($nav=0) {
         });
       });
 
-      // Update basket count + show/hide Empty Basket nav item across all nav copies.
+      /* submenu (hassub) event handling */
+      $(document).on("mouseenter", ".hassub:not(#nav-mobile .hassub)", function() {
+        $("ul", this).show();
+      })
+      .on("mouseleave", ".hassub:not(#nav-mobile .hassub)", function(){
+        $("ul", this).hide();
+      });
+      $(document).on("click", ".hassub > a", function(event) {
+        event.preventDefault();
+        $(this).siblings("ul").toggle();
+      });
+      $(document).on("click", function(event) {
+        if (!$(event.target).closest(".hassub").length) {
+          $(".hassub").not("#nav-mobile .hassub").find("ul").hide();
+        }
+      });
+
+      // Update basket count and disabled state of basket nav links across all nav copies.
       window.updateBasketCount = function(count) {
         $('.basketcount').text(count);
-        $('.emptybasket-li').toggle(count > 0);
+        $('.basket-list, .basket-tasks, .basket-empty').toggleClass('disabledlink', count === 0);
       };
+
+      // Set initial disabled state
+      $('.basket-list, .basket-tasks, .basket-empty').toggleClass('disabledlink', ($('span.basketcount').first().text() === '0'));
 
       $('.emptybasket').click(function(event) {
         event.preventDefault();
+        $(this).closest('ul.nav-sub').hide();
         $.post('ajax_actions.php', { action: 'BasketEmpty' }, function(response) {
           if (response.success) window.updateBasketCount(0);
         }, 'json');

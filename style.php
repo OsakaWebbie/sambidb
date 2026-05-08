@@ -64,7 +64,7 @@ table.tablesorter thead tr th.tablesorter-headerDesc {
   background:<?=(!empty($mainbg)?$mainbg:"White")?> url('graphics/sambidb-logo-small.png') no-repeat 3px center;
   min-height: 53px;
 }
-#nav-main ul, #scrollnav ul {
+ul.nav {
   background-color:<?=(!empty($navbg)?$navbg:"#51579A")?>;
   list-style-type: none;
   margin:10px 10px 0 58px;
@@ -73,22 +73,41 @@ table.tablesorter thead tr th.tablesorter-headerDesc {
   text-align: center;
   min-height: 40px;
 }
-#nav-main li, #scrollnav li {
+ul.nav li {
   display: inline-block;
+  position: relative;
 }
-#nav-main a, #scrollnav a {
+ul.nav-sub {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  background-color:<?=(!empty($navbg)?$navbg:"#51579A")?>;
+  margin: 0;
+  padding: 0;
+  border: 1px solid <?=(!empty($navlink)?$navlink:"White")?>;
+  border-radius: 0;
+  text-align: left;
+  min-height: 0;
+}
+ul.nav-sub li { display: block; }
+ul.nav a {
   display: block;
   color: <?=(!empty($navlink)?$navlink:"White")?>;
   padding: 5px 10px;
   margin: 0;
   font-family: arial, helvetica, sans-serif;
   font-weight: bold;
+  text-decoration: none;
   white-space:nowrap;
 }
-#nav-main li.menu-usersettings a span { font-weight:normal; white-space:wrap; }
-#nav-main a:hover {
+ul.nav li.menu-usersettings a span { font-weight:normal; white-space:wrap; }
+ul.nav a:hover {
   background-color: <?=(!empty($navbghover)?$navbghover:"#85001f")?>;
   color: <?=(!empty($navlinkhover)?$navlinkhover:"White")?>;
+}
+ul.nav a.disabledlink {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* MENU THAT APPEARS WHEN SCROLLING (WIDE SCREENS) */
@@ -99,7 +118,7 @@ table.tablesorter thead tr th.tablesorter-headerDesc {
   width: 100%;
   z-index: 9999;
 }
-#scrollnav ul {
+#scrollnav ul.nav {
   background-color: <?=(!empty($navbg)?rgba($navbg,"0.7"):rgba("#51579A","0.7"))?>;
   margin:0;
   padding:5px;
@@ -107,7 +126,7 @@ table.tablesorter thead tr th.tablesorter-headerDesc {
   border-radius: 0;
   min-height: 0;
 }
-#scrollnav ul a {
+#scrollnav ul.nav a {
   padding: 3px 10px 3px 10px;
 }
 #scrollnav.visible {
@@ -163,25 +182,35 @@ table.tablesorter thead tr th.tablesorter-headerDesc {
   display: none;
   margin-left:35px;
   z-index: 100;
+  background-color: <?=(!empty($navbg)?$navbg:"#51579A")?>;
 }
-#nav-mobile ul {
+#nav-mobile ul.nav {
   display: none;
   list-style-type: none;
   position: absolute;
+  z-index: 9998;
+  border-radius: 0;
   left: 0;
   right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  background-color: <?=(!empty($navbg)?$navbg:"#51579A")?>;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
 }
-#nav-mobile li {
+#nav-mobile ul.nav li {
   display: block;
-  padding: 5px 0;
+  padding: 5px 0 5px 10px;
   margin: 0 5px;
-  border-bottom: solid 1px <?=(!empty($primarymedium)?$primarymedium:"#51579A")?>;
+  border-bottom: solid 1px rgba(255,255,255,0.3);
 }
-nav#nav-mobile li:last-child { border-bottom: none; }
+#nav-mobile ul.nav-sub {
+  display: block;
+  position: static;
+  padding: 0 0 0 20px;
+  border: none;
+  min-height: 0;
+}
+#nav-mobile ul.nav-sub li { display: block; }
+nav#nav-mobile ul.nav li:last-child { border-bottom: none; }
 nav#nav-mobile a {
   display: block;
   color: <?=(!empty($navlink)?$navlink:"White")?>;
@@ -191,7 +220,7 @@ nav#nav-mobile a {
   font-weight: bold;
 }
 nav#nav-mobile li.menu-usersettings a span { font-weight:normal; white-space:wrap; }
-nav#nav-mobile a:hover {
+nav#nav-mobile a:hover, nav#nav-mobile a:active {
   background-color: <?=(!empty($navbghover)?$navbghover:"#85001f")?>;
   color: <?=(!empty($navlinkhover)?$navlinkhover:"White")?>;
 }
