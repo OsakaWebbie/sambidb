@@ -10,53 +10,53 @@ function h2d($text) {
   return mysqli_real_escape_string($db, $text);
 }
 
-// ********** KEYWORD ADD/UPDATE **********
-if (!empty($_POST['kw_add_upd'])) {
-  $keyword_escaped = h2d($_POST['keyword']);
-  if ($_POST['kwid'] == "new") {
-    sqlquery_checked("INSERT INTO keyword (Keyword) VALUES ('$keyword_escaped')");
-    $message = _('Keyword successfully added.');
+// ********** TAG ADD/UPDATE **********
+if (!empty($_POST['tag_add_upd'])) {
+  $tag_escaped = h2d($_POST['tag']);
+  if ($_POST['tagid'] == "new") {
+    sqlquery_checked("INSERT INTO tag (Tag) VALUES ('$tag_escaped')");
+    $message = _('New tag successfully added.');
   } else {
-    $kwid = intval($_POST['kwid']);
-    sqlquery_checked("UPDATE keyword SET Keyword='$keyword_escaped' WHERE KeywordID=$kwid");
-    $message = _('Keyword successfully renamed.');
+    $tagid = intval($_POST['tagid']);
+    sqlquery_checked("UPDATE tag SET Tag='$tag_escaped' WHERE TagID=$tagid");
+    $message = _('Tag successfully renamed.');
   }
 
-// ********** KEYWORD DELETE **********
-} elseif (!empty($_POST['kw_del'])) {
-  $kwid = intval($_POST['kwid']);
+// ********** TAG DELETE **********
+} elseif (!empty($_POST['tag_del'])) {
+  $tagid = intval($_POST['tagid']);
 
-  // if first time around, check for songkey records - if none, don't need confirmation
+  // if first time around, check for songtag records - if none, don't need confirmation
   if (empty($_POST['confirmed'])) {
-    $result = sqlquery_checked("SELECT Title FROM songkey LEFT JOIN song ON songkey.SongID=song.SongID ".
-        "WHERE KeywordID=$kwid ORDER BY Title");
+    $result = sqlquery_checked("SELECT Title FROM songtag LEFT JOIN song ON songtag.SongID=song.SongID ".
+        "WHERE TagID=$tagid ORDER BY Title");
     if (mysqli_num_rows($result) == 0) {
       $_POST['confirmed'] = 1;
     }
   }
   if (!empty($_POST['confirmed'])) {
     $affected = 0;
-    $result = sqlquery_checked("DELETE FROM songkey WHERE KeywordID=$kwid");
+    $result = sqlquery_checked("DELETE FROM songtag WHERE TagID=$tagid");
     $affected = mysqli_affected_rows($db);
-    sqlquery_checked("DELETE FROM keyword WHERE KeywordID=$kwid LIMIT 1");
+    sqlquery_checked("DELETE FROM tag WHERE TagID=$tagid LIMIT 1");
     if (mysqli_affected_rows($db) == 1) {
-      $message = ($affected > 0 ? sprintf(_('%s songs removed from keyword.'), $affected)."\\n" : "").
-                 _('Keyword successfully deleted.');
+      $message = ($affected > 0 ? sprintf(_('%s songs removed from tag.'), $affected)."\\n" : "").
+                 _('Tag successfully deleted.');
     }
   } else {
     // Show confirmation form
-    echo "<h3 class=\"alert\">"._('Please Confirm Keyword Delete')."</h3>\n<p>";
-    printf(_('The following songs are still associated with the %s keyword.&nbsp; If you are sure you want to delete these keyword associations, click the button.&nbsp; (If not, just press your browser\'s Back button.)'), $_POST['keyword'] ?? '');
+    echo "<h3 class=\"alert\">"._('Please Confirm Tag Delete')."</h3>\n<p>";
+    printf(_('The following songs are still associated with the %s tag.&nbsp; If you are sure you want to delete these tag associations, click the button.&nbsp; (If not, just press your browser\'s Back button.)'), $_POST['tag'] ?? '');
     echo "</p>\n";
 ?>
 <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-  <input type="hidden" name="kwid" value="<?=$kwid?>">
-  <input type="hidden" name="keyword" value="<?=htmlspecialchars($_POST['keyword'] ?? '')?>">
-  <input type="hidden" name="kw_del" value="1">
+  <input type="hidden" name="tagid" value="<?=$tagid?>">
+  <input type="hidden" name="tag" value="<?=htmlspecialchars($_POST['tag'] ?? '')?>">
+  <input type="hidden" name="tag_del" value="1">
   <input type="hidden" name="confirmed" value="1">
-  <input type="submit" value="<?=_("Yes, delete the keyword")?>">
+  <input type="submit" value="<?=_("Yes, delete the tag")?>">
 </form>
-<p><?=_('Songs with this keyword:')?>
+<p><?=_('Songs with this tag:')?>
 <?php
     while ($row = mysqli_fetch_object($result)) {
       echo "<br>&nbsp;&nbsp;&nbsp;".htmlspecialchars($row->Title)."\n";

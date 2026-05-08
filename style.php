@@ -48,6 +48,16 @@ div#content {
   z-index: 1;
 }
 table { background-color: White;}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+  background-color: <?=(!empty($tableheaderbg)?$tableheaderbg:"LightSteelBlue")?>;
+}
+table.tablesorter thead tr .headerSortDown,
+table.tablesorter thead tr .headerSortUp,
+table.tablesorter thead tr th.tablesorter-headerAsc,
+table.tablesorter thead tr th.tablesorter-headerDesc {
+  background-color: <?=(!empty($secondarydark)?$secondarydark:"#85001f")?>;
+  color: White;
+}
 
 /* MAIN MENU (WIDE SCREENS) */
 #nav-main {

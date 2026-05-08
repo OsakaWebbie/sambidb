@@ -43,14 +43,15 @@ function header2($nav=0) {
     $navmarkup = "<ul class='nav'>\n";
     $navmarkup .= "  <li><a href='index.php' target='_top'>"._("Search")."</a></li>\n";
     $navmarkup .= "  <li><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
-    $numtags = sql_single("SELECT COUNT(SongID) FROM song WHERE Tagged=1");
-    $navmarkup .= "  <li>".($numtags>0?"<a href='list.php?tagged=1' target='_top'>":'')._('List Tagged')." (<span class='tagcount'>$numtags</span>)".($numtags>0?"</a>":'')."</li>\n";
+    $numbasket = count($_SESSION['basket'] ?? []);
+    $navmarkup .= "  <li><a href='list.php?basket=1' class='basketlink' target='_top'>"._('Show Basket')." (<span class='basketcount'>$numbasket</span>)</a></li>\n";
+    $navmarkup .= "  <li class='emptybasket-li' style='".($numbasket>0?'':"display:none;")."'><a href='#' class='emptybasket'>"._('Empty Basket')."</a></li>\n";
     $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
-    $navmarkup .= "  <li><a href='multiselect.php' target='_top'>"._("Tagged Song Actions")."</a></li>\n";
+    $navmarkup .= "  <li><a href='task.php' target='_top'>"._("Tasks")."</a></li>\n";
     $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
     $navmarkup .= "  <li><a href='db_settings.php' target='_top'>"._("DB Settings")."</a></li>\n";
     if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
-      $navmarkup .= "  <li><a href='sqlquery.php' target='_top'>"._("(Freeform SQL)")."</a></li>\n";
+      $navmarkup .= "  <li><a href='sqlquery.php' target='_top'>"._("(Raw SQL)")."</a></li>\n";
     }
     $navmarkup .= "  <li><a class='switchlang' href='#'>".
         ($_SESSION['lang']=='en_US'?'日本語':'English')."</a></li>\n";
@@ -113,6 +114,19 @@ function footer($nav=0) {
           }
         });
       });
+
+      // Update basket count + show/hide Empty Basket nav item across all nav copies.
+      window.updateBasketCount = function(count) {
+        $('.basketcount').text(count);
+        $('.emptybasket-li').toggle(count > 0);
+      };
+
+      $('.emptybasket').click(function(event) {
+        event.preventDefault();
+        $.post('ajax_actions.php', { action: 'BasketEmpty' }, function(response) {
+          if (response.success) window.updateBasketCount(0);
+        }, 'json');
+      });
     });
   </script>
 <?php } ?>
@@ -161,6 +175,60 @@ function sql_single($sql) {
   $result = sqlquery_checked($sql);
   $row = mysqli_fetch_row($result);
   return $row[0];
+}
+
+/*** LOAD SCRIPTS - common location for version #, and makes sure only loaded once ***/
+/*** pass array of script name roots ***/
+$scripts_loaded = array();
+function load_scripts($scripts) {
+  global $scripts_loaded;
+  foreach ($scripts as $script) {
+    if (empty($scripts_loaded[$script])) {
+      switch ($script) {
+        case 'jquery':
+          echo '<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>'."\n";
+          break;
+        case 'jqueryui':
+          echo '<script type="text/JavaScript" src="js/jquery-ui-13.min.js"></script>'."\n";
+          break;
+        case 'tablesorter':
+          echo '<script type="text/JavaScript" src="js/jquery.tablesorter.min.js"></script>'."\n";
+          break;
+        case 'table2csv':
+          echo '<script type="text/JavaScript" src="js/table2CSV.js"></script>'."\n";
+          break;
+        case 'expanding':
+          echo '<script type="text/JavaScript" src="js/expanding.js"></script>'."\n";
+          break;
+        case 'multiselect':
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js"></script>'."\n";
+          break;
+        case 'multiselect-classes':
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect-classes.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js"></script>'."\n";
+          break;
+        case 'datepicker-ja':
+          echo '<script type="text/JavaScript" src="js/i18n/datepicker-ja.js"></script>'."\n";
+          break;
+        case 'readmore':
+          echo '<script type="text/JavaScript" src="js/readmore.js"></script>'."\n";
+          break;
+        case 'functions':
+          echo '<script type="text/JavaScript" src="js/functions.js"></script>'."\n";
+          break;
+      }
+      $scripts_loaded[$script] = 1;
+    }
+  }
+}
+
+// Persist the in-session basket to user.Basket so it survives logout/expiry.
+function saveBasket() {
+  global $db;
+  $userid = mysqli_real_escape_string($db, $_SESSION['userid']);
+  $basket = implode(',', $_SESSION['basket']);
+  sqlquery_checked("UPDATE user SET Basket='$basket' WHERE UserID='$userid'");
 }
 
 // Function db2table: prepares text from DB for display in table cell (or plain html text)

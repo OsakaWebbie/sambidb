@@ -10,22 +10,22 @@ header1(_("Database Settings"));
 <h1 id="title"><?=_("Database Settings")?></h1>
 
 <?php if ($_SESSION['admin'] > 0) { ?>
-  <!-- KEYWORDS -->
+  <!-- TAGS -->
 
-  <form action="do_maint.php" method="post" name="kwform" id="kwform" onSubmit="return validate('kw');">
-    <fieldset><legend><?=_("Keyword Management")?></legend>
-      <p><?=_('Select a keyword to rename, and type its new name.&nbsp; Or select &quot;New Keyword&quot; and type a new keyword name.  Or select a keyword to delete, and press Delete.')?></p>
-      <select id="kwid" name="kwid" size="1">
-        <option value="new"><?=_("New Keyword...")?></option>
+  <form action="do_maint.php" method="post" name="tagform" id="tagform" onSubmit="return validate('tag');">
+    <fieldset><legend><?=_("Tag Management")?></legend>
+      <p><?=_('Select a tag to rename, and type its new name.&nbsp; Or select &quot;New Tag&quot; and type a new tag name.  Or select a tag to delete, and press Delete.')?></p>
+      <select id="tagid" name="tagid" size="1">
+        <option value="new"><?=_("New Tag...")?></option>
         <?php
-        $result = sqlquery_checked("SELECT KeywordID,Keyword FROM keyword ORDER BY Keyword");
-        while ($row = mysqli_fetch_object($result))  echo "    <option value=\"".$row->KeywordID."\">".$row->Keyword."</option>\n";
+        $result = sqlquery_checked("SELECT TagID,Tag FROM tag ORDER BY Tag");
+        while ($row = mysqli_fetch_object($result))  echo "    <option value=\"".$row->TagID."\">".$row->Tag."</option>\n";
         ?>
       </select>
-      <label class="label-n-input"><?=_('Keyword Name:')?>  <input type="text"
-                                                                   id="keyword" name="keyword" style="width:20em" maxlength="60"></label>
-      <div class="submits"><input type="submit" id="kw_add_upd" name="kw_add_upd" value="<?=_("Add or Rename")?>">
-        <input type="submit" id="kw_del" name="kw_del" value="<?=_("Delete")?>" disabled></div>
+      <label class="label-n-input"><?=_('Tag Name:')?>  <input type="text"
+                                                                   id="tag" name="tag" style="width:20em" maxlength="60"></label>
+      <div class="submits"><input type="submit" id="tag_add_upd" name="tag_add_upd" value="<?=_("Add or Rename")?>">
+        <input type="submit" id="tag_del" name="tag_del" value="<?=_("Delete")?>" disabled></div>
     </fieldset></form>
 
   <!-- EVENTS -->
@@ -99,7 +99,7 @@ header1(_("Database Settings"));
     // Only block Enter key for text inputs within this page's forms
     if ((evt.keyCode == 13) && (node.type=="text")) {
       var form = node.form || $(node).closest('form')[0];
-      if (form && ["kwform","eventform","userform"].includes(form.id)) {
+      if (form && ["tagform","eventform","userform"].includes(form.id)) {
         return false;
       }
     }
@@ -116,25 +116,25 @@ header1(_("Database Settings"));
 
   $(document).ready(function(){
 
-// AJAX call for Keywords
-    $("#kwid").change(function(){
-      if ($("#kwid").val() == "new") {
-        $("#keyword").val("");
-        $("#kw_del").prop('disabled', true);
+// AJAX call for Tags
+    $("#tagid").change(function(){
+      if ($("#tagid").val() == "new") {
+        $("#tag").val("");
+        $("#tag_del").prop('disabled', true);
       } else {
-        showSpinner($('#kwid'));
-        $.getJSON("ajax_actions.php?action=Keyword&kwid="+$('#kwid').val())
+        showSpinner($('#tagid'));
+        $.getJSON("ajax_actions.php?action=Tag&tagid="+$('#tagid').val())
             .done(function(data) {
-              hideSpinner($('#kwid'));
+              hideSpinner($('#tagid'));
               if (data.alert) {
                 alert(data.alert);
               } else {
-                $('#keyword').val(data.keyword);
-                $("#kw_del").prop('disabled', false);
+                $('#tag').val(data.tag);
+                $("#tag_del").prop('disabled', false);
               }
             })
             .fail(function(jqxhr, textStatus, error) {
-              hideSpinner($('#kwid'));
+              hideSpinner($('#tagid'));
               alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
@@ -205,9 +205,9 @@ header1(_("Database Settings"));
 
   function validate(form) {
     switch(form) {
-      case "kw":
-        if (document.kwform.keyword.value == "") {
-          alert("<?=_("Keyword name cannot be blank.")?>");
+      case "tag":
+        if (document.tagform.tag.value == "") {
+          alert("<?=_("Tag name cannot be blank.")?>");
           return false;
         }
         break;
@@ -228,7 +228,7 @@ header1(_("Database Settings"));
           alert("<?=_("You must enter a password for a new user.")?>");
           return false;
         } else if (document.userform.new_pw1.value != "" && document.userform.new_pw1.value != document.userform.new_pw2.value) {
-          alert("<?=_("The two password entries don't match.")?>");
+          alert("<?=_("The two password entries do not match.")?>");
           return false;
         }
         break;

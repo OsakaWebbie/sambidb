@@ -155,7 +155,9 @@ header1($pageTitle);
     <label for="lyrics"><?=_('Lyrics & Chords')?>
       <span class="help-icon help-modal" data-dialog="lyrics-help">?</span>
     </label>
-    <textarea name="lyrics" id="lyrics" rows="14" style="min-height: 350px; resize: vertical; font-family: monospace"><?php echo htmlspecialchars($rec->Lyrics, ENT_QUOTES, 'UTF-8'); ?></textarea>
+    <textarea name="lyrics" id="lyrics" rows="14"
+        style="min-height:350px; resize:vertical; font-family:'Courier New','メイリオ','Meiryo','ヒラギノ角ゴシック',monospace;
+        line-height:1.3em"><?php echo htmlspecialchars($rec->Lyrics, ENT_QUOTES, 'UTF-8'); ?></textarea>
   </div>
 
 </div><!-- end main grid -->

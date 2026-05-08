@@ -7,22 +7,15 @@ if ((!isset($_GET['sid']) && !isset($_POST['sid'])) || !(is_numeric($_GET['sid']
 }
 $sid = isset($_POST['sid']) ? $_POST['sid'] : $_GET['sid'];
 
-//Song to be tagged or untagged (legacy GET-based toggle)
-if (isset($_GET['tag'])) {
-  sqlquery_checked("UPDATE song SET Tagged=1 WHERE SongID=$sid");
-} elseif (isset($_GET['untag'])) {
-  sqlquery_checked("UPDATE song SET Tagged=0 WHERE SongID=$sid");
-}
-
-//Keyword changes
-if (isset($_POST['newkeyword'])) {
-  $result = sqlquery_checked("SELECT k.KeywordID, k.Keyword, s.SongID ".
-      "FROM keyword k LEFT JOIN songkey s ON k.KeywordID=s.KeywordID and s.SongID=$sid ".
-      "ORDER BY case when s.SongID is null then 1 else 0 end, k.Keyword");
+//Tag changes
+if (isset($_POST['newtag'])) {
+  $result = sqlquery_checked("SELECT t.TagID, t.Tag, st.SongID ".
+      "FROM tag t LEFT JOIN songtag st ON t.TagID=st.TagID and st.SongID=$sid ".
+      "ORDER BY case when st.SongID is null then 1 else 0 end, t.Tag");
   while ($row = mysqli_fetch_object($result)) {
-    $keyid = $row->KeywordID;
-    if ($row->SongID && empty($_POST[$keyid])) sqlquery_checked("DELETE from songkey WHERE KeywordID=$keyid and SongID=$sid");
-    elseif (!$row->SongID && !empty($_POST[$keyid])) sqlquery_checked("INSERT INTO songkey(KeywordID,SongID) VALUES($keyid,$sid)");
+    $tagid = $row->TagID;
+    if ($row->SongID && empty($_POST[$tagid])) sqlquery_checked("DELETE from songtag WHERE TagID=$tagid and SongID=$sid");
+    elseif (!$row->SongID && !empty($_POST[$tagid])) sqlquery_checked("INSERT INTO songtag(TagID,SongID) VALUES($tagid,$sid)");
   }
   header("Location: song.php?sid=".$sid);
   exit;
@@ -57,8 +50,8 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
   flex: 1 1 auto;
 }
 
-/* Tag toggle button */
-#tag-toggle {
+/* Basket toggle button */
+#basket-toggle {
   margin: 10px auto 0;
   padding: 10px 20px;
   font-size: 14px;
@@ -72,17 +65,17 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
   transition: all 0.2s ease;
 }
 
-#tag-toggle.tagged {
+#basket-toggle.in-basket {
   background-color: #51579A;
   color: white;
 }
 
-#tag-toggle:not(.tagged) {
+#basket-toggle:not(.in-basket) {
   background-color: #d7e4f9;
   color: #51579A;
 }
 
-#tag-toggle:hover {
+#basket-toggle:hover {
   opacity: 0.85;
 }
 
@@ -173,7 +166,7 @@ if (!$showRomaji) {
   text-align: left;
 }
 
-label.keyword {
+label.tag {
   white-space: nowrap;
   margin-right: 2em;
   display: inline-block;
@@ -200,9 +193,10 @@ label.keyword {
 <div class="song-header">
   <h1><?=d2h($song->Title)?></h1>
   <div>
-    <button type="button" id="tag-toggle" class="<?=($song->Tagged ? 'tagged' : '')?>" data-sid="<?=$sid?>">
-      <span id="tag-icon" style="font-size: 18px; font-weight: bold;"><?=($song->Tagged ? '✓' : '☐')?></span>
-      <span id="tag-label"><?=($song->Tagged ? _('Tagged') : _('Not Tagged'))?></span>
+    <?php $inBasket = in_array((int)$sid, $_SESSION['basket'] ?? [], true); ?>
+    <button type="button" id="basket-toggle" class="<?=($inBasket ? 'in-basket' : '')?>" data-sid="<?=$sid?>">
+      <span id="basket-icon" style="font-size: 18px; font-weight: bold;"><?=($inBasket ? '✓' : '☐')?></span>
+      <span id="basket-label"><?=($inBasket ? _('In Basket') : _('Not in Basket'))?></span>
     </button>
     <div style="font-size: 0.75em; color: #666; text-align: center; margin-top: 2px;"><?=_('Click to toggle')?></div>
   </div>
@@ -300,19 +294,19 @@ foreach ($lines as $line) {
   </div>
 </div>
 
-<!-- Keywords Section -->
+<!-- Tags Section -->
 <form action="song.php" method="POST">
   <section>
-    <h2 class="section-title"><?=_('Keywords')?></h2>
+    <h2 class="section-title"><?=_('Tags')?></h2>
     <?php if ($_SESSION['admin'] > 0) { ?>
-      <input type="submit" value="<?=_('Save Keyword Changes')?>" name="newkeyword" class="ui-button" style="margin:0 0 0 20px;">
+      <input type="submit" value="<?=_('Save Tag Changes')?>" name="newtag" class="ui-button" style="margin:0 0 0 20px;">
     <?php } ?>
     <input type="hidden" name="sid" value="<?=$sid?>">
 
     <?php
-    $result = mysqli_query($db,"SELECT k.KeywordID, k.Keyword, sk.SongID ".
-        "FROM keyword k LEFT JOIN songkey sk ON k.KeywordID=sk.KeywordID and sk.SongID=$sid ".
-        "ORDER BY case when sk.SongID is null then 1 else 0 end, k.Keyword");
+    $result = mysqli_query($db,"SELECT t.TagID, t.Tag, st.SongID ".
+        "FROM tag t LEFT JOIN songtag st ON t.TagID=st.TagID and st.SongID=$sid ".
+        "ORDER BY case when st.SongID is null then 1 else 0 end, t.Tag");
     if (!$result) {
       echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
     } else {
@@ -321,15 +315,15 @@ foreach ($lines as $line) {
         if (!($row->SongID)) {
           if ($_SESSION['admin'] > 0) {
             echo '<div class="clear"></div></div><div class="checkboxes">'."\n".
-                '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'">'.d2h($row->Keyword).'</label>'."\n";
+                '<label class="tag"><input type="checkbox" name="'.$row->TagID.'">'.d2h($row->Tag).'</label>'."\n";
           }
           break;
         }
-        echo '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'" checked>'.d2h($row->Keyword).'</label>'."\n";
+        echo '<label class="tag"><input type="checkbox" name="'.$row->TagID.'" checked>'.d2h($row->Tag).'</label>'."\n";
       }
       if ($_SESSION['admin'] > 0) {
         while ($row = mysqli_fetch_object($result)) {
-          echo '<label class="keyword"><input type="checkbox" name="'.$row->KeywordID.'">'.d2h($row->Keyword).'</label>'."\n";
+          echo '<label class="tag"><input type="checkbox" name="'.$row->TagID.'">'.d2h($row->Tag).'</label>'."\n";
         }
       }
       echo '<div class="clear"></div></div>';
@@ -380,36 +374,36 @@ $(document).ready(function(){
   // Audio player context menu prevention
   $('audio').bind('contextmenu',function() { return false; });
 
-  // Tag toggle
-  $('#tag-toggle').click(function() {
+  // Basket toggle
+  $('#basket-toggle').click(function() {
     var $btn = $(this);
     var sid = $btn.data('sid');
-    var isTagged = $btn.hasClass('tagged');
+    var inBasket = $btn.hasClass('in-basket');
+    var action = inBasket ? 'BasketRemove' : 'BasketAdd';
 
     $.ajax({
       url: 'ajax_actions.php',
       type: 'POST',
-      data: { action: 'TagSong', sid: sid },
+      data: { action: action, sid: sid },
       dataType: 'json',
       success: function(response) {
         if (response.success) {
-          if (response.tagged) {
-            $btn.addClass('tagged');
-            $btn.find('#tag-icon').text('✓');
-            $btn.find('#tag-label').text('<?=addslashes(_('Tagged'))?>');
+          if (action === 'BasketAdd') {
+            $btn.addClass('in-basket');
+            $btn.find('#basket-icon').text('✓');
+            $btn.find('#basket-label').text('<?=addslashes(_('In Basket'))?>');
           } else {
-            $btn.removeClass('tagged');
-            $btn.find('#tag-icon').text('☐');
-            $btn.find('#tag-label').text('<?=addslashes(_('Not Tagged'))?>');
+            $btn.removeClass('in-basket');
+            $btn.find('#basket-icon').text('☐');
+            $btn.find('#basket-label').text('<?=addslashes(_('Not in Basket'))?>');
           }
-          // Update tag count in menu
-          $('.tagcount').text(response.totalTagged);
+          window.updateBasketCount(response.basketCount);
         } else if (response.error) {
           alert(response.error);
         }
       },
       error: function() {
-        alert('<?=addslashes(_('Error updating tag status.'))?>');
+        alert('<?=addslashes(_('Error updating basket.'))?>');
       }
     });
   });

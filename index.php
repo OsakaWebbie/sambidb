@@ -2,26 +2,17 @@
 include("functions.php");
 include("accesscontrol.php");
 
-if (isset($_GET['cleartags'])) {
-  if (!$result = mysqli_query($db,"UPDATE song SET Tagged=0 WHERE Tagged=1")) {
-    echo("<b>SQL Error ".mysqli_errno($db)." while untagging all songs: ".mysqli_error($db)."</b>");
-    exit;
-  }
-  $num_tagged = 0;
-} else {
-  if (!$result = mysqli_query($db,"SELECT count(*) AS Num FROM song WHERE Tagged=1")) {
-    echo("<b>SQL Error ".mysqli_errno($db)." while counting tagged songs: ".mysqli_error($db)."</b>");
-    exit;
-  }
-  $row = mysqli_fetch_object($result);
-  $num_tagged = $row->Num;
+if (isset($_GET['emptybasket'])) {
+  $_SESSION['basket'] = [];
+  saveBasket();
 }
+$num_basket = count($_SESSION['basket'] ?? []);
 
-// Build array of keywords for use in two places
-$result = sqlquery_checked("SELECT * FROM keyword ORDER BY Keyword");
-$keyword = array();
+// Build array of tags for use in two places
+$result = sqlquery_checked("SELECT * FROM tag ORDER BY Tag");
+$tag = array();
 while ($row = mysqli_fetch_object($result)) {
-  $keyword[$row->KeywordID] = $row->Keyword;
+  $tag[$row->TagID] = $row->Tag;
 }
 
 header1(_('Search'));
@@ -41,37 +32,23 @@ header2(1); ?>
 <?php if (!empty($text)) echo "<h3 class='alert'>$text</h3>"; ?>
 
 <p style="font-weight:bold; margin-top:10px">
-<?php
-    if ($num_tagged == 0) {
-      echo _('Currently there are no tagged songs.');
-    } else {
-      if ($num_tagged == 1) echo _("Currently there is 1 tagged song.");
-      else echo sprintf(_("Currently there are %s tagged songs."),$num_tagged);
-      echo ' <a href="index.php?cleartags=1" class="nowrap" style="margin-left:2em; font-size:1.2em; font-style:italic;">'.
-          _('Clear All Tags').'</a>';
-    }
-?>
-</p>
-<p style="font-weight:bold; margin-top:10px">
   <?php
   $link = ' <a href="filter.php" class="nowrap" style="margin-left:2em; font-size:1.2em; font-style:italic;">'._('Modify filter criteria').'</a>';
-  if (empty($_SESSION['inkeys']) && empty($_SESSION['exkeys'])) {
+  if (empty($_SESSION['intags']) && empty($_SESSION['extags'])) {
     echo _("You are not currently filtering data (you are seeing all songs).").$link;
   } else {
-    echo _("You are currently filtering to see only songs whose keywords...").$link;
-    if ($_SESSION['inkeys']) {
+    echo _("You are currently filtering to see only songs whose tags...").$link;
+    if ($_SESSION['intags']) {
       $txt = "";
-      $key_array=explode(",",$_SESSION['inkeys']);
-      while (list($dummy,$kwid) = each($key_array)) {
-        $txt .= ", ".$keyword[$kwid];
+      foreach (explode(",", $_SESSION['intags']) as $tagid) {
+        $txt .= ", ".$tag[$tagid];
       }
       echo "<br><span style='color:green; margin-left:2em'>"._('Include: ').substr($txt,2)."</span>";
     }
-    if ($_SESSION['exkeys']) {
+    if ($_SESSION['extags']) {
       $txt = "";
-      $key_array=explode(",",$_SESSION['exkeys']);
-      while (list($dummy,$kwid) = each($key_array)) {
-        $txt .= ", ".$keyword[$kwid];
+      foreach (explode(",", $_SESSION['extags']) as $tagid) {
+        $txt .= ", ".$tag[$tagid];
       }
       echo "<br><span style='color:red; margin-left:2em'>"._('Do not include: ').substr($txt,2)."</span>";
     }
@@ -89,14 +66,14 @@ header2(1); ?>
       <label style="grid-column:1/2"><?=_('Source')?>:</label><input type="text" name="source" style="grid-column:2/3">
       <label style="grid-column:1/2"><?=_('Composer/Copyright')?>:</label><input type="text" name="credit" style="grid-column:2/3">
 
-      <label style="grid-column:1/2" for="kwselect"><?=_('Keyword(s)')?>:</label>
-      <div style="grid-column:2/4;background-color:lavender"><select size="3" name="kwid[]" multiple="multiple" id="kwselect">
+      <label style="grid-column:1/2" for="tagselect"><?=_('Tags')?>:</label>
+      <div style="grid-column:2/4;background-color:lavender"><select size="3" name="tagid[]" multiple="multiple" id="tagselect">
         <option value=""></option>
-<?php // Build option list from keywords not filtered
-foreach ($keyword as $kwid => $kw) {
-  if (strpos(",".$_SESSION['inkeys'].",",",".$kwid.",")===FALSE &&
-      strpos(",".$_SESSION['exkeys'].",",",".$kwid.",")===FALSE) {
-    echo "        <option value='$kwid'>$kw</option>\n";
+<?php // Build option list from tags not filtered
+foreach ($tag as $tagid => $tagname) {
+  if (strpos(",".$_SESSION['intags'].",",",".$tagid.",")===FALSE &&
+      strpos(",".$_SESSION['extags'].",",",".$tagid.",")===FALSE) {
+    echo "        <option value='$tagid'>$tagname</option>\n";
   }
 }
 ?>
@@ -129,7 +106,7 @@ if ($_SESSION['admin'] == 2) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
   $(document).ready(function(){
-    $("#kwselect").select2({
+    $("#tagselect").select2({
       dropdownAutoWidth : true,
       width : '100%'
     });
