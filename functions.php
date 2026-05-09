@@ -221,7 +221,7 @@ function load_scripts($scripts) {
           echo '<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>'."\n";
           break;
         case 'jqueryui':
-          echo '<script type="text/JavaScript" src="js/jquery-ui-13.min.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>'."\n";
           break;
         case 'tablesorter':
           echo '<script type="text/JavaScript" src="js/jquery.tablesorter.min.js"></script>'."\n";
