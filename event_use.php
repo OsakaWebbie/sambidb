@@ -115,6 +115,9 @@ if (!empty($_REQUEST['action'])) {
 header1(_("Song Use Chart"));
 ?>
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<style>
+    td.sticky-col { text-align:left !important; }
+</style>
 <?php
 header2(1);
 ?>
@@ -143,11 +146,11 @@ if (!$result = mysqli_query($db,"SELECT * FROM event ORDER BY Active DESC, Event
 <div id="chart-controls" class="chart-controls" style="display: none;">
   <span class="sort-controls">
     <?= _("Sort by:") ?>
-    <button class="sort-btn ui-state-active" data-sort="origTitle" onclick="sortSongs('origTitle')"><?= _("Original Title") ?></button>
-    <button class="sort-btn" data-sort="title" onclick="sortSongs('title')"><?= _("Title") ?></button>
-    <button class="sort-btn" data-sort="count" onclick="sortSongs('count')"><?= _("Usage Count") ?></button>
+    <button class="sort-btn ui-state-active ui-button ui-corner-all" data-sort="origTitle" onclick="sortSongs('origTitle')"><?= _("Original Title") ?></button>
+    <button class="sort-btn ui-button ui-corner-all" data-sort="title" onclick="sortSongs('title')"><?= _("Title") ?></button>
+    <button class="sort-btn ui-button ui-corner-all" data-sort="count" onclick="sortSongs('count')"><?= _("Usage Count") ?></button>
   </span>
-  <button id="load-more-dates" style="display: none;" onclick="loadMoreDates()"><?= _("Load Earlier Dates") ?></button>
+  <button id="load-more-dates" class="ui-button ui-corner-all" style="display: none;" onclick="loadMoreDates()"><?= _("Load Earlier Dates") ?></button>
 </div>
 
 <div id="chart-container" style="display: none;">
@@ -377,13 +380,6 @@ function renderTable() {
 
 <script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
 <script src="js/jquery-ui.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-  // Apply jQuery UI button styling
-  $('button').button();
-});
-</script>
-
 <?php
 footer();
 ?>

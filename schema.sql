@@ -60,15 +60,6 @@ CREATE TABLE `history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='To record when a song was used';
 
 
-DROP TABLE IF EXISTS `keyword`;
-CREATE TABLE `keyword` (
-  `KeywordID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `Keyword` varchar(150) NOT NULL DEFAULT '',
-  PRIMARY KEY (`KeywordID`),
-  KEY `Keyword` (`Keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
 DROP TABLE IF EXISTS `loginlog`;
 CREATE TABLE `loginlog` (
   `UserID` varchar(16) NOT NULL DEFAULT '',
@@ -134,34 +125,43 @@ CREATE TABLE `song` (
   `Pattern` varchar(80) NOT NULL DEFAULT '',
   `Audio` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `AudioComment` varchar(255) NOT NULL DEFAULT '',
-  `Tagged` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`SongID`),
   KEY `Title` (`Title`,`SongKey`,`Tempo`),
-  KEY `Tagged` (`Tagged`),
   KEY `OrigTitle` (`OrigTitle`),
   KEY `Lyrics` (`Lyrics`(50))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
-DROP TABLE IF EXISTS `songkey`;
-CREATE TABLE `songkey` (
+DROP TABLE IF EXISTS `songtag`;
+CREATE TABLE `songtag` (
   `SongID` mediumint(8) NOT NULL DEFAULT 0,
-  `KeywordID` mediumint(8) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`SongID`,`KeywordID`)
+  `TagID` mediumint(8) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SongID`,`TagID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='Many-many link table';
+
+
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag` (
+  `TagID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `Tag` varchar(150) NOT NULL DEFAULT '',
+  PRIMARY KEY (`TagID`),
+  KEY `Keyword` (`Tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `UserID` varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
-  `Password` char(41) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `UserName` varchar(100) NOT NULL DEFAULT '',
-  `Admin` tinyint(1) NOT NULL DEFAULT 0,
-  `Language` varchar(6) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ja_JP',
-  `IncludeKeywords` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
-  `ExcludeKeywords` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+  `UserID` varchar(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'For login form',
+  `Password` char(41) CHARACTER SET ascii COLLATE ascii_bin NOT NULL COMMENT 'hashed, of course',
+  `UserName` varchar(100) NOT NULL DEFAULT '' COMMENT 'real name',
+  `Email` varchar(200) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'for password reset',
+  `Access` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0=readonly, 1=normal, 2=admin',
+  `Language` varchar(6) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ja_JP' COMMENT 'en_US or ja_JP',
+  `IncludeTags` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'for filter',
+  `ExcludeTags` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'for filter',
+  `Basket` varchar(2000) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'persistent save of session variable',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- 2026-01-31 00:05:06 UTC
+-- 2026-05-12 06:03:38 UTC

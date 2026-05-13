@@ -1,7 +1,17 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-print_header("","#E8FFE0",0);
+header1('');
+?>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<?php
+header2(0);
+
+if ($_SESSION['access'] < 1) {
+  echo '<p class="alert">'._('Access denied.').'</p>';
+  footer();
+  exit;
+}
 
 if (!empty($_POST['save_tag'])) {
   if ($tagid == "new") {  //need to insert the new tag record first
@@ -87,10 +97,10 @@ while ($row = mysqli_fetch_object($result)) {
             maxlength="50" border="0">
           </td>
           <td align="center" valign="middle" nowrap>
-          <input type="submit" name="save_tag" value="<?=_('Add This Tag to These Songs')?>" border="0"></td>
+          <input type="submit" name="save_tag" class="ui-button ui-corner-all" value="<?=_('Add This Tag to These Songs')?>" border="0"></td>
         </tr>
       </table>
     </form>
   </div>
-<?php print_footer();
+<?php footer();
 ?>

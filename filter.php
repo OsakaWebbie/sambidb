@@ -2,7 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 
-if (!empty($_POST['filter_submit'])) {
+if (isset($_POST['filter_submit'])) {
   $result = sqlquery_checked("SELECT * FROM tag ORDER BY Tag");
   $in_list = "";
   $ex_list = "";
@@ -17,54 +17,84 @@ if (!empty($_POST['filter_submit'])) {
   }
   $_SESSION['intags'] = substr($in_list,1);
   $_SESSION['extags'] = substr($ex_list,1);
-  $sql = "UPDATE user SET IncludeTags='".$_SESSION['intags'].
-  "', ExcludeTags='".$_SESSION['extags']."' WHERE UserID='".$_SESSION['userid']."'";
-  $result = sqlquery_checked($sql);
-  echo "<html><head></head><body onload=\"window.location = 'index.php';\"></body></html>\n";
+  $uid = mysqli_real_escape_string($db, $_SESSION['userid']);
+  $sql = "UPDATE user SET IncludeTags='".$_SESSION['intags']."', ExcludeTags='".$_SESSION['extags']."' WHERE UserID='".$uid."'";
+  sqlquery_checked($sql);
+  header('Location: index.php');
   exit;
 }
- 
-print_header("Praise & Worship DB: Search Filtering","#F0FFF0",1);
-?>
-  <h1><?php echo _('Search Filtering'); ?></h1>
-  <h3><?php echo sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Modify Search Filtering')); ?></h3>
-  <form name="filterform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-    <input type="submit" name="filter_submit" value="<?php echo _('Modify Search Filtering'); ?>"><br>&nbsp;<br>
-    <table border=0 cellpadding=2 cellspacing=0 bgcolor="#FFFFFF"><tr>
-    <td align=center valign=middle bgcolor="#D0DDD0"><?php echo _('Tag'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Filter&nbsp;<br>Off'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('Must<br>&nbsp;Include&nbsp;'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;'); ?></td>
-    <td width=30 bgcolor="#F0FFF0">&nbsp;</td>
-    <td align=center valign=middle bgcolor="#D0DDD0"><?php echo _('Tag'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Filter&nbsp;<br>Off'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('Must<br>&nbsp;Include&nbsp;'); ?></td>
-    <td align=center bgcolor="#D0DDD0"><?php echo _('&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;'); ?></td>
-    </tr><tr>
-<?php
+
 $result = sqlquery_checked("SELECT * FROM tag ORDER BY Tag");
-$column = 1;
-while ($row = mysqli_fetch_object($result)) {
-  echo "      <td>".$row->Tag.":&nbsp;</td>\n      <td align=center>";
-  echo "<input type=\"radio\" name=\"".$row->TagID."\" value=\"\"";
-  if (strpos(",".$_SESSION['intags'].",".$_SESSION['extags'].",",",".$row->TagID.",")===FALSE)  echo " checked";
-  echo "></td>\n      <td align=center>";
-  echo "<input type=\"radio\" name=\"".$row->TagID."\" value=\"in\"";
-  if (strpos(",".$_SESSION['intags'].",",",".$row->TagID.",")!==FALSE)  echo " checked";
-  echo "></td>\n      <td align=center>";
-  echo "<input type=\"radio\" name=\"".$row->TagID."\" value=\"ex\"";
-  if (strpos(",".$_SESSION['extags'].",",",".$row->TagID.",")!==FALSE)  echo " checked";
-  echo "></td>\n";
-  if ($column == 1) {
-    echo "      <td width=30 bgcolor=\"#F0FFF0\">&nbsp;</td>\n";
-    $column = 2;
-  } else {
-    echo "      </tr><tr>\n";
-    $column = 1;
-  }    
-}
+
+header1(_('Filtering for Search'));
 ?>
-    </tr></table>
-    <input type="submit" name="filter_submit" value="<?php echo _('Modify Search Filtering'); ?>">
-  </form>
-<?php print_footer(); ?>
+<style>
+.filter-wrapper {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin: 1rem 0 1.5rem;
+}
+.filter-table td:not(:first-child),
+.filter-table th:not(:first-child) { text-align: center; }
+@media (max-width: 900px) {
+  .filter-wrapper { flex-direction: column; }
+}
+</style>
+<?php header2(1); ?>
+
+<h1><?= _('Search Filtering') ?></h1>
+<p><?= sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Apply Filter')) ?></p>
+<form name="filterform" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
+  <p><button type="submit" name="filter_submit"><?= _('Apply Filter') ?></button></p>
+  <div class="filter-wrapper">
+    <table id="filter-table" class="filter-table">
+      <thead>
+        <tr>
+          <th><?= _('Tag') ?></th>
+          <th><?= _('Filter<br>Off') ?></th>
+          <th><?= _('Must<br>Include') ?></th>
+          <th><?= _('Must Not<br>Include') ?></th>
+        </tr>
+      </thead>
+      <tbody>
+<?php while ($row = mysqli_fetch_object($result)): ?>
+        <tr>
+          <td><?= htmlspecialchars($row->Tag) ?></td>
+          <td><input type="radio" name="<?= (int)$row->TagID ?>" value=""<?= (strpos(','.$_SESSION['intags'].','.$_SESSION['extags'].',', ','.$row->TagID.',') === false) ? ' checked' : '' ?>></td>
+          <td><input type="radio" name="<?= (int)$row->TagID ?>" value="in"<?= (strpos(','.$_SESSION['intags'].',', ','.$row->TagID.',') !== false) ? ' checked' : '' ?>></td>
+          <td><input type="radio" name="<?= (int)$row->TagID ?>" value="ex"<?= (strpos(','.$_SESSION['extags'].',', ','.$row->TagID.',') !== false) ? ' checked' : '' ?>></td>
+        </tr>
+<?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
+  <p><button type="submit" name="filter_submit"><?= _('Apply Filter') ?></button></p>
+</form>
+<?php load_scripts(array('jquery')); ?>
+<script>
+$(function () {
+  function splitTable() {
+    if ($('#filter-table-2').length) {
+      $('#filter-tbody-2 tr').appendTo('#filter-table tbody');
+      $('#filter-table-2').remove();
+    }
+    if ($(window).width() > 900) {
+      var $rows = $('#filter-table tbody tr');
+      var half = Math.ceil($rows.length / 2);
+      var $t2 = $('<table id="filter-table-2" class="filter-table"></table>')
+        .append($('#filter-table thead').clone())
+        .append($('<tbody id="filter-tbody-2"></tbody>'));
+      $('.filter-wrapper').append($t2);
+      $rows.slice(half).appendTo('#filter-tbody-2');
+    }
+  }
+  splitTable();
+  var timer;
+  $(window).on('resize', function () {
+    clearTimeout(timer);
+    timer = setTimeout(splitTable, 150);
+  });
+});
+</script>
+<?php footer(); ?>

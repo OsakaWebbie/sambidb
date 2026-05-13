@@ -47,7 +47,18 @@ div#content {
   background-color: White;
   z-index: 1;
 }
-table { background-color: White;}
+table {
+  background-color: White;
+  border-collapse: collapse;
+}
+table th,
+table td {
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+table th {
+  background-color: <?=(!empty($tableheaderbg)?$tableheaderbg:"LightSteelBlue")?>;
+}
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
   background-color: <?=(!empty($tableheaderbg)?$tableheaderbg:"LightSteelBlue")?>;
 }
@@ -228,7 +239,7 @@ nav#nav-mobile a:hover, nav#nav-mobile a:active {
 /* general purpose typography */
 
 body { font-family:Arial,"ＭＳ Ｐゴシック",sans-serif; }
-textarea { font-family:Arial,"ＭＳ Ｐゴシック",sans-serif; } /* because inherit doesn't work in IE <8 */
+button, input, select, textarea { font-family: inherit; font-size: inherit; }
 
 h1 {
   margin:6px 0 6px 0;
@@ -253,13 +264,13 @@ h3 {
   color: <?=(!empty($h3)?$h3:"Black")?>;
   margin:10px 0 4px 0;
 }
-  h4 {
+h4 {
   text-align:left;
   font-size: 1.2em;
   font-weight:bold;
   color: <?=(!empty($h4)?$h4:"#85001f")?>;
   margin:5px 0 3px 0;
-  }
+}
 a:link,a:visited { color:<?=(!empty($link)?$link:"#333399")?>; }
 a:hover,a:active { color:<?=(!empty($linkhover)?$linkhover:"DarkBlue")?>; }
 a.more { cursor:pointer; color:<?=(!empty($linkmore)?$linkmore:"Black")?>; text-decoration:underline; }

@@ -53,12 +53,17 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
     // set session variables for user-specific settings
     $_SESSION['userid'] = $user->UserID;
     $_SESSION['username'] = $user->UserName;
-    $_SESSION['admin'] = $user->Admin;
+    $_SESSION['access'] = $user->Access;
     $_SESSION['lang'] = $user->Language;
     $_SESSION['basket'] = !empty($user->Basket) ? array_map('intval', explode(',', $user->Basket)) : [];
     $_SESSION['intags'] = $user->IncludeTags ?? '';
     $_SESSION['extags'] = $user->ExcludeTags ?? '';
     if (!empty($user->DefaultEvent))  $_SESSION['default_ event'] = $user->DefaultEvent;  // overwrite instance default if user setting != 0
+    //echo "<pre>";
+    //print_r($user);
+    //echo "\n\n";
+    //print_r($_SESSION);
+    //exit;
 
   } else {     // INFORM USER OF FAILED LOGIN
     $message = "<h3 style='color:red'>Invalid UserID or Password.</h3>\n";
@@ -112,7 +117,7 @@ if (!isset($_SESSION['userid'])) {      // COVERS TWO CASES: FIRST TIME THROUGH 
     <form name="lform" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
       <label>User ID: <input type="text" name="usr"></label>
       <label>Password: <input type="password" name="pwd"></label>
-      <input id="submit" type="submit" name="login_submit" value="Log in">
+      <input id="submit" type="submit" name="login_submit" class="ui-button ui-corner-all" value="Log in">
     </form>
     <?php
     footer();
