@@ -16,8 +16,12 @@ while ($row = mysqli_fetch_object($result)) {
 }
 
 header1(_('Search'));
+?>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.multiselect.filter.css">
+<?php
 header2(1); ?>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
 
 <div style="font-size:0.8em; font-style:italic; float:right; width:25%; border:1px solid grey; padding:3px">
@@ -26,14 +30,14 @@ header2(1); ?>
       'Users of the material bear their own responsibility for how they use the information stored here.')?>
 </div>
 <h1><?=(isset($_SESSION['dbtitle']) ? $_SESSION['dbtitle'].': ' : '')._('Search')?></h1>
-<?php if ($_SESSION['admin'] == 0)  echo '<div style="font-weight:bold; margin:10px 20px 10px 0">'.
+<?php if ($_SESSION['access'] == 0)  echo '<div style="font-weight:bold; margin:10px 20px 10px 0">'.
     _('Your user status is "read-only"; if you need editing privileges, ask the administrator.').'</div>';
 ?>
 <?php if (!empty($text)) echo "<h3 class='alert'>$text</h3>"; ?>
 
 <p style="font-weight:bold; margin-top:10px">
   <?php
-  $link = ' <a href="filter.php" class="nowrap" style="margin-left:2em; font-size:1.2em; font-style:italic;">'._('Modify filter criteria').'</a>';
+  $link = ' <a href="filter.php" class="nowrap" style="margin-left:2em;">'._('Modify filter criteria').'</a>';
   if (empty($_SESSION['intags']) && empty($_SESSION['extags'])) {
     echo _("You are not currently filtering data (you are seeing all songs).").$link;
   } else {
@@ -66,8 +70,7 @@ header2(1); ?>
       <label style="grid-column:1/2"><?=_('Source')?>:</label><input type="text" name="source" style="grid-column:2/3">
       <label style="grid-column:1/2"><?=_('Composer/Copyright')?>:</label><input type="text" name="credit" style="grid-column:2/3">
 
-      <label style="grid-column:1/2" for="tagselect"><?=_('Tags')?>:</label>
-      <div style="grid-column:2/4;background-color:lavender"><select size="3" name="tagid[]" multiple="multiple" id="tagselect">
+      <select size="3" name="tagid[]" multiple="multiple" id="tagselect">
         <option value=""></option>
 <?php // Build option list from tags not filtered
 foreach ($tag as $tagid => $tagname) {
@@ -77,7 +80,7 @@ foreach ($tag as $tagid => $tagname) {
   }
 }
 ?>
-      </select></div>
+      </select>
 
       <label style="grid-column:1/2"><?=_('Tempo')?>:</label>
       <select size="1" name="tempo" id="temposelect" style="width:fit-content; grid-column:2/3">
@@ -89,31 +92,41 @@ foreach ($tag as $tagid => $tagname) {
 
       <label style="grid-column:1/2"><?=_('Key')?>:</label><input type="text" name="key" style="width:3em; grid-column:2/4">
 <?php
-if ($_SESSION['admin'] == 2) {
+if ($_SESSION['access'] == 2) {
   echo "  <div style='grid-column:1/4'><label style='margin-top:1em'>Freeform SQL: SELECT this stuff FROM wherever WHERE...</label><br>\n";
   echo "  <textarea name='freesql' style='height:3em; width:90%'></textarea></div>\n";
 }
 
 ?>
-    <input type="submit" class="bigbutton" name="search" id="searchbutton" value="<?=_('Search!')?>" style="grid-column:1/4;width:80%;margin:10px auto">
+    <input type="submit" class="bigbutton ui-button ui-corner-all" name="search" id="searchbutton" value="<?=_('Search!')?>" style="grid-column:1/4;width:80%;margin:10px auto">
     </div>
   </fieldset>
 </form>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
-<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript" src="js/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="js/jquery.multiselect.filter.js"></script>
 <script>
   $(document).ready(function(){
-    $("#tagselect").select2({
+/*    $("#tagselect").select2({
       dropdownAutoWidth : true,
       width : '100%'
     });
     $("#temposelect").select2({
       dropdownAutoWidth : true,
       width : 'auto'
+    });*/
+    $("#tagselect").multiselect({
+      noneSelectedText: '<?=_("Select...")?>',
+      selectedText: '<?=_("# selected")?>',
+      checkAllText: '<?=_("Check all")?>',
+      uncheckAllText: '<?=_("Uncheck all")?>',
+      /*close: function(){ alert("Select closed!"); }, PART OF MY FUTURE AJAX COUNT FEATURE */
+    }).multiselectfilter({
+      label: '<?=_("Search:")?>'
     });
+
 
     $('#searchform').submit(function() {
       $(this).find(':input').filter(function() {
@@ -125,4 +138,4 @@ if ($_SESSION['admin'] == 2) {
 
   });
 </script>
-<?php print_footer(); ?>
+<?php footer(); ?>

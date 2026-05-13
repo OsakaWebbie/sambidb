@@ -7,6 +7,11 @@ ini_set("upload_max_filesize","7M");
 include("functions.php");
 include("accesscontrol.php");
 
+if ($_SESSION['access'] < 1) {
+  header("Location: index.php");
+  exit;
+}
+
 if (!empty($sid)) {  // SongID was passed, so we're editing an existing record
   $sql = "SELECT * FROM song WHERE SongID=$sid";
   if (!$result = mysqli_query($db,$sql)) {
@@ -36,7 +41,7 @@ if (!empty($sid)) {  // SongID was passed, so we're editing an existing record
 }
 
 $isNew = empty($sid);
-$pageTitle = $isNew ? _('New Song') : sprintf(_('Edit: %s'), $rec->Title);
+$pageTitle = $isNew ? _('New Song') : sprintf(_('Edit: %s'), d2h($rec->Title));
 $buttonText = $isNew ? _('Save Song') : _('Save Changes');
 
 header1($pageTitle);
@@ -51,10 +56,10 @@ header1($pageTitle);
 </style>
 <?php header2(1); ?>
 
-<h1 id="title"><?=$pageTitle?></h1>
+<h1><?=$pageTitle?></h1>
 
 <div style="margin: 12px 0">
-  <button type="submit" form="editform" class="edit-save-btn"><?=$buttonText?></button>
+  <button type="submit" form="editform" class="edit-save-btn ui-button ui-corner-all"><?=$buttonText?></button>
   <span class="save-status" style="margin-left: 18px; font-weight: bold"></span>
 </div>
 
@@ -148,7 +153,7 @@ header1($pageTitle);
       <textarea name="audiocomment" id="audiocomment" rows="2"><?php echo htmlspecialchars($rec->AudioComment, ENT_QUOTES, 'UTF-8'); ?></textarea>
     </div>
 
-    <button type="submit" form="editform" class="edit-save-btn" style="align-self: center; margin-top: 16px"><?=$buttonText?></button>
+    <button type="submit" form="editform" class="edit-save-btn ui-button ui-corner-all" style="align-self: center; margin-top: 16px"><?=$buttonText?></button>
   </div>
 
   <div class="form-group form-group-lyrics">
@@ -235,9 +240,6 @@ function validateForm() {
 
 $(document).ready(function() {
 
-  // --- Style save buttons with jQuery UI ---
-  $('.edit-save-btn').button();
-
   // --- Auto-grow lyrics textarea ---
   autoGrow(document.getElementById('lyrics'));
   $('#lyrics').on('input', function() { autoGrow(this); });
@@ -312,10 +314,10 @@ $(document).ready(function() {
       success: function(r) {
         if (r.success) {
           formChanged = false;
-          $statuses.text('<?=addslashes(_("Saved!"))?>').css('color', 'green');
+          $statuses.text('<?=addslashes(_("Saved."))?>').css('color', 'green');
           setTimeout(function() {
             window.location.href = 'song.php?sid=' + r.sid;
-          }, 1000);
+          }, 2000);
         } else {
           $statuses.text(r.error).css('color', 'red');
           $btns.button('option', { label: originalBtnText, disabled: false });

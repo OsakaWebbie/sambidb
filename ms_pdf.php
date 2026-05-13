@@ -1,7 +1,11 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-print_header("","#FFF0E0",0);
+header1('');
+?>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<?php
+header2(0);
 ?>
     <h3>Select your options and click the button to proceed...</h3>
     <form action="pdflayout.php" method="get" name="optionsform" target="_blank">
@@ -15,8 +19,8 @@ print_header("","#FFF0E0",0);
         <input type="checkbox" name="multilingual" value="yes" checked> Combine Multilingual Songs
       </div>
       <div style="float:left">
-        <input type="submit" name="submit" value="Go to Layout Page" border="0">
+        <input type="submit" name="submit" class="ui-button ui-corner-all" value="Go to Layout Page" border="0">
       </div>
     </form>
-<?php print_footer();
+<?php footer();
 ?>

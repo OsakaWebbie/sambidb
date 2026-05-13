@@ -2,6 +2,9 @@
 include("functions.php");
 include("accesscontrol.php");
 header1("Layout Prep for PDF or Powerpoint");
+?>
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<?php
 header2(1);
 
 
@@ -68,7 +71,6 @@ while ($song = mysqli_fetch_object($result)) {
 }
 ?>
 </script>
-<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #help-section, #layoutform { visibility:hidden; } /* shown after jQuery UI effects are applied */
 
@@ -105,8 +107,6 @@ while ($song = mysqli_fetch_object($result)) {
   #layout img.print, #layout img.chords { margin:0 0.5em 0 0; }
   .ui-accordion .ui-accordion-content { padding: 0.5em !important; }
 </style>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
-
 <div id="help-section">
   <div class="help" id="pdf-help" title="How to make a PDF for printing or tablet">
     <h4>Stanzas and order</h4>
@@ -232,7 +232,7 @@ while ($row = mysqli_fetch_object($result)) {
       </div>
       <div>
         <input type="submit" id="pdfgenerate" name="submit" value="Generate PDF"
-                  style="font-size:120%; font-weight:bold; padding:5px; margin-top: 10px;">
+                  class="ui-button ui-corner-all" style="font-size:120%; font-weight:bold; margin-top: 10px;">
       </div>
     </div>
 
@@ -259,13 +259,13 @@ while ($row = mysqli_fetch_object($result)) {
       </div>
       <div>
         <input type="submit" id="powerpoint" name="submit" value="Generate Text for PP"
-                  style="font-size:120%; font-weight:bold; padding:5px; margin-top: 10px;">
+                  class="ui-button ui-corner-all" style="font-size:120%; font-weight:bold; margin-top: 10px;">
       </div>
     </div>
   </div>
 </form>
 
-<script type="text/JavaScript" src="js/jquery.min.js"></script>
+<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>
 <script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
 <script type="text/JavaScript" src="js/jquery.ui.touch-punch.min.js"></script>
 
@@ -431,7 +431,7 @@ while ($row = mysqli_fetch_object($result)) {
   });
 
 // ACTIONS RELATED TO GUITAR CHORD TOGGLE ICONS
-  $("#layout").delegate("img.chords","click",function() {
+  $("#layout").on("click","img.chords",function() {
     if ($(this).attr("src") == "graphics/guitar.gif")  $(this).attr("src","graphics/noguitar.gif");
     else  $(this).attr("src","graphics/guitar.gif");
   });
@@ -445,7 +445,7 @@ while ($row = mysqli_fetch_object($result)) {
   });
 
 // ACTIONS RELATED TO PRINT TOGGLE ICONS
-  $("#layout").delegate("img.print","click",function() {
+  $("#layout").on("click","img.print",function() {
     if ($(this).attr("src") == "graphics/print.gif")  $(this).attr("src","graphics/noprint.gif");
     else  $(this).attr("src","graphics/print.gif");
   });
@@ -455,17 +455,17 @@ while ($row = mysqli_fetch_object($result)) {
   });
 
 // ACTIONS RELATED TO COPY ICONS
-  $("#layout").delegate("img.copy","click",function() {
+  $("#layout").on("click","img.copy",function() {
     var original = $(this).closest("li");
     var cloned = $(original).clone(true,true);
     $(original).after($(cloned));
   });
 // ACTIONS RELATED TO DELETE ICONS
-  $("#layout").delegate("img.delete","click",function() {
+  $("#layout").on("click","img.delete",function() {
     $(this).closest("li").remove();
   });
 // DOUBLE-CLICK TO TOGGLE COLUMN BREAK
-  $("#layout").delegate("li","dblclick",function(e) {
+  $("#layout").on("dblclick","li",function(e) {
     e.stopPropagation();
     $(this).toggleClass("colbreak");
   });

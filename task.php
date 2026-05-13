@@ -2,16 +2,17 @@
 include("functions.php");
 include("accesscontrol.php");
 header1(_("Tasks"));
-
+?>
+  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<?php
 if (empty($sid_list) && empty($_SESSION['basket'])) {
   header2(1);
   echo "&nbsp;<br><b>"._('Your basket is empty.  Add songs to your basket from the Search page or a song detail page, then return here to put them in order and do tasks.')."</b><br>";
-  print_footer();
+  footer();
   exit;
 }
 header2(1);
 ?>
-<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
 <style>
   #tagged { border:1px #999999 solid; margin:0; padding:3px; background-color:#EEEEEE; }
   #tagged li { list-style-type:none; border:1px #999999 solid; margin:1px; padding:2px 4px; white-space:nowrap; background-color:White; }
@@ -59,18 +60,21 @@ while ($song = mysqli_fetch_object($result)) {
   </div>
   <div style="float:left; border:3px solid gray; text-align:center; margin:10px; padding:0 10px;">
     <h3><?php echo _('Choose a task:'); ?></h3>
-    <p><input type="submit" name="ms_history" value="<?php echo _('Record As Event Song Session'); ?>"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
-    <p><input type="submit" name="ms_pdf" value="<?php echo _('Output Songs (PDF)'); ?>"></p>
-    <p><input type="submit" name="ms_text" value="<?php echo _('Output Songs (text)'); ?>"></p>
-    <p><input type="submit" name="ms_tag" value="<?php echo _('Add a Tag'); ?>"<?php if ($_SESSION['admin']==0) echo " disabled"; ?>></p>
+    <?php if ($_SESSION['access'] > 0) { ?>
+    <p><input type="submit" name="ms_history" class="ui-button ui-corner-all" value="<?php echo _('Record As Event Song Session'); ?>"></p>
+    <?php } ?>
+    <p><input type="submit" name="ms_pdf" class="ui-button ui-corner-all" value="<?php echo _('Output Songs (PDF)'); ?>"></p>
+    <p><input type="submit" name="ms_text" class="ui-button ui-corner-all" value="<?php echo _('Output Songs (text)'); ?>"></p>
+    <?php if ($_SESSION['access'] > 0) { ?>
+    <p><input type="submit" name="ms_tag" class="ui-button ui-corner-all" value="<?php echo _('Add a Tag'); ?>"></p>
+    <?php } ?>
   </div>
 </form>
 <iframe id= "taskframe" name="taskframe" style="width:90%;height:300px" src="blank.html">
 </iframe>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
-<script src="js/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
+<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
 <script type="text/JavaScript">
   $(document).ready(function(){
 
@@ -80,13 +84,13 @@ while ($song = mysqli_fetch_object($result)) {
       update: function() { $("#taskframe").attr("src","blank.html"); }
     });
 // ACTIONS RELATED TO COPY ICONS
-    $("#tagged").delegate("img.copy","click",function() {
+    $("#tagged").on("click","img.copy",function() {
       var original = $(this).closest("li");
       var cloned = $(original).clone(true,true);
       $(original).after($(cloned));
     });
 // ACTIONS RELATED TO DELETE ICONS
-    $("#tagged").delegate("img.delete","click",function() {
+    $("#tagged").on("click","img.delete",function() {
       $(this).closest("li").remove();
     });
 
@@ -117,4 +121,4 @@ while ($song = mysqli_fetch_object($result)) {
     }
   }
 </script>
-<?php print_footer();?>
+<?php footer();?>

@@ -54,7 +54,6 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 #basket-toggle {
   margin: 10px auto 0;
   padding: 10px 20px;
-  font-size: 14px;
   font-weight: bold;
   border: 2px solid #51579A;
   border-radius: 5px;
@@ -284,9 +283,9 @@ foreach ($lines as $line) {
       <?php } ?>
     <?php } ?>
 
-    <?php if ($_SESSION['admin'] > 0) { ?>
+    <?php if ($_SESSION['access'] > 0) { ?>
       <div style="margin-top: 15px;">
-        <button type="button" class="ui-button" onclick="window.location='edit.php?sid=<?=$sid?>'">
+        <button type="button" class="ui-button ui-corner-all" onclick="window.location='edit.php?sid=<?=$sid?>'">
           <?=_('Edit This Song')?>
         </button>
       </div>
@@ -298,8 +297,8 @@ foreach ($lines as $line) {
 <form action="song.php" method="POST">
   <section>
     <h2 class="section-title"><?=_('Tags')?></h2>
-    <?php if ($_SESSION['admin'] > 0) { ?>
-      <input type="submit" value="<?=_('Save Tag Changes')?>" name="newtag" class="ui-button" style="margin:0 0 0 20px;">
+    <?php if ($_SESSION['access'] > 0) { ?>
+      <input type="submit" value="<?=_('Save Tag Changes')?>" name="newtag" class="ui-button ui-corner-all" style="margin:0 0 0 20px;">
     <?php } ?>
     <input type="hidden" name="sid" value="<?=$sid?>">
 
@@ -313,7 +312,7 @@ foreach ($lines as $line) {
       echo '<div class="checkboxes" style="margin-top:10px;">'."\n";
       while ($row = mysqli_fetch_object($result)) {
         if (!($row->SongID)) {
-          if ($_SESSION['admin'] > 0) {
+          if ($_SESSION['access'] > 0) {
             echo '<div class="clear"></div></div><div class="checkboxes">'."\n".
                 '<label class="tag"><input type="checkbox" name="'.$row->TagID.'">'.d2h($row->Tag).'</label>'."\n";
           }
@@ -321,7 +320,7 @@ foreach ($lines as $line) {
         }
         echo '<label class="tag"><input type="checkbox" name="'.$row->TagID.'" checked>'.d2h($row->Tag).'</label>'."\n";
       }
-      if ($_SESSION['admin'] > 0) {
+      if ($_SESSION['access'] > 0) {
         while ($row = mysqli_fetch_object($result)) {
           echo '<label class="tag"><input type="checkbox" name="'.$row->TagID.'">'.d2h($row->Tag).'</label>'."\n";
         }
@@ -346,18 +345,18 @@ if (!$result) {
 ?>
   <section>
     <h2 class="section-title"><?=_('Usage History')?></h2>
-    <table style="width: 100%; border-collapse: collapse;">
+    <table>
       <?php while ($row = mysqli_fetch_object($result)) { ?>
         <tr>
-          <td nowrap style="border: 1px solid #ccc; padding: 5px;"><?=d2h($row->Event)?></td>
-          <td nowrap style="border: 1px solid #ccc; padding: 5px;">
+          <td nowrap><?=d2h($row->Event)?></td>
+          <td nowrap>
             <?php if ($row->first == $row->last) {
               echo $row->first;
             } else {
               echo sprintf(_('%s to<br>%s (%sx)'), $row->first, $row->last, $row->times);
             } ?>
           </td>
-          <td style="border: 1px solid #ccc; padding: 5px;"><?=d2h($row->Remarks)?>&nbsp;</td>
+          <td><?=d2h($row->Remarks)?>&nbsp;</td>
         </tr>
       <?php } ?>
     </table>
@@ -368,9 +367,6 @@ if (!$result) {
 <script src="js/jquery-ui.min.js"></script>
 <script>
 $(document).ready(function(){
-  // Style buttons with jQuery UI
-  $('.ui-button').button();
-
   // Audio player context menu prevention
   $('audio').bind('contextmenu',function() { return false; });
 

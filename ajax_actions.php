@@ -46,7 +46,7 @@ switch($_REQUEST['action']) {
 
   case 'User':
     // Admin only
-    if ($_SESSION['admin'] != 2) {
+    if ($_SESSION['access'] != 2) {
       die(json_encode(array('alert' => 'Access denied.')));
     }
     if (isset($_REQUEST['userid']) && $_REQUEST['userid']!="") {
@@ -66,7 +66,7 @@ switch($_REQUEST['action']) {
           if ($arr === null) {
             // Get user data from first row
             $arr = array('userid' => $row->UserID, 'username' => $row->UserName,
-                         'language' => $row->Language, 'admin' => $row->Admin);
+                         'language' => $row->Language, 'access' => $row->Access);
             $lastLogin = $row->loginlast;
           }
           if ($row->loginyear !== null) {

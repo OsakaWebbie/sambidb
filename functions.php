@@ -8,26 +8,13 @@ function header1($title='') {
 <html><head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="Content-Script-Type" content="text/javascript">
-  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-  <link rel="manifest" href="/manifest.json"
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/x-icon" href="favicons/favicon.ico">
-  <title><?=(isset($_SESSION['dbtitle']) ? $_SESSION['dbtitle'].': ' : '').$title?></title>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <title><?=$title.(isset($_SESSION['dbtitle']) ? ' ('.$_SESSION['dbtitle'].')' : '')?></title>
 <?php
 }
 
@@ -44,7 +31,8 @@ function header2($nav=0) {
     $navmarkup = "<ul class='nav'>\n";
     $navmarkup .= "  <li><a href='index.php' target='_top'>"._("Search")."</a></li>\n";
     $navmarkup .= "  <li class='not-on-scroll'><form action='list.php'><input name='title' placeholder='"._('(quick search)')."' style='width:7em'></form></li>\n";
-    $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
+    if ($_SESSION['access'] > 0)
+      $navmarkup .= "  <li><a href='edit.php' target='_top'>"._("New Song")."</a></li>\n";
     $navmarkup .= "  <li class='hassub'>\n";
     $navmarkup .= "    <a href='#'>"._('Basket/Tasks')." (<span class='basketcount'>$numbasket</span>) &#x25BC;</a>\n";
     $navmarkup .= "    <ul class='nav-sub'>\n";
@@ -53,8 +41,9 @@ function header2($nav=0) {
     $navmarkup .= "      <li><a href='#' class='emptybasket basket-empty'>"._('Empty Basket')."</a></li>\n";
     $navmarkup .= "    </ul>\n  </li>\n";
     $navmarkup .= "  <li><a href='event_use.php' target='_top'>"._("Song Use Chart")."</a></li>\n";
-    $navmarkup .= "  <li><a href='db_settings.php' target='_top'>"._("DB Settings")."</a></li>\n";
-    if (!empty($_SESSION['admin']) && $_SESSION['admin'] == 2) {
+    if ($_SESSION['access'] > 0)
+      $navmarkup .= "  <li><a href='db_settings.php' target='_top'>"._("DB Settings")."</a></li>\n";
+    if (!empty($_SESSION['access']) && $_SESSION['access'] == 2) {
       $navmarkup .= "  <li><a href='sqlquery.php' target='_top'>"._("(Raw SQL)")."</a></li>\n";
     }
     $navmarkup .= "  <li><a class='switchlang' href='#'>".
@@ -87,7 +76,7 @@ function footer($nav=0) {
 <?php if ($nav) { ?>
   <script>
     if (!window.jQuery) {
-      document.write('<script src="https://code.jquery.com/jquery-3.2.1.min.js"><\/script>');
+      document.write('<script src="js/jquery-3.6.0.min.js"><\/script>');
     }
   </script>
   <script>

@@ -32,9 +32,9 @@ $row = mysqli_fetch_object($result);
 $default_lang = $row->Language;
 header1(_("User Settings"));
 ?>
-<link rel="stylesheet" href="style.php">
+<link rel="stylesheet" href="css/jquery-ui.css">
 <?php header2(1); ?>
-<h1 id="title"><?=_("User Settings")?></h1>
+<h1><?=_("User Settings")?></h1>
 <?php if (!empty($_GET['err'])) echo '<h4 class="ui-icon-alert">'.$_GET['err'].'</h4>';
     elseif (!empty($_GET['msg'])) echo '<h4>'.$_GET['msg'].'</h4>';
 ?>
@@ -47,7 +47,7 @@ header1(_("User Settings"));
     <option value="en_US"<?php if($default_lang=="en_US") echo " selected"; ?>><?=_("English")?></option>
     <option value="ja_JP"<?php if($default_lang=="ja_JP") echo " selected"; ?>><?=_("Japanese")?></option>
   </select></label>
-  <input type="submit" name="user_lang_upd" value="<?=_("Save Changes")?>">
+  <input type="submit" name="user_lang_upd" class="ui-button ui-corner-all" value="<?=_("Save Changes")?>">
 </fieldset></form>
 
 <!-- PASSWORD -->
@@ -57,7 +57,7 @@ header1(_("User Settings"));
   <label class="label-n-input"><?=_("Old:")?> <input type="password" id="old_pw" name="old_pw" style="width:8em"></label>
   <label class="label-n-input"><?=_("New:")?> <input type="password" id="new_pw1" name="new_pw1" style="width:8em"></label>
   <label class="label-n-input"><?=_("New again:")?> <input type="password" id="new_pw2" name="new_pw2" style="width:8em"></label>
-  <input type="submit" name="user_pwd_upd" value="<?=_("Change Password")?>">
+  <input type="submit" name="user_pwd_upd" class="ui-button ui-corner-all" value="<?=_("Change Password")?>">
 </fieldset></form>
 
 <script type="text/javascript">

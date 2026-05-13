@@ -1,7 +1,11 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-print_header("","#FFF0E0",0);
+header1('');
+?>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+<?php
+header2(0);
 ?>
     <form action="text.php" method="get" name="optionsform" target="_blank">
       <input type="hidden" name="sid_list" value="<?php echo $sid_list; ?>" border="0">
@@ -34,10 +38,10 @@ for ($i=1; $i<7; $i++) {
           <td>
             <p><input type=checkbox name="xml"><?php echo _('XML Format ("Place It..." option ignored)'); ?></p>
             <h3><font color="#8b4513"><?php echo _('Select fields to output and click the button...'); ?></font></h3>
-            <input type="submit" name="submit" value="<?php echo _('Make Page to Copy or Print'); ?>" border="0">
+            <input type="submit" name="submit" class="ui-button ui-corner-all" value="<?php echo _('Make Page to Copy or Print'); ?>" border="0">
           </td>
         </tr>
       </table>
     </form>
-<?php print_footer();
+<?php footer();
 ?>

@@ -6,8 +6,17 @@ include("accesscontrol.php");
 
 $isAjax = !empty($_POST['ajax']);
 
+if ($_SESSION['access'] < 1) {
+  if ($isAjax) {
+    die(json_encode(array('success' => false, 'error' => _('Access denied.'))));
+  }
+  header("Location: index.php");
+  exit;
+}
+
 if (!$isAjax) {
-  print_header(_("Saving..."),"#FFFFFF",0);
+  header1(_("Saving..."));
+  header2(0);
   echo "<h3>"._('Saving...')."</h3>";
 }
 
@@ -102,5 +111,5 @@ echo "<SCRIPT FOR=window EVENT=onload LANGUAGE=\"Javascript\">\n";
 echo "window.location = \"song.php?sid=".$sid."\";\n";
 echo "</SCRIPT>\n";
 
-print_footer();
+footer();
 ?>

@@ -64,7 +64,7 @@ $result = sqlquery_checked($idsql);
 $numrecords = mysqli_num_rows($result);
 
 if ($numrecords == 0) {
-  header("Location: index.php?text=" . urlencode(_('No songs found for this search.') . (($_SESSION['admin'] == 2) ? "<br>" . $idsql : "")));
+  header("Location: index.php?text=" . urlencode(_('No songs found for this search.') . (($_SESSION['access'] == 2) ? "<br>" . $idsql : "")));
   exit;
 } elseif ($numrecords == 1) {
   $single = mysqli_fetch_object($result);
@@ -84,14 +84,14 @@ header1(_("Search Results"));
 <?php
 header2(1);
 
-if ($_SESSION['admin'] > 1) {
+if ($_SESSION['access'] > 1) {
   echo '<p style="font-size:10px">' . $idsql . '</p>';
 }
 
 if (!empty($_GET['basket'])) {
-  echo "<h3>" . sprintf(_("%d Songs in Basket"), $numrecords) . "</h3>\n";
+  echo "<h3>" . sprintf(_("%d songs in Basket"), $numrecords) . "</h3>\n";
 } else {
-  echo "<h3>" . sprintf(_("%d results of these criteria:"), $numrecords) . "</h3>\n";
+  echo "<h3>" . sprintf(_("%d songs of these criteria:"), $numrecords) . "</h3>\n";
   echo $criteria;
 }
 
@@ -221,7 +221,7 @@ $tableopt->cols[] = (object)[
 
 ?>
 <div style="margin:10px 0">
-  <button id="go-to-tasks"><?=_('Go to task page with this list in this order')?></button>
+  <button id="go-to-tasks" class="ui-button ui-corner-all"><?=_('Go to task page with this list in this order')?></button>
 </div>
 <?php
 flextable($tableopt);
@@ -229,8 +229,8 @@ flextable($tableopt);
 
 <script>
 $(function() {
-  $('#go-to-tasks').button();
   $('#event-selector').insertAfter('#songlist-colsel-toggle').show();
+  $('audio').bind('contextmenu', function() { return false; });
 
   // Override flextable's Save Checkbox Changes handler for basket-aware JSON response
   $('#songlist-savechecks').off('click').on('click', function() {

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 22:39+0900\n"
-"PO-Revision-Date: 2026-05-07 22:39+0900\n"
+"POT-Creation-Date: 2026-05-12 08:30+0900\n"
+"PO-Revision-Date: 2026-05-12 08:35+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -69,19 +69,19 @@ msgstr "新規タグ..."
 msgid "Tag Name:"
 msgstr "タグ名："
 
-#: db_settings.php:27
+#: db_settings.php:28
 msgid "Add or Rename"
 msgstr "追加または名前変更"
 
-#: db_settings.php:28 db_settings.php:48 db_settings.php:87
+#: db_settings.php:29 db_settings.php:51 db_settings.php:92
 msgid "Delete"
 msgstr "削除"
 
-#: db_settings.php:34
+#: db_settings.php:36
 msgid "Event Management"
 msgstr "イベント管理"
 
-#: db_settings.php:35
+#: db_settings.php:37
 msgid ""
 "Fill in the information to add a new event.  Or select an event, and modify "
 "its info (name, remarks, and/or active status).  Or select an event to "
@@ -91,31 +91,31 @@ msgstr ""
 "て、その情報（名前、備考、現在開催中かどうか）を変更してください。または削除"
 "するイベントを選択して「削除」をクリックしてください。"
 
-#: db_settings.php:37
+#: db_settings.php:39
 msgid "New Event..."
 msgstr "新規イベント..."
 
-#: db_settings.php:44 event_use.php:125 ms_history.php:77
+#: db_settings.php:46 event_use.php:125 ms_history.php:77
 msgid "Event:"
 msgstr "イベント："
 
-#: db_settings.php:45
+#: db_settings.php:47
 msgid "Currently Occurring Event"
 msgstr "現在開催中のイベント"
 
-#: db_settings.php:46
+#: db_settings.php:48
 msgid "Description:"
 msgstr "説明："
 
-#: db_settings.php:47 db_settings.php:86
+#: db_settings.php:50 db_settings.php:91
 msgid "Add or Update"
 msgstr "追加または更新"
 
-#: db_settings.php:56
+#: db_settings.php:60
 msgid "User Management"
 msgstr "ユーザ（ログイン）管理"
 
-#: db_settings.php:57
+#: db_settings.php:61
 msgid ""
 "Fill in the information to add a new user. Or select an existing user to "
 "make changes or delete. NOTE: You cannot see the existing password, but you "
@@ -125,91 +125,91 @@ msgstr ""
 "除するには、そのユーザを選択してください。注：既存のパスワードは表示されませ"
 "んが、ユーザがパスワードを忘れた場合は新しいパスワードを入力できます。"
 
-#: db_settings.php:59
+#: db_settings.php:63
 msgid "New User..."
 msgstr "新規ユーザ…"
 
-#: db_settings.php:66
+#: db_settings.php:70
 msgid "Name"
 msgstr "名前"
 
-#: db_settings.php:68
+#: db_settings.php:72
 msgid "UserID (to log in)"
 msgstr "UserID （ログインする時に使う）"
 
-#: db_settings.php:70
+#: db_settings.php:74
 msgid "(max. 16 characters, no spaces)"
 msgstr "（最大16文字、スペースなし）"
 
-#: db_settings.php:71
+#: db_settings.php:75
 msgid "Language for Interface"
 msgstr "インタフェースの言語"
 
-#: db_settings.php:72 user_settings.php:47
+#: db_settings.php:76 user_settings.php:47
 msgid "English"
 msgstr "英語"
 
-#: db_settings.php:73 user_settings.php:48
+#: db_settings.php:77 user_settings.php:48
 msgid "Japanese"
 msgstr "日本語"
 
-#: db_settings.php:75
+#: db_settings.php:79
 msgid "Access Level"
 msgstr "アクセス権限"
 
-#: db_settings.php:76
+#: db_settings.php:80
 msgid "Read-only"
 msgstr "読み取り専用"
 
-#: db_settings.php:77
+#: db_settings.php:81
 msgid "Standard (can edit)"
 msgstr "標準（編集可能）"
 
-#: db_settings.php:78
+#: db_settings.php:82
 msgid "Admin"
 msgstr "管理者"
 
-#: db_settings.php:80
+#: db_settings.php:84
 msgid "New Password"
 msgstr "新しいパスワード"
 
-#: db_settings.php:82
+#: db_settings.php:86
 msgid "(leave blank if not changing password)"
 msgstr "（パスワード変更しない場合、空けておいてください。）"
 
-#: db_settings.php:83
+#: db_settings.php:87
 msgid "New Password again"
 msgstr "新しいパスワード（確認用）"
 
-#: db_settings.php:210 ms_tag.php:56
+#: db_settings.php:216 ms_tag.php:60
 msgid "Tag name cannot be blank."
 msgstr "タグ名を入力してください。"
 
-#: db_settings.php:216
+#: db_settings.php:222
 msgid "Event name cannot be blank."
 msgstr "イベント名を入力してください。"
 
-#: db_settings.php:222
+#: db_settings.php:228
 msgid "User Name cannot be blank."
 msgstr "ユーザ名を入力してください。"
 
-#: db_settings.php:225
+#: db_settings.php:231
 msgid "UserID cannot be blank."
 msgstr "ユーザIDを入力してください。"
 
-#: db_settings.php:228
+#: db_settings.php:234
 msgid "You must enter a password for a new user."
 msgstr "新規ユーザのために、パスワードの入力は必要です。"
 
-#: db_settings.php:231
+#: db_settings.php:237
 msgid "The two password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
 
-#: do_edit.php:10 do_edit.php:11 edit.php:299
+#: do_edit.php:10 do_edit.php:12 edit.php:296
 msgid "Saving..."
 msgstr "保存中..."
 
-#: do_edit.php:18
+#: do_edit.php:19
 #, php-format
 msgid ""
 "The uploaded file was too large. You must upload a file smaller than %s."
@@ -217,7 +217,7 @@ msgstr ""
 "アップロードされたファイルが大きすぎます。%s未満のファイルをアップロードする"
 "必要があります。"
 
-#: do_edit.php:19
+#: do_edit.php:20
 msgid ""
 "Sorry, but you will have to redo any other edits (or new song data) that you "
 "entered at the same time as the file upload."
@@ -225,31 +225,31 @@ msgstr ""
 "申し訳ありませんが、ファイルアップロードと同時に入力した他の編集（または新規"
 "曲データ）をやり直す必要があります。"
 
-#: do_edit.php:20
+#: do_edit.php:21
 msgid "To edit again, hit your browser's Back button."
 msgstr "再度編集するには、ブラウザの戻るボタンを押してください。"
 
-#: do_edit.php:45
+#: do_edit.php:46
 msgid "The song was updated."
 msgstr "曲が更新されました。"
 
-#: do_edit.php:69
+#: do_edit.php:70
 msgid "The song was added."
 msgstr "曲が追加されました。"
 
-#: do_edit.php:71 do_edit.php:72
+#: do_edit.php:72 do_edit.php:73
 msgid "The song was not added for some reason."
 msgstr "何らかの理由で曲が追加されませんでした。"
 
-#: do_edit.php:79
+#: do_edit.php:80
 msgid "File is valid, and was successfully uploaded."
 msgstr "ファイルは有効で、正常にアップロードされました。"
 
-#: do_edit.php:88
+#: do_edit.php:89
 msgid "File upload failed."
 msgstr "ファイルのアップロードが失敗しました。"
 
-#: do_edit.php:89
+#: do_edit.php:90
 msgid "File upload failed.  Here's some debugging info:"
 msgstr "ファイルのアップロードに失敗しました。デバッグ情報："
 
@@ -257,7 +257,7 @@ msgstr "ファイルのアップロードに失敗しました。デバッグ情
 msgid "Processing..."
 msgstr "処理中..."
 
-#: do_maint.php:18 ms_tag.php:15
+#: do_maint.php:18 ms_tag.php:19
 msgid "New tag successfully added."
 msgstr "新規タグが正常に追加されました。"
 
@@ -365,7 +365,7 @@ msgstr "ユーザを削除しました。"
 msgid "Song not found (ID: %s)."
 msgstr "曲が見つかりません。（ID: %s）"
 
-#: edit.php:39 functions.php:49
+#: edit.php:39 functions.php:47
 msgid "New Song"
 msgstr "新規の曲"
 
@@ -382,47 +382,48 @@ msgstr "新規曲を保存"
 msgid "Save Changes"
 msgstr "変更を保存"
 
-#: edit.php:69 event_use.php:147 list.php:132 ms_text.php:14
+#: edit.php:69 event_use.php:147 list.php:132 ms_text.php:18
+#: song_session.php:35
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:74 event_use.php:146 list.php:139 ms_text.php:15
+#: edit.php:74 event_use.php:146 list.php:139 ms_text.php:19
 msgid "Original Title"
 msgstr "原曲名"
 
 #: edit.php:75
 msgid "Fill in if the song is a translation from another language."
-msgstr "歌詞が他の言語から翻訳された場合は記入する"
+msgstr "歌詞が他の言語から翻訳された場合は記入します。"
 
-#: edit.php:83 index.php:102 list.php:165 ms_text.php:17
+#: edit.php:83 index.php:92 list.php:165 ms_text.php:21 song_session.php:37
 msgid "Key"
 msgstr "調"
 
-#: edit.php:89 index.php:94 list.php:158 ms_text.php:16
+#: edit.php:89 index.php:84 list.php:158 ms_text.php:20 song_session.php:38
 msgid "Tempo"
 msgstr "テンポ"
 
-#: edit.php:92 index.php:97
+#: edit.php:92 index.php:87
 msgid "Fast"
 msgstr "早い"
 
-#: edit.php:93 index.php:98
+#: edit.php:93 index.php:88
 msgid "Medium"
 msgstr "中"
 
-#: edit.php:94 index.php:99
+#: edit.php:94 index.php:89
 msgid "Slow"
 msgstr "ゆっくり"
 
-#: edit.php:105 list.php:196 ms_text.php:18
+#: edit.php:105 list.php:196 ms_text.php:22
 msgid "Composer"
 msgstr "作曲家"
 
-#: edit.php:110 list.php:203 ms_text.php:19
+#: edit.php:110 list.php:203 ms_text.php:23
 msgid "Copyright"
 msgstr "著作権"
 
-#: edit.php:121 ms_text.php:21
+#: edit.php:121 ms_text.php:25
 msgid "Pattern"
 msgstr "パターン"
 
@@ -459,7 +460,7 @@ msgstr "オーディオファイルをアップロード"
 #: edit.php:139
 #, php-format
 msgid "MP3 format only. Maximum file size: %s."
-msgstr "MP3形式のみ、%s 以下のファイルサイズ"
+msgstr "MP3形式のみ、%s 以下のファイルサイズ。"
 
 #: edit.php:144
 msgid ""
@@ -519,7 +520,7 @@ msgstr "タイトルを入力してください！"
 msgid "Only MP3 files can be accepted for audio."
 msgstr "オーディオファイルはMP3形式のみ受け付けます。"
 
-#: edit.php:218 edit.php:259
+#: edit.php:218 edit.php:256
 #, php-format
 msgid ""
 "The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
@@ -534,17 +535,17 @@ msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:315
-msgid "Saved!"
+#: edit.php:312
+msgid "Saved."
 msgstr "保存しました。"
 
-#: edit.php:325
+#: edit.php:322
 #, php-format
 msgid "Upload failed. The file may exceed the %s limit."
 msgstr ""
 "アップロードに失敗しました。ファイルが%sの上限を超えている可能性があります。"
 
-#: event_use.php:115 event_use.php:122 functions.php:51
+#: event_use.php:115 event_use.php:122 functions.php:55
 msgid "Song Use Chart"
 msgstr "曲使用の表"
 
@@ -581,33 +582,37 @@ msgid "Song (Count)"
 msgstr "曲名（使用数）"
 
 #: filter.php:29
+msgid "Filtering for Search"
+msgstr "検索用のフィルター"
+
+#: filter.php:46
 msgid "Search Filtering"
 msgstr "検索のフィルター設定"
 
-#: filter.php:30
+#: filter.php:47
 #, php-format
 msgid "Modify filter criteria as desired, and click \"%s\"."
 msgstr "必要に応じてフィルター条件を変更し、「%s」をクリックしてください。"
 
-#: filter.php:30 filter.php:32 filter.php:68
-msgid "Modify Search Filtering"
-msgstr "検索フィルターを変更"
+#: filter.php:47 filter.php:49 filter.php:72
+msgid "Apply Filter"
+msgstr "フィルとーを適用"
 
-#: filter.php:34 filter.php:39 ms_tag.php:71
+#: filter.php:54 ms_tag.php:75
 msgid "Tag"
 msgstr "タグ"
 
-#: filter.php:35 filter.php:40
-msgid "&nbsp;Filter&nbsp;<br>Off"
-msgstr "&nbsp;フィルター&nbsp;<br>なし"
+#: filter.php:55
+msgid "Filter<br>Off"
+msgstr "フィルター<br>なし"
 
-#: filter.php:36 filter.php:41
-msgid "Must<br>&nbsp;Include&nbsp;"
+#: filter.php:56
+msgid "Must<br>Include"
 msgstr "含む必要"
 
-#: filter.php:37 filter.php:42
-msgid "&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;"
-msgstr "&nbsp;含んでは&nbsp;<br>&nbsp;ならない&nbsp;"
+#: filter.php:57
+msgid "Must Not<br>Include"
+msgstr "含んでは<br>ならない"
 
 #: flextable.php:629
 msgid "Column Selector"
@@ -627,15 +632,15 @@ msgstr "かごから外す"
 
 #: flextable.php:637
 msgid "Set Basket to these only"
-msgstr ""
+msgstr "Set Basket to these only (unused)"
 
 #: flextable.php:640
 msgid "Go to Batch Processing page with these entries preselected"
-msgstr ""
+msgstr "Go to Batch Processing page with these entries preselected (unused)"
 
 #: flextable.php:640
 msgid "To Batch Processing"
-msgstr ""
+msgstr "To Batch Processing (unused)"
 
 #: flextable.php:646
 msgid "Download CSV"
@@ -665,43 +670,51 @@ msgstr "[閉じる]"
 msgid "Show Fewer Records"
 msgstr "表示を減らす"
 
-#: functions.php:44 index.php:18 index.php:28 index.php:74
+#: functions.php:45 index.php:18 index.php:30 index.php:64
 msgid "Search"
 msgstr "検索"
 
-#: functions.php:45
+#: functions.php:46
 msgid "(quick search)"
 msgstr "(クイック検索)"
 
-#: functions.php:47
-msgid "Show Basket"
+#: functions.php:49
+msgid "Basket/Tasks"
+msgstr "かご/作業"
+
+#: functions.php:51
+msgid "List Basket"
 msgstr "かごを表示"
 
-#: functions.php:48 index.php:42
-msgid "Empty Basket"
-msgstr "かごを空にする"
-
-#: functions.php:50 task.php:4
+#: functions.php:52 task.php:4
 msgid "Tasks"
 msgstr "曲の作業"
 
-#: functions.php:52
+#: functions.php:53
+msgid "Empty Basket"
+msgstr "かごを空にする"
+
+#: functions.php:56
 msgid "DB Settings"
 msgstr "基本データ設定"
 
-#: functions.php:54
-msgid "(Freeform SQL)"
-msgstr "（自由ＳＱＬ）"
+#: functions.php:58
+msgid "(Raw SQL)"
+msgstr "(SQL直接実行)"
 
-#: functions.php:58 user_settings.php:33 user_settings.php:37
+#: functions.php:63
+msgid "User"
+msgstr "ユーザ"
+
+#: functions.php:65 user_settings.php:33 user_settings.php:37
 msgid "User Settings"
 msgstr "私のユーザ設定"
 
-#: functions.php:59
+#: functions.php:66
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: index.php:24
+#: index.php:26
 msgid ""
 "Note: This database is only a tool for convenience; existence of copyrighted "
 "material (lyrics, recordings, etc.) in it does not give you permission to "
@@ -713,7 +726,7 @@ msgstr ""
 "ありません。利用者は、ここに格納された情報をどのように利用するかについて、自"
 "己の責任を負うものとします。"
 
-#: index.php:30
+#: index.php:32
 msgid ""
 "Your user status is \"read-only\"; if you need editing privileges, ask the "
 "administrator."
@@ -721,60 +734,47 @@ msgstr ""
 "あなたのユーザーステータスは「読み取り専用」なので、編集権限が必要な場合は、"
 "管理者に問い合わせてください。"
 
-#: index.php:37
-msgid "Your basket is empty."
-msgstr "かごは空です。"
-
-#: index.php:39
-msgid "Your basket has 1 song."
-msgstr "かごには1曲入っています。"
-
-#: index.php:40
-#, php-format
-msgid "Your basket has %s songs."
-msgstr "かごには%s曲入っています。"
-
-#: index.php:48
+#: index.php:38
 msgid "Modify filter criteria"
 msgstr "フィルターを変更"
 
-#: index.php:50
+#: index.php:40
 msgid "You are not currently filtering data (you are seeing all songs)."
 msgstr "現在、フィルターは適用されていません（すべての曲が表示されます）。"
 
-#: index.php:52
+#: index.php:42
 msgid "You are currently filtering to see only songs whose tags..."
 msgstr "表示される曲はフィルターされています。条件は…"
 
-#: index.php:58
+#: index.php:48
 msgid "Include: "
 msgstr "含むキーワード：　"
 
-#: index.php:65
+#: index.php:55
 msgid "Do not include: "
 msgstr "含まないキーワード：　"
 
-#: index.php:76
+#: index.php:66
 msgid "Title/Original Title"
 msgstr "曲名／原曲名"
 
-#: index.php:77 ms_text.php:22
+#: index.php:67 ms_text.php:26
 msgid "Lyrics"
 msgstr "歌詞"
 
-#: index.php:78 list.php:210 ms_text.php:20
+#: index.php:68 list.php:210 ms_text.php:24 song_session.php:39
 msgid "Source"
 msgstr "参照"
 
-#: index.php:79
+#: index.php:69
 msgid "Composer/Copyright"
 msgstr "作曲家・著作権"
 
-#: index.php:81 song.php:300
+#: index.php:71 song.php:299
 msgid "Tags"
 msgstr "タグ"
 
-#: index.php:110
+#: index.php:100
 msgid "Search!"
 msgstr "検索！"
 
@@ -823,20 +823,20 @@ msgstr "検索の結果"
 
 #: list.php:92
 #, php-format
-msgid "%d Songs in Basket"
+msgid "%d songs in Basket"
 msgstr "かごに入っている%d曲"
 
 #: list.php:94
 #, php-format
-msgid "%d results of these criteria:"
-msgstr "この条件の結果（%d項目）："
+msgid "%d songs of these criteria:"
+msgstr "この条件の結果（%d曲）："
 
 #: list.php:106
 #, php-format
 msgid "Show usage history for: %s"
 msgstr "%sの使用履歴を表示"
 
-#: list.php:147 song.php:199 song.php:394
+#: list.php:147 song.php:198 song.php:390
 msgid "In Basket"
 msgstr "かごに入っている"
 
@@ -860,7 +860,7 @@ msgstr "オーディオ"
 msgid "Go to task page with this list in this order"
 msgstr "この順番で作業ページへ移動"
 
-#: list.php:255 song.php:406
+#: list.php:255 song.php:402
 msgid "Error updating basket."
 msgstr "かごの更新中にエラーが発生しました。"
 
@@ -913,87 +913,87 @@ msgstr "使用日："
 msgid "Save Data"
 msgstr "データを保存"
 
-#: ms_history.php:106
+#: ms_history.php:105
 msgid "You must enter a date."
 msgstr "日付が必要です。"
 
-#: ms_history.php:112
+#: ms_history.php:111
 msgid "Date is invalid."
 msgstr "日付は正しくありません。"
 
-#: ms_tag.php:17
+#: ms_tag.php:21
 msgid "The tag was not added for some reason."
 msgstr "タグが追加されませんでした（理由は不明です）。"
 
-#: ms_tag.php:42
+#: ms_tag.php:46
 #, php-format
 msgid "Tag added to %s songs."
 msgstr "タグが%s曲に付けられました。"
 
-#: ms_tag.php:44
+#: ms_tag.php:48
 #, php-format
 msgid "(%s songs in this list already included this tag.)"
 msgstr "（このリストの%s曲にはすでにこのタグが含まれています。）"
 
-#: ms_tag.php:66
+#: ms_tag.php:70
 msgid "Choose existing tag, or choose New and fill in new tag name:"
 msgstr ""
 "既存のタグを選択するか、「新規」を選択して新しいタグ名を入力してください："
 
-#: ms_tag.php:73
+#: ms_tag.php:77
 msgid "Select a tag..."
 msgstr "タグを選択..."
 
-#: ms_tag.php:74
+#: ms_tag.php:78
 msgid "New Tag (input name)"
 msgstr "新規タグ（名前を入力）"
 
-#: ms_tag.php:86
+#: ms_tag.php:90
 msgid "New Tag Name:"
 msgstr "新規タグ名："
 
-#: ms_tag.php:90
+#: ms_tag.php:94
 msgid "Add This Tag to These Songs"
 msgstr "このタグをこれらの曲に付ける"
 
-#: ms_text.php:12
+#: ms_text.php:16
 #, php-format
 msgid "Field %s:"
 msgstr "フィールド %s："
 
-#: ms_text.php:23
+#: ms_text.php:27
 msgid "Blank Line"
 msgstr "空行"
 
-#: ms_text.php:25
+#: ms_text.php:29
 msgid "Place it:"
 msgstr "配置場所："
 
-#: ms_text.php:26
+#: ms_text.php:30
 msgid "On a new line"
 msgstr "新しい行に"
 
-#: ms_text.php:27
+#: ms_text.php:31
 msgid "On same line, in parentheses"
 msgstr "同じ行に（括弧内）"
 
-#: ms_text.php:28
+#: ms_text.php:32
 msgid "On new line, in parentheses"
 msgstr "新しい行に（括弧内）"
 
-#: ms_text.php:29
+#: ms_text.php:33
 msgid "On new line, indented"
 msgstr "新しい行にインデント付きで"
 
-#: ms_text.php:35
+#: ms_text.php:39
 msgid "XML Format (\"Place It...\" option ignored)"
 msgstr "XML形式（「配置」オプションは無視されます）"
 
-#: ms_text.php:36
+#: ms_text.php:40
 msgid "Select fields to output and click the button..."
 msgstr "出力するフィールドを選択してボタンをクリックしてください..."
 
-#: ms_text.php:37
+#: ms_text.php:41
 msgid "Make Page to Copy or Print"
 msgstr "コピーまたは印刷用のページを作成"
 
@@ -1005,104 +1005,117 @@ msgstr "PDF作成のガイドを表示する"
 msgid "Floating Guide for Powerpoint"
 msgstr "Powerpoint作成のガイドを表示する"
 
-#: song.php:199 song.php:398
+#: song.php:198 song.php:394
 msgid "Not in Basket"
 msgstr "かごに入っていない"
 
-#: song.php:201
+#: song.php:200
 msgid "Click to toggle"
 msgstr "クリックで切り替え"
 
-#: song.php:209
+#: song.php:208
 msgid "Show:"
 msgstr "表示："
 
-#: song.php:211
+#: song.php:210
 msgid "Chords"
 msgstr "コード"
 
-#: song.php:214
+#: song.php:213
 msgid "Romaji"
 msgstr "ローマ字"
 
-#: song.php:242
+#: song.php:241
 msgid "Original Title:"
 msgstr "原曲名："
 
-#: song.php:245
+#: song.php:244
 msgid "Key:"
 msgstr "調："
 
-#: song.php:247
+#: song.php:246
 msgid "Tempo:"
 msgstr "テンポ："
 
-#: song.php:252
+#: song.php:251
 msgid "Composer:"
 msgstr "作曲家："
 
-#: song.php:256
+#: song.php:255
 msgid "Copyright:"
 msgstr "著作権："
 
-#: song.php:260
+#: song.php:259
 msgid "Source(s):"
 msgstr "参照："
 
-#: song.php:265
+#: song.php:264
 msgid "Pattern of Stanzas:"
 msgstr "節のパターン："
 
-#: song.php:269
+#: song.php:268
 msgid "Instruction (intro, etc.):"
 msgstr "指示（イントロなど）："
 
-#: song.php:274
+#: song.php:273
 msgid "Audio for learning:"
 msgstr "練習用オーディオ："
 
-#: song.php:279 song.php:449
+#: song.php:278 song.php:445
 msgid "Play in loop"
 msgstr "ループ再生"
 
-#: song.php:283
+#: song.php:282
 msgid "Comment about audio recording:"
 msgstr "オーディオ録音についての備考："
 
-#: song.php:290
+#: song.php:289
 msgid "Edit This Song"
 msgstr "この曲を編集"
 
-#: song.php:302
+#: song.php:301
 msgid "Save Tag Changes"
 msgstr "タグの変更を保存"
 
-#: song.php:344
+#: song.php:343
 msgid "No history records."
 msgstr "使用記録はありません。"
 
-#: song.php:348
+#: song.php:347
 msgid "Usage History"
 msgstr "使用履歴"
 
-#: song.php:357
+#: song.php:356
 #, php-format
 msgid "%s to<br>%s (%sx)"
 msgstr "%s〜<br>%s（%s回）"
 
-#: song.php:449
+#: song.php:445
 msgid "Disable looping"
 msgstr "ループ再生をオフにする"
 
-#: song_session.php:65
+#: song_session.php:23
+#, php-format
+msgid "Songs used on %s at %s"
+msgstr "%s、「%s」で使用した曲"
+
+#: song_session.php:36
+msgid "Check/uncheck all"
+msgstr "全部にチェックを付ける"
+
+#: song_session.php:69
 msgid "Update basket according to checkboxes above"
 msgstr "上のチェックボックスに合わせてかごを更新する"
 
-#: song_session.php:67
+#: song_session.php:71
 msgid "Go to task page with this session"
 msgstr "作業ページへ移動"
 
-#: task.php:8
+#: sqlquery.php:5
+msgid "SQL Query"
+msgstr "SQL Query"
+
+#: task.php:10
 msgid ""
 "Your basket is empty.  Add songs to your basket from the Search page or a "
 "song detail page, then return here to put them in order and do tasks."
@@ -1110,7 +1123,7 @@ msgstr ""
 "かごは空です。検索ページや曲の詳細ページからかごに曲を追加し、ここに戻って並"
 "べ替えや作業を実行してください。"
 
-#: task.php:26
+#: task.php:27
 msgid ""
 "Drag songs to reorder; click the Duplicate or Remove icons as needed.  Then "
 "choose a task from the buttons on the right."
@@ -1118,31 +1131,31 @@ msgstr ""
 "曲をドラッグして並べ替え、必要に応じて「複製」または「削除」アイコンをクリッ"
 "クしてください。その後、右側のボタンから作業を選択してください。"
 
-#: task.php:50
+#: task.php:51
 msgid "Duplicate"
 msgstr "複製"
 
-#: task.php:51
+#: task.php:52
 msgid "Remove"
 msgstr "削除"
 
-#: task.php:61
+#: task.php:62
 msgid "Choose a task:"
 msgstr "作業を選択："
 
-#: task.php:62
+#: task.php:63
 msgid "Record As Event Song Session"
 msgstr "イベントの曲セッションとして記録"
 
-#: task.php:63
+#: task.php:64
 msgid "Output Songs (PDF)"
 msgstr "曲を出力（PDF）"
 
-#: task.php:64
+#: task.php:65
 msgid "Output Songs (text)"
 msgstr "曲を出力（テキスト）"
 
-#: task.php:65
+#: task.php:66
 msgid "Add a Tag"
 msgstr "タグを付ける"
 
@@ -1199,6 +1212,28 @@ msgstr "確証のため、現在のパスワードを入力してください。
 #: user_settings.php:72
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#~ msgid "Modify Search Filtering"
+#~ msgstr "検索フィルターを変更"
+
+#~ msgid "&nbsp;Must Not&nbsp;<br>&nbsp;Include&nbsp;"
+#~ msgstr "&nbsp;含んでは&nbsp;<br>&nbsp;ならない&nbsp;"
+
+#~ msgid "Show Basket"
+#~ msgstr "かごを表示"
+
+#~ msgid "(Freeform SQL)"
+#~ msgstr "（自由ＳＱＬ）"
+
+#~ msgid "Your basket is empty."
+#~ msgstr "かごは空です。"
+
+#~ msgid "Your basket has 1 song."
+#~ msgstr "かごには1曲入っています。"
+
+#, php-format
+#~ msgid "Your basket has %s songs."
+#~ msgstr "かごには%s曲入っています。"
 
 #~ msgid "Tag successfully added."
 #~ msgstr "タグが正常に追加されました。"

@@ -4,12 +4,12 @@ include("accesscontrol.php");
 
 header1(_("Database Settings"));
 ?>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
 <?php header2(1); ?>
 <h1 id="title"><?=_("Database Settings")?></h1>
 
-<?php if ($_SESSION['admin'] > 0) { ?>
+<?php if ($_SESSION['access'] > 0) { ?>
   <!-- TAGS -->
 
   <form action="do_maint.php" method="post" name="tagform" id="tagform" onSubmit="return validate('tag');">
@@ -24,8 +24,10 @@ header1(_("Database Settings"));
       </select>
       <label class="label-n-input"><?=_('Tag Name:')?>  <input type="text"
                                                                    id="tag" name="tag" style="width:20em" maxlength="60"></label>
-      <div class="submits"><input type="submit" id="tag_add_upd" name="tag_add_upd" value="<?=_("Add or Rename")?>">
-        <input type="submit" id="tag_del" name="tag_del" value="<?=_("Delete")?>" disabled></div>
+      <div class="submits">
+        <input type="submit" id="tag_add_upd" name="tag_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Rename")?>">
+        <input type="submit" id="tag_del" name="tag_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+      </div>
     </fieldset></form>
 
   <!-- EVENTS -->
@@ -44,12 +46,14 @@ header1(_("Database Settings"));
       <label class="label-n-input"><?=_('Event:')?> <input type="text" id="event" name="event" style="width:20em" maxlength="60"></label>
       <label class="label-n-input"><input type="checkbox" id="active" name="active" checked><?=_("Currently Occurring Event")?></label>
       <label class="label-n-input"><?=_('Description:')?> <textarea id="remarks" name="remarks" rows="3" cols="50"></textarea></label>
-      <div class="submits"><input type="submit" id="event_add_upd" name="event_add_upd" value="<?=_("Add or Update")?>">
-        <input type="submit" id="event_del" name="event_del" value="<?=_("Delete")?>" disabled></div>
+      <div class="submits">
+        <input type="submit" id="event_add_upd" name="event_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Update")?>">
+        <input type="submit" id="event_del" name="event_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+      </div>
     </fieldset></form>
 <?php } // end of if admin > 0 ?>
 
-<?php if ($_SESSION['admin'] == 2) { ?>
+<?php if ($_SESSION['access'] == 2) { ?>
   <!-- USERS (admin only) -->
 
   <form action="do_maint.php" method="post" name="userform" id="userform" autocomplete="off" onSubmit="return validate('user');">
@@ -72,7 +76,7 @@ header1(_("Database Settings"));
           <option value="en_US"<?php if($_SESSION['lang']=="en_US") echo " selected"; ?>><?= _("English")?></option>
           <option value="ja_JP"<?php if($_SESSION['lang']=="ja_JP") echo " selected"; ?>><?=_("Japanese")?></option>
         </select></label>
-      <label class="label-n-input"><?=_("Access Level")?>: <select id="adminlevel" name="adminlevel" size="1">
+      <label class="label-n-input"><?=_("Access Level")?>: <select id="accesslevel" name="accesslevel" size="1">
           <option value="0"><?=_("Read-only")?></option>
           <option value="1" selected><?=_("Standard (can edit)")?></option>
           <option value="2"><?=_("Admin")?></option>
@@ -83,8 +87,10 @@ header1(_("Database Settings"));
       <label class="label-n-input"><?=_("New Password again")?>: <input type="password"
                                                                         id="new_pw2" name="new_pw2" style="width:10em" autocomplete="new-password"></label>
       <div id="loginstats" class="comment"></div>
-      <div class="submits"><input type="submit" id="user_add_upd" name="user_add_upd" value="<?=_("Add or Update")?>">
-        <input type="submit" id="user_del" name="user_del" value="<?=_("Delete")?>" disabled></div>
+      <div class="submits">
+        <input type="submit" id="user_add_upd" name="user_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Update")?>">
+        <input type="submit" id="user_del" name="user_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+      </div>
     </fieldset></form>
 <?php } // end of if admin == 2 ?>
 
@@ -168,13 +174,13 @@ header1(_("Database Settings"));
       }
     });
 
-    <?php if ($_SESSION['admin'] == 2) { ?>
+    <?php if ($_SESSION['access'] == 2) { ?>
 // AJAX call for Users (admin only)
     $("#userid").change(function(){
       if ($("#userid").val() == "new") {
         $("#username, #new_userid, #old_userid, #new_pw1, #new_pw2").val("");
         $("#language").val("<?=$_SESSION['lang']?>");
-        $("#adminlevel").val("1");
+        $("#accesslevel").val("1");
         $("#user_del").prop('disabled', true);
         $("#loginstats").html("");
       } else {
@@ -189,7 +195,7 @@ header1(_("Database Settings"));
                 $('#new_userid').val(data.userid);
                 $('#old_userid').val(data.userid);
                 $('#language').val(data.language);
-                $('#adminlevel').val(data.admin);
+                $('#accesslevel').val(data.access);
                 $("#loginstats").html(data.loginstats);
                 $("#user_del").prop('disabled', false);
               }
