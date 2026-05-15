@@ -91,7 +91,7 @@ ul.nav li {
 ul.nav-sub {
   display: none;
   position: absolute;
-  z-index: 100;
+  z-index: 200;
   background-color:<?=(!empty($navbg)?$navbg:"#51579A")?>;
   margin: 0;
   padding: 0;
@@ -274,6 +274,7 @@ h4 {
 a:link,a:visited { color:<?=(!empty($link)?$link:"#333399")?>; }
 a:hover,a:active { color:<?=(!empty($linkhover)?$linkhover:"DarkBlue")?>; }
 a.more { cursor:pointer; color:<?=(!empty($linkmore)?$linkmore:"Black")?>; text-decoration:underline; }
+.ui-widget-header a { color:white; }  /* for links in jQuery UI multiselects */
 
 .alert { color:<?=(!empty($alert)?$alert:"Red")?>; }
 .comment { font-size:0.8em; font-style:italic; }
@@ -301,7 +302,7 @@ input.text {
   background-color: <?=(!empty($inputbg)?$inputbg:"White")?>;
   border: <?=(!empty($inputborder)?$inputborder:"DimGray")?> solid 1px;
 }
-fieldset,input,select,label,label textarea { vertical-align:top; }
+fieldset,input,select,label,label textarea { vertical-align:middle; }
 .label-n-input { white-space:nowrap; margin:0.2em 2em 0.2em 0}
 td.button-in-table { text-align:center; }
 
@@ -456,74 +457,23 @@ body.index #index {
 }
 
 /* specific to list.php */
-body.list.full div#main-container { width:auto; }
+/*body.list.full div#main-container { width:auto; }
 body.list h3 { margin-bottom:0; }
 body.list ul#criteria {
   margin-left:30px;
   padding-left:12px;
   list-style-type: disc;
-}
-body.list table { margin-right:auto; margin-left:auto; }
-body.list td.categories { white-space:nowrap; }
-body.list .select-checkbox {
-  text-align: center;
-}
-/* DataTables sort arrows - enlarge and recolor the existing jQuery UI icon spans */
-body.list table.dataTable thead th div.DataTables_sort_wrapper span {
-  transform: scale(1.5);
-  filter: brightness(0);  /* gray sprite → black, visible on light background */
-}
-body.list table.dataTable thead th.sorting_asc div.DataTables_sort_wrapper span,
-body.list table.dataTable thead th.sorting_desc div.DataTables_sort_wrapper span {
-  filter: brightness(0) invert(1);  /* black → white, visible on colored background */
-}
-body.list table.dataTable thead th.sorting_asc,
-body.list table.dataTable thead th.sorting_desc {
-  background-color: #980023 !important;
-  color: white !important;
-}
-body.list .song-tag-cb {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-/* Override DataTables responsive expand/collapse icon (dtr-inline mode) */
-body.list table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child {
-  padding-left: 24px;
-}
-body.list table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before {
-  content: '▶';
-  background-color: transparent;
-  box-shadow: none;
-  border: none;
-  border-radius: 0;
-  color: #980023;
-  left: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: auto;
-  height: auto;
-  font-size: 1.3em;
-  line-height: 1;
-}
-body.list table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before {
-  content: '▼';
-}
+}*/
 /* Columns that must always remain visible (even if table overflows) */
-body.list table#songlist td.title,
+/*body.list table#songlist td.title,
 body.list table#songlist th.title,
 body.list table#songlist td.select-checkbox,
 body.list table#songlist th.select-checkbox {
   display: table-cell !important;
-}
-/* Fix DataTables responsive overflow */
-body.list #songlist_wrapper {
-  width: 100%;
-  overflow-x: hidden;
-}
-body.list table#songlist {
+}*/
+/*body.list table#songlist {
   width: 100% !important;
-}
+}*/
 
 /* specific to edit.php */
 body.edit .edit-form-grid {

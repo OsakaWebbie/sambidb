@@ -108,6 +108,37 @@ if (!empty($_REQUEST['action'])) {
       ]);
       exit;
     }
+  } elseif ($action === 'loadSession') {
+    $ud = mysqli_real_escape_string($db, $_REQUEST['ud'] ?? '');
+    if (!$eid || !$ud) { exit; }
+    $result = sqlquery_checked(
+      "SELECT UseOrder, history.SongID, Title, OrigTitle, Tempo, SongKey, Source, Audio, " .
+      "INSTR(Lyrics, '[') AS Chords FROM history LEFT JOIN song ON song.SongID = history.SongID " .
+      "WHERE EventID=$eid AND UseDate='$ud' ORDER BY UseOrder"
+    );
+    echo "<table>\n";
+    echo "<tr><th></th><th>" . _('Title') . "</th>" .
+      "<th><input type='checkbox' id='checkall' title='" . htmlspecialchars(_('Check/uncheck all'), ENT_QUOTES, 'UTF-8') . "'></th>" .
+      "<th>" . _('Key') . "</th><th>" . _('Tempo') . "</th><th>" . _('Source') . "</th></tr>\n";
+    while ($r = mysqli_fetch_object($result)) {
+      $sid = intval($r->SongID);
+      $checked = in_array($sid, $_SESSION['basket'] ?? [], true) ? ' checked' : '';
+      echo "<tr>\n";
+      echo "  <td>" . intval($r->UseOrder) . "</td>\n";
+      echo "  <td style='white-space:nowrap; text-align:left'><a href='song.php?sid=$sid' target='_blank'>" . d2h($r->Title) . "</a>";
+      if ($r->OrigTitle && strpos(strtolower($r->Title), strtolower($r->OrigTitle)) === false)
+        echo " (" . d2h($r->OrigTitle) . ")";
+      if ($r->Audio == "1") echo "&nbsp;<img src='graphics/audio.gif' height='16' width='16' alt=''>";
+      if ($r->Chords != "0") echo "&nbsp;<img src='graphics/guitar.gif' height='16' width='16' alt=''>";
+      echo "</td>\n";
+      echo "  <td style='text-align:center'><input type='checkbox' class='row-cb' name='$sid'$checked></td>\n";
+      echo "  <td style='white-space:nowrap'>" . d2h($r->SongKey) . "</td>\n";
+      echo "  <td>" . d2h($r->Tempo) . "</td>\n";
+      echo "  <td style='text-align:left'>" . ($r->Source ? d2h($r->Source) : '') . "</td>\n";
+      echo "</tr>\n";
+    }
+    echo "</table>\n";
+    exit;
   }
 }
 
@@ -117,6 +148,7 @@ header1(_("Song Use Chart"));
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <style>
     td.sticky-col { text-align:left !important; }
+    #session-dialog-content { overflow-x: auto; }
 </style>
 <?php
 header2(1);
@@ -157,13 +189,33 @@ if (!$result = mysqli_query($db,"SELECT * FROM event ORDER BY Active DESC, Event
   <!-- Chart will be built here -->
 </div>
 
+<div id="session-dialog" style="display:none">
+  <div id="session-dialog-content"></div>
+</div>
+
+<?php load_scripts(['jquery', 'jqueryui']); ?>
 <script type="text/javascript">
-// Song session popup
 function song_session(eventid, usedate) {
-  var left = Math.floor((screen.width - 800) / 2);
-  var top = Math.floor((screen.height - 600) / 2);
-  window.open('song_session.php?eid=' + eventid + '&ud=' + usedate, '',
-    'top=' + top + ',left=' + left + ',WIDTH=800,HEIGHT=600,scrollbars=yes,menubar=yes');
+  var $dlg = $('#session-dialog');
+  var defaultWidth = Math.min(700, $(window).width() * 0.95);
+  $dlg.dialog('option', 'width', defaultWidth);
+  $('#session-dialog-content').html('<p><?= addslashes(_('Loading...')) ?></p>');
+  var eventName = $('select[name="event"] option:selected').text().replace(/\s*\([^)]+\)$/, '');
+  $dlg.dialog('option', 'title', usedate + ' — ' + eventName);
+  $dlg.dialog('open');
+  $.get('event_use.php', {action: 'loadSession', eid: eventid, ud: usedate}, function(html) {
+    $('#session-dialog-content').html(html);
+    // Reposition after content loads (height may have changed)
+    $dlg.dialog('widget').position({my: 'center top', at: 'center top+70', of: window});
+    // Widen to fit table if it overflows horizontally
+    var $content = $('#session-dialog-content');
+    var overflow = $content[0].scrollWidth - $content[0].clientWidth;
+    if (overflow > 0) {
+      var newWidth = Math.min(defaultWidth + overflow + 4, $(window).width() * 0.95);
+      $dlg.dialog('option', 'width', newWidth);
+      $dlg.dialog('widget').position({my: 'center top', at: 'center top+70', of: window});
+    }
+  });
 }
 
 // Chart state
@@ -376,10 +428,50 @@ function renderTable() {
     }
   });
 }
-</script>
 
-<script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
-<script src="js/jquery-ui.min.js" type="text/javascript"></script>
+$(function() {
+  $('#session-dialog').dialog({
+    autoOpen: false,
+    modal: false,
+    dialogClass: 'session-dialog-wrapper',
+    width: Math.min(700, $(window).width() * 0.95),
+    maxHeight: $(window).height() * 0.85,
+    position: {my: 'center top', at: 'center top+70', of: window},
+    create: function() {
+      $(this).dialog('widget').find('.ui-dialog-buttonset').css('float', 'none');
+    },
+    buttons: [
+      {
+        text: '<?= addslashes(_('Update basket according to checkboxes above')) ?>',
+        click: function() {
+          var checked = [], unchecked = [];
+          $('#session-dialog-content .row-cb').each(function() {
+            ($(this).prop('checked') ? checked : unchecked).push($(this).attr('name'));
+          });
+          $.post('ajax_actions.php', {
+            action: 'BasketUpdate',
+            checked_ids: checked.join(','),
+            unchecked_ids: unchecked.join(',')
+          }, function(r) {
+            if (r.success && window.updateBasketCount) window.updateBasketCount(r.basketCount);
+          }, 'json');
+        }
+      },
+      {
+        text: '<?= addslashes(_('Go to task page with this session')) ?>',
+        click: function() {
+          var sids = [];
+          $('#session-dialog-content .row-cb').each(function() { sids.push($(this).attr('name')); });
+          if (sids.length) window.location.href = 'task.php?sid_list=' + sids.join(',');
+        }
+      }
+    ]
+  });
+  $('#session-dialog').on('change', '#checkall', function() {
+    $('#session-dialog-content .row-cb').prop('checked', this.checked);
+  });
+});
+</script>
 <?php
 footer();
 ?>
