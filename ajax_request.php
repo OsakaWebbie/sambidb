@@ -17,10 +17,10 @@ switch($_REQUEST['action']) {
   case 'Tag':
     if (isset($_REQUEST['tagid']) && $_REQUEST['tagid']!="") {
       $tagid = intval($_REQUEST['tagid']);
-      $result = sqlquery_checked("SELECT * FROM tag WHERE TagID=".$tagid);
+      $result = sqlquery_checked("SELECT t.*, COUNT(st.TagID) AS songtag_count FROM tag t LEFT JOIN songtag st ON t.TagID=st.TagID WHERE t.TagID=$tagid GROUP BY t.TagID");
       if (mysqli_num_rows($result)>0) {
         $row = mysqli_fetch_object($result);
-        $arr = array('tagid' => $row->TagID, 'tag' => $row->Tag);
+        $arr = array('tagid' => $row->TagID, 'tag' => $row->Tag, 'songtag_count' => (int)$row->songtag_count);
         die(json_encode($arr));
       } else {
         die(json_encode(array('alert' => 'Record not found.')));
@@ -33,11 +33,13 @@ switch($_REQUEST['action']) {
       die(json_encode(array('alert' => 'Missing eventid parameter.')));
     }
     $eventid = intval($_REQUEST['eventid']);
-    $result = sqlquery_checked("SELECT * FROM event WHERE EventID=".$eventid);
+    $result = sqlquery_checked("SELECT e.*, COUNT(h.EventID) AS history_count, MIN(h.UseDate) AS use_first, MAX(h.UseDate) AS use_last FROM event e LEFT JOIN history h ON e.EventID=h.EventID WHERE e.EventID=$eventid GROUP BY e.EventID");
     if (mysqli_num_rows($result)>0) {
       $row = mysqli_fetch_object($result);
       $arr = array('eventid' => $row->EventID, 'event' => $row->Event,
-                   'active' => $row->Active, 'remarks' => $row->Remarks);
+                   'active' => $row->Active, 'remarks' => $row->Remarks,
+                   'history_count' => (int)$row->history_count,
+                   'use_first' => $row->use_first, 'use_last' => $row->use_last);
       die(json_encode($arr));
     } else {
       die(json_encode(array('alert' => 'Event not found.')));

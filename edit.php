@@ -48,6 +48,95 @@ header1($pageTitle);
 ?>
 <link rel="stylesheet" href="css/jquery-ui.css">
 <style>
+.edit-form-grid {
+  display: grid;
+  gap: 8px 20px;
+  align-items: start;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.form-group label {
+  font-weight: bold;
+  color: var(--inline-label);
+}
+.form-group input[type="text"],
+.form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+}
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+.audio-section { margin-top: 12px; }
+.audio-section label { display: block; }
+.audio-section input[type="file"] { margin-top: 3px; }
+
+/* help icons and tooltips (click-triggered) */
+.help-icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+  text-align: center;
+  border-radius: 50%;
+  background: steelblue;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 4px;
+  vertical-align: middle;
+  user-select: none;
+  position: relative;
+  overflow: visible;
+}
+.help-icon:hover { background: #3a7bc8; }
+.help-tooltip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: normal;
+  width: 220px;
+  text-align: left;
+  white-space: normal;
+  z-index: 200;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.help-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 5px solid #333;
+}
+
+/* lyrics help floating dialog */
+.ui-dialog { font-family: Arial, sans-serif; }
+.ui-dialog .ui-dialog-content {
+  font-size: 0.88em;
+  text-align: left;
+}
+.ui-dialog .ui-dialog-content p { margin: 6px 0; }
+.ui-dialog .ui-dialog-content code {
+  background: #f5f5f5;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
 @media screen and (max-width: 900px) {
   .edit-form-grid { grid-template-columns: 1fr !important; }
   .form-group-lyrics { order: -1; }

@@ -26,6 +26,7 @@ header1(_("Database Settings"));
                                                                    id="tag" name="tag" style="width:20em" maxlength="60"></label>
       <div class="submits">
         <input type="submit" id="tag_add_upd" name="tag_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Rename")?>">
+        <input type="hidden" name="confirmed" id="tag_confirmed" value="">
         <input type="submit" id="tag_del" name="tag_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
       </div>
     </fieldset></form>
@@ -48,6 +49,7 @@ header1(_("Database Settings"));
       <label class="label-n-input"><?=_('Description:')?> <textarea id="remarks" name="remarks" rows="3" cols="50"></textarea></label>
       <div class="submits">
         <input type="submit" id="event_add_upd" name="event_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Update")?>">
+        <input type="hidden" name="confirmed" id="event_confirmed" value="">
         <input type="submit" id="event_del" name="event_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
       </div>
     </fieldset></form>
@@ -112,14 +114,6 @@ header1(_("Database Settings"));
   }
   document.onkeypress = stopRKey;
 
-  function showSpinner(el) {
-    el.after('<span class="spinner"><img src="css/images/ajax-loader.gif" alt="Loading..." /></span>');
-  }
-
-  function hideSpinner(el) {
-    el.siblings(".spinner").remove();
-  }
-
   $(document).ready(function(){
 
 // AJAX call for Tags
@@ -128,19 +122,20 @@ header1(_("Database Settings"));
         $("#tag").val("");
         $("#tag_del").prop('disabled', true);
       } else {
-        showSpinner($('#tagid'));
-        $.getJSON("ajax_actions.php?action=Tag&tagid="+$('#tagid').val())
+        $('#tag').addClass('is-loading');
+        $.getJSON("ajax_request.php?action=Tag&tagid="+$('#tagid').val())
             .done(function(data) {
-              hideSpinner($('#tagid'));
+              $('#tag').removeClass('is-loading');
               if (data.alert) {
                 alert(data.alert);
               } else {
                 $('#tag').val(data.tag);
+                $('#tag_del').data('name', data.tag).data('songtag-count', data.songtag_count);
                 $("#tag_del").prop('disabled', false);
               }
             })
             .fail(function(jqxhr, textStatus, error) {
-              hideSpinner($('#tagid'));
+              $('#tag').removeClass('is-loading');
               alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
@@ -153,10 +148,10 @@ header1(_("Database Settings"));
         $("#active").prop("checked", true);
         $("#event_del").prop('disabled', true);
       } else {
-        showSpinner($('#eventid'));
-        $.getJSON("ajax_actions.php?action=Event&eventid="+$('#eventid').val())
+        $('#event').addClass('is-loading');
+        $.getJSON("ajax_request.php?action=Event&eventid="+$('#eventid').val())
             .done(function(data) {
-              hideSpinner($('#eventid'));
+              $('#event').removeClass('is-loading');
               if (data.alert) {
                 alert(data.alert);
               } else {
@@ -164,14 +159,37 @@ header1(_("Database Settings"));
                 $('#event').val(data.event);
                 if (data.active == 1) $('#active').prop('checked', true);
                 $('#remarks').val(data.remarks);
+                $('#event_del').data({
+                  name:         data.event,
+                  historyCount: data.history_count,
+                  useFirst:     data.use_first,
+                  useLast:      data.use_last
+                });
                 $("#event_del").prop('disabled', false);
               }
             })
             .fail(function(jqxhr, textStatus, error) {
-              hideSpinner($('#eventid'));
+              $('#event').removeClass('is-loading');
               alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
+    });
+
+    $('#tag_del').click(function() {
+      var name = $(this).data('name');
+      var n    = $(this).data('songtag-count');
+      var msg  = '<?=addslashes(_("Delete tag"))?> "' + name + '"?';
+      if (n > 0) msg += '\n\n' + n + ' <?=addslashes(_("songs will be removed from this tag."))?>';
+      if (!confirm(msg)) return false;
+      $('#tag_confirmed').val('1');
+    });
+
+    $('#event_del').click(function() {
+      var n = $(this).data('historyCount');
+      if (n > 0) return true;
+      var msg = '<?=addslashes(_("Delete event"))?> "' + $(this).data('name') + '"?';
+      if (!confirm(msg)) return false;
+      $('#event_confirmed').val('1');
     });
 
     <?php if ($_SESSION['access'] == 2) { ?>
@@ -184,10 +202,10 @@ header1(_("Database Settings"));
         $("#user_del").prop('disabled', true);
         $("#loginstats").html("");
       } else {
-        showSpinner($('#userid'));
-        $.getJSON("ajax_actions.php?action=User&userid="+$('#userid').val())
+        $('#username').addClass('is-loading');
+        $.getJSON("ajax_request.php?action=User&userid="+$('#userid').val())
             .done(function(data) {
-              hideSpinner($('#userid'));
+              $('#username').removeClass('is-loading');
               if (data.alert) {
                 alert(data.alert);
               } else {
@@ -197,14 +215,20 @@ header1(_("Database Settings"));
                 $('#language').val(data.language);
                 $('#accesslevel').val(data.access);
                 $("#loginstats").html(data.loginstats);
+                $('#user_del').data('name', data.username).data('userid', data.userid);
                 $("#user_del").prop('disabled', false);
               }
             })
             .fail(function(jqxhr, textStatus, error) {
-              hideSpinner($('#userid'));
+              $('#username').removeClass('is-loading');
               alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
+    });
+    $('#user_del').click(function() {
+      var name   = $(this).data('name');
+      var userid = $(this).data('userid');
+      return confirm('<?=addslashes(_("Delete user"))?> "' + name + '" (<?=addslashes(_("login"))?>: ' + userid + ')?');
     });
     <?php } ?>
   });

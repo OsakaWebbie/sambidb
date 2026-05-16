@@ -82,7 +82,7 @@ if (!isset($_SESSION['userid'])) {      // COVERS TWO CASES: FIRST TIME THROUGH 
   <?php
   //$hostarray = explode(".",$_SERVER['HTTP_HOST']);
   ?>
-  <link rel="stylesheet" type="text/css" href="style.php?page=<?=$_SERVER['PHP_SELF']?>&jquery=1" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   <style>
     #nav-main ul {
       padding-top:6px;

@@ -243,7 +243,7 @@ $(function() {
         unchecked_ids.push($(this).data('id'));
       }
     });
-    $.post('ajax_actions.php', {
+    $.post('ajax_request.php', {
       action: 'BasketUpdate',
       checked_ids: checked_ids.join(','),
       unchecked_ids: unchecked_ids.join(',')
@@ -269,7 +269,7 @@ $(function() {
 
   // Event dropdown: update LastUse/Uses cells in-place via AJAX
   $('#event').on('change', function() {
-    $.getJSON('ajax_actions.php', {action: 'HistoryData', eventid: $(this).val()}, function(data) {
+    $.getJSON('ajax_request.php', {action: 'HistoryData', eventid: $(this).val()}, function(data) {
       var map = {};
       $.each(data, function(i, row) { map[row.SongID] = row; });
       $('#songlist-table tbody tr').each(function() {
