@@ -21,7 +21,7 @@ function header1($title='') {
 function header2($nav=0) {
   global $_nav_shown;
   $_nav_shown = $nav;
-  echo '<link rel="stylesheet" type="text/css" href="style.php">'."\n";
+  echo '<link rel="stylesheet" type="text/css" href="css/style.css">'."\n";
   echo "</head>\n";
   $fileroot = substr($_SERVER['PHP_SELF'],(strrpos($_SERVER['PHP_SELF'],"/")+1),(strrpos($_SERVER['PHP_SELF'],".")-strrpos($_SERVER['PHP_SELF'],"/")-1));
   echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
@@ -108,7 +108,7 @@ function footer($nav=0) {
         event.preventDefault();
         $.ajax({
           type: "POST",
-          url: "ajax_actions.php?action=SwitchLang&lang=<?=$_SESSION['lang']=='en_US'?'ja_JP':'en_US' ?>",
+          url: "ajax_request.php?action=SwitchLang&lang=<?=$_SESSION['lang']=='en_US'?'ja_JP':'en_US' ?>",
           success: function() {
             location.reload(true);
           }
@@ -144,7 +144,7 @@ function footer($nav=0) {
       $('.emptybasket').click(function(event) {
         event.preventDefault();
         $(this).closest('ul.nav-sub').hide();
-        $.post('ajax_actions.php', { action: 'BasketEmpty' }, function(response) {
+        $.post('ajax_request.php', { action: 'BasketEmpty' }, function(response) {
           if (response.success) window.updateBasketCount(0);
         }, 'json');
       });

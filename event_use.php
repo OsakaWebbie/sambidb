@@ -448,7 +448,7 @@ $(function() {
           $('#session-dialog-content .row-cb').each(function() {
             ($(this).prop('checked') ? checked : unchecked).push($(this).attr('name'));
           });
-          $.post('ajax_actions.php', {
+          $.post('ajax_request.php', {
             action: 'BasketUpdate',
             checked_ids: checked.join(','),
             unchecked_ids: unchecked.join(',')

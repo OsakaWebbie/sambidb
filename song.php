@@ -378,7 +378,7 @@ $(document).ready(function(){
     var action = inBasket ? 'BasketRemove' : 'BasketAdd';
 
     $.ajax({
-      url: 'ajax_actions.php',
+      url: 'ajax_request.php',
       type: 'POST',
       data: { action: action, sid: sid },
       dataType: 'json',
@@ -426,7 +426,7 @@ $(document).ready(function(){
 
     // Save preference via AJAX (fire and forget)
     $.ajax({
-      url: 'ajax_actions.php',
+      url: 'ajax_request.php',
       type: 'POST',
       data: {
         action: 'SetDisplayPref',
