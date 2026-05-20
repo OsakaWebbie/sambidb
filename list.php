@@ -252,7 +252,7 @@ $(function() {
         window.updateBasketCount(response.basketCount);
         $('#songlist-savechecks').button('disable');
       } else {
-        alert(response.error || '<?=addslashes(_('Error updating basket.'))?>');
+        alert(response.error || '<?=_('Error updating basket.')?>');
       }
     }, 'json');
   });

@@ -5,14 +5,20 @@ include("accesscontrol.php");
 header1(_("Database Settings"));
 ?>
 <link rel="stylesheet" href="css/jquery-ui.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
+<style>
+#status-msg {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  padding: 10px 16px; background: #2e7d32; color: white; border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 10000; display: none;
+}
+</style>
 <?php header2(1); ?>
 <h1 id="title"><?=_("Database Settings")?></h1>
 
 <?php if ($_SESSION['access'] > 0) { ?>
   <!-- TAGS -->
 
-  <form action="do_maint.php" method="post" name="tagform" id="tagform" onSubmit="return validate('tag');">
+  <form name="tagform" id="tagform">
     <fieldset><legend><?=_("Tag Management")?></legend>
       <p><?=_('Select a tag to rename, and type its new name.&nbsp; Or select &quot;New Tag&quot; and type a new tag name.  Or select a tag to delete, and press Delete.')?></p>
       <select id="tagid" name="tagid" size="1">
@@ -25,15 +31,14 @@ header1(_("Database Settings"));
       <label class="label-n-input"><?=_('Tag Name:')?>  <input type="text"
                                                                    id="tag" name="tag" style="width:20em" maxlength="60"></label>
       <div class="submits">
-        <input type="submit" id="tag_add_upd" name="tag_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Rename")?>">
-        <input type="hidden" name="confirmed" id="tag_confirmed" value="">
-        <input type="submit" id="tag_del" name="tag_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+        <button type="button" id="tag_add_upd" class="ui-button ui-corner-all"><?=_("Add or Rename")?></button>
+        <button type="button" id="tag_del" class="ui-button ui-corner-all" disabled><?=_("Delete")?></button>
       </div>
     </fieldset></form>
 
   <!-- EVENTS -->
 
-  <form action="do_maint.php" method="post" name="eventform" id="eventform" onSubmit="return validate('event');">
+  <form name="eventform" id="eventform">
     <fieldset><legend><?=_("Event Management")?></legend>
       <p><?=_('Fill in the information to add a new event.  Or select an event, and modify its info (name, remarks, and/or active status).  Or select an event to delete and press Delete.')?></p>
       <select id="eventid" name="eventid" size="1">
@@ -48,17 +53,21 @@ header1(_("Database Settings"));
       <label class="label-n-input"><input type="checkbox" id="active" name="active" checked><?=_("Currently Occurring Event")?></label>
       <label class="label-n-input"><?=_('Description:')?> <textarea id="remarks" name="remarks" rows="3" cols="50"></textarea></label>
       <div class="submits">
-        <input type="submit" id="event_add_upd" name="event_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Update")?>">
-        <input type="hidden" name="confirmed" id="event_confirmed" value="">
-        <input type="submit" id="event_del" name="event_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+        <button type="button" id="event_add_upd" class="ui-button ui-corner-all"><?=_("Add or Update")?></button>
+        <button type="button" id="event_del" class="ui-button ui-corner-all" disabled><?=_("Delete")?></button>
       </div>
     </fieldset></form>
+
+  <div id="event-del-dialog" title="<?=_("Caution")?>" style="display:none;">
+    <p id="event-del-name" style="font-weight:bold;"></p>
+    <p id="event-del-msg"></p>
+  </div>
 <?php } // end of if admin > 0 ?>
 
 <?php if ($_SESSION['access'] == 2) { ?>
   <!-- USERS (admin only) -->
 
-  <form action="do_maint.php" method="post" name="userform" id="userform" autocomplete="off" onSubmit="return validate('user');">
+  <form name="userform" id="userform" autocomplete="off">
     <fieldset><legend><?=_("User Management")?></legend>
       <p><?=_("Fill in the information to add a new user. Or select an existing user to make changes or delete. NOTE: You cannot see the existing password, but you can enter a new one if the user forgot their password.")?></p>
       <select id="userid" name="userid" size="1">
@@ -90,8 +99,8 @@ header1(_("Database Settings"));
                                                                         id="new_pw2" name="new_pw2" style="width:10em" autocomplete="new-password"></label>
       <div id="loginstats" class="comment"></div>
       <div class="submits">
-        <input type="submit" id="user_add_upd" name="user_add_upd" class="ui-button ui-corner-all" value="<?=_("Add or Update")?>">
-        <input type="submit" id="user_del" name="user_del" class="ui-button ui-corner-all" value="<?=_("Delete")?>" disabled>
+        <button type="button" id="user_add_upd" class="ui-button ui-corner-all"><?=_("Add or Update")?></button>
+        <button type="button" id="user_del" class="ui-button ui-corner-all" disabled><?=_("Delete")?></button>
       </div>
     </fieldset></form>
 <?php } // end of if admin == 2 ?>
@@ -113,6 +122,32 @@ header1(_("Database Settings"));
     }
   }
   document.onkeypress = stopRKey;
+
+  function showStatus(msg) {
+    var $s = $('#status-msg');
+    if (!$s.length) $s = $('<div id="status-msg">').appendTo('body');
+    $s.text(msg).fadeIn(100).delay(1500).fadeOut(400);
+  }
+  function selectUpsertOption($select, id, text, extraAttrs) {
+    var $opt = $select.find('option[value="' + id + '"]');
+    if ($opt.length) $opt.text(text);
+    else $opt = $('<option>').val(id).text(text).appendTo($select);
+    if (extraAttrs) $opt.attr(extraAttrs);
+    selectSortOptions($select);
+    $select.val(id);
+  }
+  function selectRemoveOption($select, id) {
+    $select.find('option[value="' + id + '"]').remove();
+    $select.val('new');
+  }
+  function selectSortOptions($select) {
+    var $first = $select.find('option[value="new"]').detach();
+    var opts = $select.find('option').get().sort(function(a, b) {
+      return a.text.localeCompare(b.text);
+    });
+    $select.empty().append($first).append(opts);
+  }
+  function resetEntityForm($select) { $select.val('new').trigger('change'); }
 
   $(document).ready(function(){
 
@@ -162,6 +197,7 @@ header1(_("Database Settings"));
                 $('#event_del').data({
                   name:         data.event,
                   historyCount: data.history_count,
+                  dateCount:    data.date_count,
                   useFirst:     data.use_first,
                   useLast:      data.use_last
                 });
@@ -175,21 +211,130 @@ header1(_("Database Settings"));
       }
     });
 
+    $('#tag_add_upd').click(function() {
+      if (validate('tag') === false) return;
+      var $tag = $('#tag');
+      $tag.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action: 'TagSave',
+        tagid: $('#tagid').val(),
+        tag: $tag.val()
+      }, function(data) {
+        $tag.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        selectUpsertOption($('#tagid'), data.tagid, data.tag);
+        resetEntityForm($('#tagid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $tag.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
+    });
+
     $('#tag_del').click(function() {
       var name = $(this).data('name');
       var n    = $(this).data('songtag-count');
-      var msg  = '<?=addslashes(_("Delete tag"))?> "' + name + '"?';
-      if (n > 0) msg += '\n\n' + n + ' <?=addslashes(_("songs will be removed from this tag."))?>';
-      if (!confirm(msg)) return false;
-      $('#tag_confirmed').val('1');
+      var msg = '<?=_("Are you sure you want to delete tag \"%s\"?")?>'.replace('%s', name);
+      if (n > 0) msg += '\n\n' + '<?=_("It is currently applied to %d songs, which will also lose this tag.")?>'.replace('%d', n);
+      if (!confirm(msg)) return;
+      var tagid = $('#tagid').val();
+      var $tag = $('#tag');
+      $tag.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action: 'TagDelete',
+        tagid: tagid
+      }, function(data) {
+        $tag.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        selectRemoveOption($('#tagid'), tagid);
+        resetEntityForm($('#tagid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $tag.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
+    });
+
+    $('#event_add_upd').click(function() {
+      if (validate('event') === false) return;
+      var $event = $('#event');
+      $event.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action: 'EventSave',
+        eventid: $('#eventid').val(),
+        event: $event.val(),
+        active: $('#active').is(':checked') ? 1 : 0,
+        remarks: $('#remarks').val()
+      }, function(data) {
+        $event.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        selectUpsertOption($('#eventid'), data.eventid, data.event,
+                           {'class': data.active ? 'active' : 'inactive'});
+        resetEntityForm($('#eventid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $event.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
     });
 
     $('#event_del').click(function() {
-      var n = $(this).data('historyCount');
-      if (n > 0) return true;
-      var msg = '<?=addslashes(_("Delete event"))?> "' + $(this).data('name') + '"?';
-      if (!confirm(msg)) return false;
-      $('#event_confirmed').val('1');
+      var name = $(this).data('name');
+      var n    = $(this).data('historyCount');
+      if (n > 0) {
+        var first     = $(this).data('useFirst');
+        var last      = $(this).data('useLast');
+        var dateCount = $(this).data('dateCount');
+        var dateRange = (first === last) ? first : first + ' – ' + last;
+        $('#event-del-name').text('<?=_("Are you sure you want to delete event \"%s\"?")?>'.replace('%s', name));
+        $('#event-del-msg').text(
+          '<?=_('This event has usage records for %1$d dates (%2$s), for a total of %3$d song usages.')?>'
+            .replace('%1$d', dateCount).replace('%2$s', dateRange).replace('%3$d', n)
+        );
+        $('#event-del-dialog').dialog('open');
+        return;
+      }
+      if (!confirm('<?=_("Are you sure you want to delete event \"%s\"?")?>'.replace('%s', name))) return;
+      doEventDelete($('#eventid').val());
+    });
+
+    function doEventDelete(eventid) {
+      var $event = $('#event');
+      $event.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action: 'EventDelete',
+        eventid: eventid
+      }, function(data) {
+        $event.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        selectRemoveOption($('#eventid'), eventid);
+        resetEntityForm($('#eventid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $event.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
+    }
+
+    $('#event-del-dialog').dialog({
+      autoOpen: false,
+      modal: true,
+      width: Math.min(500, $(window).width() - 40),
+      buttons: [
+        {
+          text: '<?=_("Yes, delete the event and all usage history")?>',
+          click: function() {
+            var $dlg = $(this);
+            var eventid = $('#eventid').val();
+            doEventDelete(eventid);
+            $dlg.dialog('close');
+          }
+        },
+        {
+          text: '<?=_("Cancel")?>',
+          click: function() { $(this).dialog('close'); }
+        }
+      ]
     });
 
     <?php if ($_SESSION['access'] == 2) { ?>
@@ -225,10 +370,55 @@ header1(_("Database Settings"));
             });
       }
     });
+    $('#user_add_upd').click(function() {
+      if (validate('user') === false) return;
+      var $username = $('#username');
+      $username.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action:      'UserSave',
+        userid:      $('#userid').val(),
+        new_userid:  $('#new_userid').val(),
+        username:    $username.val(),
+        accesslevel: $('#accesslevel').val(),
+        language:    $('#language').val(),
+        old_userid:  $('#old_userid').val(),
+        new_pw1:     $('#new_pw1').val(),
+        new_pw2:     $('#new_pw2').val()
+      }, function(data) {
+        $username.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        var sentOldUserid = $('#old_userid').val();
+        selectUpsertOption($('#userid'), data.userid, data.username);
+        if (sentOldUserid && sentOldUserid !== data.userid) {
+          $('#userid').find('option[value="' + sentOldUserid + '"]').remove();
+        }
+        if (data.sessionUpdated) { window.location.reload(); return; }
+        resetEntityForm($('#userid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $username.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
+    });
     $('#user_del').click(function() {
       var name   = $(this).data('name');
       var userid = $(this).data('userid');
-      return confirm('<?=addslashes(_("Delete user"))?> "' + name + '" (<?=addslashes(_("login"))?>: ' + userid + ')?');
+      if (!confirm('<?=_('Are you sure you want to delete user "%1$s" (UserID: %2$s)?')?>'.replace('%1$s', name).replace('%2$s', userid))) return;
+      var $username = $('#username');
+      $username.addClass('is-loading');
+      $.post('ajax_action.php', {
+        action:     'UserDelete',
+        old_userid: userid
+      }, function(data) {
+        $username.removeClass('is-loading');
+        if (data.alert || data.error) { alert(data.alert || data.error); return; }
+        selectRemoveOption($('#userid'), userid);
+        resetEntityForm($('#userid'));
+        showStatus(data.message);
+      }, 'json').fail(function(jqxhr, textStatus, error) {
+        $username.removeClass('is-loading');
+        alert('AJAX Error: ' + textStatus + ', ' + error);
+      });
     });
     <?php } ?>
   });

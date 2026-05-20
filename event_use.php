@@ -199,7 +199,7 @@ function song_session(eventid, usedate) {
   var $dlg = $('#session-dialog');
   var defaultWidth = Math.min(700, $(window).width() * 0.95);
   $dlg.dialog('option', 'width', defaultWidth);
-  $('#session-dialog-content').html('<p><?= addslashes(_('Loading...')) ?></p>');
+  $('#session-dialog-content').html('<p><?=_('Loading...')?></p>');
   var eventName = $('select[name="event"] option:selected').text().replace(/\s*\([^)]+\)$/, '');
   $dlg.dialog('option', 'title', usedate + ' — ' + eventName);
   $dlg.dialog('open');
@@ -442,7 +442,7 @@ $(function() {
     },
     buttons: [
       {
-        text: '<?= addslashes(_('Update basket according to checkboxes above')) ?>',
+        text: '<?=_('Update basket according to checkboxes')?>',
         click: function() {
           var checked = [], unchecked = [];
           $('#session-dialog-content .row-cb').each(function() {
@@ -458,7 +458,7 @@ $(function() {
         }
       },
       {
-        text: '<?= addslashes(_('Go to task page with this session')) ?>',
+        text: '<?=_('Go to task page with this session')?>',
         click: function() {
           var sids = [];
           $('#session-dialog-content .row-cb').each(function() { sids.push($(this).attr('name')); });

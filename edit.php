@@ -299,12 +299,12 @@ function autoGrow(el) {
 function validateForm() {
   var f = document.editform;
   if (!f.title.value.trim()) {
-    alert('<?=addslashes(_("Please enter the title!"))?>');
+    alert('<?=_("Please enter the title!")?>');
     f.title.focus();
     return false;
   }
   if (f.audiofile.files.length && !mp3_regexp.test(f.audiofile.files[0].name)) {
-    alert('<?=addslashes(_("Only MP3 files can be accepted for audio."))?>');
+    alert('<?=_("Only MP3 files can be accepted for audio.")?>');
     f.audiofile.value = '';
     return false;
   }
@@ -316,7 +316,7 @@ function validateForm() {
   }
   <?php if (empty($rec->Audio)): ?>
   if (!f.audiofile.files.length && f.audiocomment.value.trim()) {
-    alert('<?=addslashes(_("Audio comments only make sense if there is an audio file to comment on."))?>');
+    alert('<?=_("Audio comments only make sense if there is an audio file to comment on.")?>');
     f.audiofile.focus();
     return false;
   }
@@ -387,7 +387,7 @@ $(document).ready(function() {
 
     var $btns = $('.edit-save-btn');
     var $statuses = $('.save-status');
-    $btns.button('option', { label: '<?=addslashes(_("Saving..."))?>', disabled: true });
+    $btns.button('option', { label: '<?=_("Saving...")?>', disabled: true });
     $statuses.text('').css('color', '');
 
     var formData = new FormData(this);
@@ -403,7 +403,7 @@ $(document).ready(function() {
       success: function(r) {
         if (r.success) {
           formChanged = false;
-          $statuses.text('<?=addslashes(_("Saved."))?>').css('color', 'green');
+          $statuses.text('<?=_("Saved.")?>').css('color', 'green');
           setTimeout(function() {
             window.location.href = 'song.php?sid=' + r.sid;
           }, 2000);
