@@ -387,11 +387,11 @@ $(document).ready(function(){
           if (action === 'BasketAdd') {
             $btn.addClass('in-basket');
             $btn.find('#basket-icon').text('✓');
-            $btn.find('#basket-label').text('<?=addslashes(_('In Basket'))?>');
+            $btn.find('#basket-label').text('<?=_('In Basket')?>');
           } else {
             $btn.removeClass('in-basket');
             $btn.find('#basket-icon').text('☐');
-            $btn.find('#basket-label').text('<?=addslashes(_('Not in Basket'))?>');
+            $btn.find('#basket-label').text('<?=_('Not in Basket')?>');
           }
           window.updateBasketCount(response.basketCount);
         } else if (response.error) {
@@ -399,7 +399,7 @@ $(document).ready(function(){
         }
       },
       error: function() {
-        alert('<?=addslashes(_('Error updating basket.'))?>');
+        alert('<?=_('Error updating basket.')?>');
       }
     });
   });
@@ -442,7 +442,7 @@ $(document).ready(function(){
     var player = $("#audioplayer")[0];
     player.loop = !player.loop;
     $(this).toggleClass('enabled', player.loop)
-        .prop('title', player.loop ? '<?=addslashes(_('Disable looping'))?>' : '<?=addslashes(_('Play in loop'))?>');
+        .prop('title', player.loop ? '<?=_('Disable looping')?>' : '<?=_('Play in loop')?>');
   });
 });
 </script>

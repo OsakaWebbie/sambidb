@@ -113,7 +113,7 @@ if ($_SESSION['access'] == 2) {
       checkAllText: '<?=_("Check all")?>',
       uncheckAllText: '<?=_("Uncheck all")?>',
     }).multiselectfilter({
-      label: '<?=_("Search:")?>'
+      label: '<?=_("Search")?>:'
     });
 
     $('#searchform').submit(function() {
