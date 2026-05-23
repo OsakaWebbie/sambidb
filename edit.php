@@ -84,7 +84,7 @@ header1($pageTitle);
   line-height: 17px;
   text-align: center;
   border-radius: 50%;
-  background: steelblue;
+  background: var(--primary-medium);
   color: white;
   font-size: 11px;
   font-weight: bold;
@@ -95,7 +95,7 @@ header1($pageTitle);
   position: relative;
   overflow: visible;
 }
-.help-icon:hover { background: #3a7bc8; }
+.help-icon:hover { background: var(--secondary-dark); }
 .help-tooltip {
   position: absolute;
   left: calc(100% + 8px);
@@ -260,13 +260,13 @@ header1($pageTitle);
 <!-- Lyrics help: floating draggable guide (jQuery UI dialog, non-modal) -->
 <div id="lyrics-help" title="<?=_('Chord Formatting Help')?>" style="display:none">
   <p><?=_('Chords go in [square brackets] just before the syllable where the chord is played:')?></p>
-  <p><code>[G]Amazing [C]grace, how [G]sweet the [D]sound</code></p>
+  <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>A[E]mazing [E7/G#]grace, how [A]sweet the [E]sound</code></p>
   <p><?=_('If a kanji character represents multiple syllables and the chord is not played with the first one, you can use spaces to control the location:')?></p>
-  <p><code>[ E]驚[E7/G#]くば[A]かり[E]の[ C#m]恵み[F#]なり[B B7]き</code></p>
+  <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>[ E]驚[E7/G#]くば[A]かり[E]の[ C#m]恵み[F#]なり[B B7]き</code></p>
   <p><?=_('To indicate Japanese lyrics written in romaji, start the line with [r]:')?></p>
-  <p><code>[r]o[E]doro[E7/G#]ku ba[A]kari [E]no me[C#m]gumi [F#]nari[B B7]ki</code></p>
+  <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>[r]o[E]doro[E7/G#]ku ba[A]kari [E]no me[C#m]gumi [F#]nari[B B7]ki</code></p>
   <p><?=_('To mark a section that is only needed when the full pattern is printed (e.g. chorus with repeated line for the song ending), precede it with a line containing only hyphens:')?></p>
-  <p><code>---</code></p>
+  <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>---</code></p>
 </div>
 
 <script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
@@ -372,7 +372,7 @@ $(document).ready(function() {
   $('#lyrics-help').dialog({
     autoOpen: false,
     modal: false,
-    width: 450
+    width: 500
   });
   $('.help-modal').on('click', function(e) {
     e.preventDefault();
@@ -387,7 +387,7 @@ $(document).ready(function() {
 
     var $btns = $('.edit-save-btn');
     var $statuses = $('.save-status');
-    $btns.button('option', { label: '<?=_("Saving...")?>', disabled: true });
+    $btns.text('<?=_("Saving...")?>').prop('disabled', true);
     $statuses.text('').css('color', '');
 
     var formData = new FormData(this);
@@ -409,12 +409,12 @@ $(document).ready(function() {
           }, 2000);
         } else {
           $statuses.text(r.error).css('color', 'red');
-          $btns.button('option', { label: originalBtnText, disabled: false });
+          $btns.text(originalBtnText).prop('disabled', false);
         }
       },
       error: function(xhr) {
         $statuses.text('<?=addslashes(sprintf(_("Upload failed. The file may exceed the %s limit."), ini_get("upload_max_filesize")))?>').css('color', 'red');
-        $btns.button('option', { label: originalBtnText, disabled: false });
+        $btns.text(originalBtnText).prop('disabled', false);
       }
     });
   });

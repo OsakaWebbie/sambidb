@@ -15,6 +15,7 @@ function header1($title='') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <title><?=$title.(isset($_SESSION['dbtitle']) ? ' ('.$_SESSION['dbtitle'].')' : '')?></title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
 <?php
 }
 
@@ -265,6 +266,12 @@ function d2h($text) {
 function escape_quotes($text) {
   $text = str_replace('"','\"',$text);
   return $text;
+}
+
+// trim() plus the Japanese ideographic space U+3000 (UTF-8 bytes E3 80 80).
+// UTF-8 is self-synchronizing so the byte-based trim() handles this safely.
+function jtrim($text) {
+  return trim($text, " \n\r\t\v\x00　");
 }
 
 function url2link($text) {

@@ -1,0 +1,54 @@
+/*
+Reset/normalize styles.
+Originally based on initial.css v2.1 by Faruk Ates (2005), trimmed and updated.
+*/
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, div, span, object,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, address, cite, code,
+dfn, em, img, kbd, q, s, samp,
+small, strong, sub, sup, var,
+b, u, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+caption {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1.2;
+  font-family: Arial, Helvetica, "ＭＳ Ｐゴシック", sans-serif;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+}
+
+input, textarea, select, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+pre {
+  font-size: 1em;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
