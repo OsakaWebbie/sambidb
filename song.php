@@ -78,6 +78,20 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
   opacity: 0.85;
 }
 
+/* Stack both labels in one grid cell so width = wider of the two */
+.basket-label-stack {
+  display: inline-grid;
+  text-align: center;
+}
+.basket-label-stack > span {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+#basket-toggle.in-basket .basket-label-stack > .lbl-in,
+#basket-toggle:not(.in-basket) .basket-label-stack > .lbl-out {
+  visibility: visible;
+}
+
 
 /* Content grid */
 .song-content {
@@ -95,8 +109,8 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 }
 
 .lyrics {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
+  /*font-family: Arial, Helvetica, sans-serif;*/
+  font-size: 16px;
   margin-top: 0;
   margin-bottom: 0;
   text-indent: -30px;
@@ -105,8 +119,8 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 }
 
 .chordlyrics {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
+  /*font-family: Arial, Helvetica, sans-serif;*/
+  font-size: 16px;
   margin: 6px 0 0 0;
   white-space: pre-wrap;
   text-indent: -30px;
@@ -118,7 +132,7 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 }
 
 .chordlyrics rt span {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
   color: #E00000;
   position: relative;
@@ -127,10 +141,10 @@ header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
 }
 
 .smallspace {
-  font-size: 9px;
+  font-size: 11px;
   margin-bottom: 0;
   margin-top: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
 }
 
 <?php
@@ -195,7 +209,10 @@ label.tag {
     <?php $inBasket = in_array((int)$sid, $_SESSION['basket'] ?? [], true); ?>
     <button type="button" id="basket-toggle" class="<?=($inBasket ? 'in-basket' : '')?>" data-sid="<?=$sid?>">
       <span id="basket-icon" style="font-size: 18px; font-weight: bold;"><?=($inBasket ? '✓' : '☐')?></span>
-      <span id="basket-label"><?=($inBasket ? _('In Basket') : _('Not in Basket'))?></span>
+      <span class="basket-label-stack">
+        <span class="lbl-in"><?=_('In Basket')?></span>
+        <span class="lbl-out"><?=_('Not in Basket')?></span>
+      </span>
     </button>
     <div style="font-size: 0.75em; color: #666; text-align: center; margin-top: 2px;"><?=_('Click to toggle')?></div>
   </div>
@@ -238,39 +255,40 @@ foreach ($lines as $line) {
 
   <div class="info-sidebar">
     <?php if ($song->Title != $song->OrigTitle) { ?>
-      <b><?=_('Original Title:')?></b> <?=d2h($song->OrigTitle)?><br><br>
+      <p style="margin-bottom:1em"><strong><?=_('Original Title:')?></strong> <?=d2h($song->OrigTitle)?></p>
     <?php } ?>
 
-    <b><?=_('Key:')?></b> <span style="color: #00C000;"><?=($song->SongKey ? d2h($song->SongKey) : "?")?></span>
+    <p style="margin-bottom:1em"><strong><?=_('Key:')?></strong> <span style="color: var(--secondary-dark);"><?=($song->SongKey ? d2h($song->SongKey) : "?")?></span>
     <?php if ($song->Tempo) { ?>
-      &nbsp;&nbsp;<b><?=_('Tempo:')?></b> <span style="color: #C00000;"><?=$song->Tempo?></span>
+      &nbsp;&nbsp;<strong><?=_('Tempo:')?></strong> <span style="color: var(--secondary-dark);"><?=$song->Tempo?></span>
     <?php } ?>
-    <br>
+    </p>
 
+    <div style="margin-bottom:1em">
     <?php if ($song->Composer) { ?>
-      <b><?=_('Composer:')?></b> <?=d2h($song->Composer)?><br>
+      <div><strong><?=_('Composer:')?></strong> <?=d2h($song->Composer)?></div>
     <?php } ?>
 
     <?php if ($song->Copyright) { ?>
-      <b><?=_('Copyright:')?></b> <?=d2h($song->Copyright)?><br>
+      <div><strong><?=_('Copyright:')?></strong> <?=d2h($song->Copyright)?></div>
     <?php } ?>
 
     <?php if ($song->Source) { ?>
-      <br><b><?=_('Source(s):')?></b>
+      <strong><?=_('Source(s):')?></strong>
       <div style="margin-left: 20px;"><?=url2link(d2h($song->Source))?></div>
     <?php } ?>
+    </div>
 
     <?php if ($song->Pattern) { ?>
-      <br><b><?=_('Pattern of Stanzas:')?></b> <?=d2h($song->Pattern)?>
+      <div style="margin-bottom:1em"><strong><?=_('Pattern of Stanzas:')?></strong> <?=d2h($song->Pattern)?></div>
     <?php } ?>
 
     <?php if ($song->Instruction) { ?>
-      <br><b><?=_('Instruction (intro, etc.):')?></b> <?=d2h($song->Instruction)?>
+      <div style="margin-bottom:1em"><strong><?=_('Instruction (intro, etc.):')?></strong> <?=d2h($song->Instruction)?></div>
     <?php } ?>
 
     <?php if ($song->Audio) { ?>
-      <br><br>
-      <b><?=_('Audio for learning:')?></b><br>
+      <strong><?=_('Audio for learning:')?></strong><br>
       <div style="display: flex; align-items: center; gap: 5px; max-width: 500px;">
         <audio id="audioplayer" controls controlsList="nodownload" style="flex: 1 1 auto; min-width: 0;">
           <source src="sendaudio.php?sid=<?=$_GET['sid']?>">
@@ -279,12 +297,12 @@ foreach ($lines as $line) {
       </div>
 
       <?php if ($song->AudioComment) { ?>
-        <br><br><b><?=_('Comment about audio recording:')?></b> <?=d2h($song->AudioComment)?>
+        <div style="margin-top:0.5em"><strong><?=_('Comment about audio recording:')?></strong> <?=d2h($song->AudioComment)?></div>
       <?php } ?>
     <?php } ?>
 
     <?php if ($_SESSION['access'] > 0) { ?>
-      <div style="margin-top: 15px;">
+      <div style="margin-top: 1em;">
         <button type="button" class="ui-button ui-corner-all" onclick="window.location='edit.php?sid=<?=$sid?>'">
           <?=_('Edit This Song')?>
         </button>
@@ -387,11 +405,9 @@ $(document).ready(function(){
           if (action === 'BasketAdd') {
             $btn.addClass('in-basket');
             $btn.find('#basket-icon').text('✓');
-            $btn.find('#basket-label').text('<?=_('In Basket')?>');
           } else {
             $btn.removeClass('in-basket');
             $btn.find('#basket-icon').text('☐');
-            $btn.find('#basket-label').text('<?=_('Not in Basket')?>');
           }
           window.updateBasketCount(response.basketCount);
         } else if (response.error) {

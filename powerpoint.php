@@ -11,10 +11,7 @@ header('Content-Disposition: attachment; filename="songs_'.date('Y-m-d').'.txt"'
 
 $steps = explode(',',$_GET['order']);
 
-if ($_GET['ttype']=='main') $titlefield = 'Title';
-elseif ($_GET['ttype']=='orig') $titlefield = 'OrigTitle';
-else $titlefield = "IF(Title LIKE CONCAT('%',OrigTitle,'%'), Title, CONCAT(Title,' (',OrigTitle,')'))";  //ttype='paren'
-$sql = "SELECT SongID,$titlefield AS title,Composer,Copyright,Lyrics FROM song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
+$sql = "SELECT SongID,Title AS title,Composer,Copyright,Lyrics FROM song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
 $result = sqlquery_checked($sql);
 
 $songs = array();

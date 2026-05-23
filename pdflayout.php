@@ -1,7 +1,21 @@
 <?php
 include("functions.php");
 include("accesscontrol.php");
-header1("Layout Prep for PDF or Powerpoint");
+
+if (isset($_GET['action']) && $_GET['action'] === 'PdfFormatData') {
+  header('Content-Type: application/json;charset=utf-8');
+  $name = mysqli_real_escape_string($db, $_GET['value'] ?? '');
+  $sql = "SELECT TitleNumbering, TitleWithKey, Instruction, Credit, Chords, Romaji, UseColor FROM pdfformat WHERE FormatName = '$name'";
+  $result = mysqli_query($db, $sql);
+  if (!$result || mysqli_num_rows($result) == 0) {
+    echo json_encode(['success' => false]);
+  } else {
+    echo json_encode(['success' => true, 'data' => mysqli_fetch_assoc($result)]);
+  }
+  exit;
+}
+
+header1(_("Layout Prep for PDF or Powerpoint"));
 ?>
   <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <?php
@@ -31,8 +45,13 @@ while ($song = mysqli_fetch_object($result)) {
     $stanzas = preg_split("/\n-*\s*\n/u",rtrim($song->Lyrics));
   }
   $snippets = array();  //truncate
+  $linecounts = array();  //count lines excluding romaji ([r]...) lines
+  $stripped = array();  //version with chords/[r] brackets removed, for tooltip
   foreach ($stanzas as &$stanza) {
-    $snippets[] = mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars(mb_strcut(preg_replace("#\[[^\[]*\]#","",$stanza),0,30),ENT_QUOTES));
+    $nochords = preg_replace("#\[[^\[]*\]#","",$stanza);
+    $snippets[] = mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars(mb_strcut($nochords,0,30),ENT_QUOTES));
+    $linecounts[] = count(preg_grep('/^\s*\[r\]/i', explode("\n", $stanza), PREG_GREP_INVERT));
+    $stripped[] = trim(mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars($nochords,ENT_QUOTES)));
     $stanza = trim(mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars($stanza,ENT_QUOTES)));
   }
   if ($_GET['pattern']=="pattern" && $song->Pattern!="") {
@@ -45,25 +64,25 @@ while ($song = mysqli_fetch_object($result)) {
   $html .= "<li class=\"s".$song->SongID."t ui-state-default song".(trim($song->Lyrics)==""?" empty":"")."\">".
   "<div class=\"left\"><span class=\"songnum\"></span><span class=\"title\">".$song->Title."</span><span class=\"songkey\"></span>";
   if (preg_match("/^[A-G]/",$song->SongKey)) {
-    $html .= " (Key:".preg_replace("/^([A-G][#b]?m?).*$/","$1",$song->SongKey)."<select name='trans".$song->SongID."'>\n";
+    $html .= " (".htmlspecialchars(_('Key'),ENT_QUOTES).":".preg_replace("/^([A-G][#b]?m?).*$/","$1",$song->SongKey)."<select name='trans".$song->SongID."'>\n";
     for ($i=-6;$i<6;$i++) {
       $html .= ($i==0 ? "<option value=\"0\" selected> </option>" : ("<option value=\"".($i<0?$i+12:$i)."\">".($i>0 ? ("+".$i) : $i)."</option>"));
     }
     $html .= "</select>)\n";
   }
-  $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"Duplicate\">".
-  "<img src=\"graphics/delete.gif\" class=\"delete\" title=\"Remove\"></div><div class=\"clear\"></div>\n";
+  $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"".htmlspecialchars(_('Duplicate'),ENT_QUOTES)."\">".
+  "<img src=\"graphics/delete.gif\" class=\"delete\" title=\"".htmlspecialchars(_('Remove'),ENT_QUOTES)."\"></div><div class=\"clear\"></div>\n";
   if (trim($song->Lyrics) != "") {
     $html .= "  <ul>\n";
     foreach ($patternarray as $letter) {
       $i = ord($letter)-65;
-      $html .= "    <li class='s".$song->SongID.$letter." ui-state-default stanza' title='".$stanzas[$i].
+      $html .= "    <li class='s".$song->SongID.$letter." ui-state-default stanza' title='".$stripped[$i].
       "'>";
-      $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"Turn printing on or off\">";
-      $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title='Turn chord printing on or off'" :
+      $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"".htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)."\">";
+      $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title=\"".htmlspecialchars(_('Turn chord printing on or off'),ENT_QUOTES)."\"" :
       "clear_pixel.gif' width='16'")." class='chords'>";
-      $html .= "[".$letter."] ".$snippets[$i]."...(".(substr_count($stanzas[$i],"\n")+1).")";
-      $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"Duplicate\"><img src=\"graphics/delete.gif\" class=\"delete\" title=\"Remove\"></div><div class=\"clear\"></div></li>\n";
+      $html .= "[".$letter."] ".$snippets[$i]."...(".$linecounts[$i].")";
+      $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"".htmlspecialchars(_('Duplicate'),ENT_QUOTES)."\"><img src=\"graphics/delete.gif\" class=\"delete\" title=\"".htmlspecialchars(_('Remove'),ENT_QUOTES)."\"></div><div class=\"clear\"></div></li>\n";
     }
     $html .= "  </ul>\n";
   }
@@ -73,19 +92,20 @@ while ($song = mysqli_fetch_object($result)) {
 </script>
 <style>
   #help-section, #layoutform { visibility:hidden; } /* shown after jQuery UI effects are applied */
+  .help p { text-align:left; }
 
   #help-section { text-align:center; }
   .help h3, .help h4 { margin:0.3em 0 0.2em 0; }
   .help p { margin:0 0 0.7em 0; }
-  .help-btn { margin: 5px 20px; }
+  .help-btn { margin: 0 20px 5px 20px; background-color: var(--secondary-dark); color: white; border: 1px solid var(--secondary-medium); font-weight: bold; font-size: 90%; }
 
-  /*@media(min-width: 700px) { *** UNCOMMENT AFTER SITE IS MADE RESPONSIVE *** */
-    #layout { float:right; width:60%; }
-    #settings { float:left; width:38%; }
-  /*} /* end of min-width */
+  @media(min-width: 901px) {
+    #layout { float:right; width:49%; }
+    #settings { float:left; width:49%; }
+  }
 
   div.output-section {
-    border:2px solid SteelBlue;
+    border:2px solid var(--primary-medium);
     padding:8px;
     margin-bottom: 10px;
   }
@@ -93,8 +113,13 @@ while ($song = mysqli_fetch_object($result)) {
   div.adjustments { margin:0 0 1em 0; border:1px solid black; padding:5px 0;line-height:1.3em; }
   div.adjustments fieldset legend { font-weight:bold; font-style:italic; }
   div.adjustments h3 { margin-top:0; }
-  div.adjustments div.indented { margin-left:1em; }
-  div.adjustments div.indentedmore { margin-left:3em; }
+  div.adjustments div.indented { margin-left:1em; padding-left:2em; text-indent:-2em; }
+  div.adjustments div.stanza-resets { text-indent:0; padding-left:0; }
+  div.adjustments div.stanza-resets button { margin:2px 4px 2px 0; }
+  div.adjustments div.side-by-side { display:flex; flex-wrap:wrap; column-gap:2em; }
+  div.adjustments div.side-by-side>div { margin-bottom:1em; }
+  div.adjustments.preset-needed { cursor:not-allowed; }
+  div.adjustments.preset-needed > * { pointer-events:none; }
   
   #layout ul, #layout ul li ul { list-style-type: none; margin: 0; padding: 0; }
   #layout ul li { margin: 3px 0 3px 0; padding: 4px; white-space:nowrap; background:#E0E0E0; }
@@ -108,48 +133,60 @@ while ($song = mysqli_fetch_object($result)) {
   .ui-accordion .ui-accordion-content { padding: 0.5em !important; }
 </style>
 <div id="help-section">
-  <div class="help" id="pdf-help" title="How to make a PDF for printing or tablet">
-    <h4>Stanzas and order</h4>
-    <p>Drag stanzas (or even whole songs) into the order you want.&nbsp;Hover over any part to see the complete content.</p>
-    <p>Click <img src="graphics/copy.gif"> to duplicate an item, <img src="graphics/delete.gif"> to delete it,
-      or <img src="graphics/print.gif"> to disable an item temporarily without deleting it.</p>
-    <h4>Chords</h4>
-    <p>Selecting a layout preset will enable or disable all chords, but after that, you can show/hide
-      them individually by clicking <img src="graphics/guitar.gif">.</p>
-    <p>Next to the song title, you can transpose the chords for that song.
-      (You won't see the change when hovering here, but it will affect the PDF.)</p>
-    <h4>Preset and options</h4>
-    <p>First select a PDF Layout Preset. Then you can optionally click on "PDF Layout Options" and
-      change any of those settings to customize your output.</p>
-    <h4>Usage</h4>
-    <p>Important: When printing the PDF, turn off any setting that "fits" to the page - set to "actual size".</p>
-    <h4 style="color:darkred">Contact me if you need new/different layout presets.</h4>
+  <div class="help" id="pdf-help" title="<?=_('How to make a PDF for printing or tablet')?>">
+    <h4><?=_('Stanzas and order')?></h4>
+    <p><?=_('Drag stanzas (or even whole songs) into the order you want. Hover over any part to see the complete content.')?></p>
+    <p><?=sprintf(
+      _('Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an item temporarily without deleting it.'),
+      '<img src="graphics/copy.gif">',
+      '<img src="graphics/delete.gif">',
+      '<img src="graphics/print.gif">'
+    )?></p>
+    <h4><?=_('Chords')?></h4>
+    <p><?=sprintf(
+      _('Selecting a layout preset will enable or disable all chords, but after that, you can show/hide them individually by clicking %s.'),
+      '<img src="graphics/guitar.gif">'
+    )?></p>
+    <p><?=_('Next to the song title and key is a menu you can use to transpose the chords of that song in the PDF.')?></p>
+    <h4><?=_('Preset and options')?></h4>
+    <p><?=_('First select a PDF Layout Preset. Then you can optionally click on "PDF Layout Options" and'
+      .' change any of those settings to customize your output.')?></p>
+    <h4><?=_('How to use')?></h4>
+    <p><?=_('When printing the PDF, for best results, turn off any setting that "fits" to the page - set to "actual size".')?></p>
+    <h4><?=_('Contact Karen if you need new/different layout presets.')?></h4>
   </div>
-  <div class="help" id="pp-help" title="How to make Powerpoint slides">
-    <h4>Stanzas and order</h4>
-    <p>Drag stanzas (or even whole songs) into the order you want.&nbsp;Hover over any part to see the complete content.</p>
-    <p>Click <img src="graphics/copy.gif"> to duplicate an item, <img src="graphics/delete.gif"> to delete it,
-      or <img src="graphics/print.gif"> to disable an item temporarily without deleting it.</p>
-    <p>(Chords are never used for Powerpoint.)</p>
-    <h4>Options</h4>
-    <p>You can optionally click on "Powerpoint Text Options" and
-      change any of those settings to customize your output. The "max lines" setting controls whether multiple
-      short stanzas will fit on one slide. (NOTE: Single stanzas are not split between slides, so a very
-      long one might overfill a slide by itself.)</p>
-    <p>The combatibility defaults are the best settings for Windows. Powerpoint on Mac might need different
-    settings (I cannot test that, so I'm not sure).</p>
-    <h4>Usage</h4>
-    <p>Save the text file. Open Powerpoint, preferably with a template that has been prepared for your usage.
-      With a slide of the desired layout selected, click "New Slide" on the Home tab, click
-      "do "Slides from Outline" (it might be worded differently depending on the Powerpoint version), and
-      choose the text file you saved. It will make new slides using the styles of the master layout:
-      song titles will be in the Title block and everything else in the Text block -
-      main lyrics as Outline Level 1, romaji as Level 2, and composer/copyright as Level 3.</p>
-    <p><a href="tools/SambiDB.potx" download target="_blank">Click here</a> to download a starter template you can modify for your needs.</p>
-    <h4 style="color:darkred">This is a new feature - please report any bugs or suggestions.</h4>
+  <div class="help" id="pp-help" title="<?=_('How to make Powerpoint slides')?>">
+    <h4><?=_('Stanzas and order')?></h4>
+    <p><?=_('Drag stanzas (or even whole songs) into the order you want. Hover over any part to see the complete content.')?></p>
+    <p><?=sprintf(
+      _('Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an item temporarily without deleting it.'),
+      '<img src="graphics/copy.gif">',
+      '<img src="graphics/delete.gif">',
+      '<img src="graphics/print.gif">'
+    )?></p>
+    <p><?=_('(Chords are never used for Powerpoint.)')?></p>
+    <h4><?=_('Options')?></h4>
+    <p><?=_('You can optionally click on "Powerpoint Text Options" and'
+      .' change any of those settings to customize your output. The "max lines" setting controls whether multiple'
+      .' short stanzas will fit on one slide. (NOTE: Single stanzas are not split between slides, so a very'
+      .' long one might overfill a slide by itself.)')?></p>
+    <p><?=_('The combatibility defaults are the best settings for Windows. Powerpoint on Mac might need different'
+      .' settings (I cannot test that, so I\'m not sure).')?></p>
+    <h4><?=_('How to use')?></h4>
+    <p><?=_('Save the text file. Open Powerpoint, preferably with a template that has been prepared for your usage.'
+      .' With a slide of the desired layout selected, click "New Slide" on the Home tab, click'
+      .' "do "Slides from Outline" (it might be worded differently depending on the Powerpoint version), and'
+      .' choose the text file you saved. It will make new slides using the styles of the master layout:'
+      .' song titles will be in the Title block and everything else in the Text block -'
+      .' main lyrics as Outline Level 1, romaji as Level 2, and composer/copyright as Level 3.')?></p>
+    <p><?=sprintf(
+      _('%1$sClick here%2$s to download a starter template you can modify for your needs.'),
+      '<a href="tools/SambiDB.potx" download target="_blank">',
+      '</a>'
+    )?></p>
   </div>
-  <button class="help-btn" id="pdf-help-btn"><?=_('Floating Guide for PDFs')?></button>
-  <button class="help-btn" id="pp-help-btn"><?=_('Floating Guide for Powerpoint')?></button>
+  <button class="help-btn ui-button ui-corner-all" id="pdf-help-btn"><?=_('Floating Guide for PDFs')?></button>
+  <button class="help-btn ui-button ui-corner-all" id="pp-help-btn"><?=_('Floating Guide for Powerpoint')?></button>
 </div>
 
 <form id="layoutform" action="pdfgenerate.php" method="get">
@@ -164,9 +201,9 @@ while ($song = mysqli_fetch_object($result)) {
 
   <div id="settings">
     <div id="pdf-controls" class="output-section">
-      <div style="margin-bottom:10px;"><label><strong>PDF Layout Preset:</strong>
+      <div style="margin-bottom:10px;"><label><strong><?=_('PDF Layout Preset')?>:</strong>
         <select id="formatname" name="formatname" size="1">
-          <option value="">Select...</option>
+          <option value=""><?=_('Select...')?></option>
 <?php
 $sql = "SELECT FormatName FROM pdfformat ORDER BY ListOrder";
 if (!$result = mysqli_query($db,$sql)) die("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b><br>($sql)<br>");
@@ -177,88 +214,90 @@ while ($row = mysqli_fetch_object($result)) {
         </select></div>
       </label>
       <div class="accordion">
-        <h3 style="padding-left:25px;">PDF Layout Options</h3>
-        <div class="adjustments">
+        <h3 style="padding-left:25px;"><?=_('PDF Layout Options')?></h3>
+        <div class="adjustments preset-needed">
           <fieldset>
-            <legend>Title Line Settings</legend>
-            <div style="display:none"><strong>Multilingual Song Titles:</strong><br>
-            <div class="indented"><label><input type="radio" id="title-main" name="ttype" value="main"  checked>Actual Title (first if group)</label></div>
-            <div class="indented"><label><input type="radio" id="title-orig" name="ttype" value="orig">Original Title</label></div>
-            <div class="indented"><label><input type="radio" id="title-paren" name="ttype" value="paren">"Actual (Original)"</label></div></div>
-            <strong>Numbering:</strong><br>
-            <div class="indented"><label><input type="radio" id="title-numnone" name="tnum" value="none" checked>None</label>&nbsp;
-            <label><input type="radio" id="title-numbasic" name="tnum" value="basic">"1."</label>&nbsp;
-            <label><input type="radio" id="title-numcircle" name="tnum" value="circle">"①"</label></div>
-            <label><input type="checkbox" id="title-key" name="tkey">Append "[Song Key]"</label>
+            <legend><?=_('Content Settings')?></legend>
+            <div class="side-by-side">
+              <div>
+                <h5><?=_('Song numbering')?>:</h5>
+                <div class="indented"><label><input type="radio" id="title-numnone" name="tnum" value="none" checked><?=_('None')?></label>
+                <label><input type="radio" id="title-numbasic" name="tnum" value="basic">"1."</label>
+                <label><input type="radio" id="title-numcircle" name="tnum" value="circle">"①"</label></div>
+                <label style="display:block; margin-top:1em;"><input type="checkbox" id="title-key" name="tkey"><?=_('Include "[key]" after titles')?></label>
+              </div>
+              <div>
+                <h5><?=_('Romaji (lines prefaced with "[r]")')?>:</h5>
+                <div class="indented"><label><input type="radio" id="romaji-chordless" name="romaji" value="chordless" checked><?=_('Show all lines, but omit chords on romaji')?></label></div>
+                <div class="indented"><label><input type="radio" id="romaji-hide" name="romaji" value="hide"><?=_('Hide romaji')?></label></div>
+                <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only"><?=_('Show <em>only</em> romaji (in stanzas that have it)')?></label></div>
+                <div class="indented"><label><input type="radio" id="romaji-showall" name="romaji" value="showall"><?=_('Show all content')?></label></div>
+              </div>
+            </div>
+            <div class="side-by-side">
+              <div>
+                <h5><?=_('Instructions')?>:</h5>
+                <div class="indented"><label><input type="radio" id="instrshort" name="instr" value="short"><?=_('Short (omit "[text in brackets]")')?></label></div>
+                <div class="indented"><label><input type="radio" id="instrlong" name="instr" value="long"><?=_('Long (include "[text]")')?></label></div>
+                <div class="indented"><label><input type="radio" id="instrnone" name="instr" value="none" checked><?=_('None')?></label></div>
+              </div>
+              <div>
+                <h5><?=_('Copyright info')?>:</h5>
+                <div class="indented"><label><input type="radio" id="copyright-before" name="credit" value="before"><?=_('Before lyrics, one line')?></label></div>
+                <div class="indented"><label><input type="radio" id="copyright-before-twoline" name="credit" value="before-twoline"><?=_('Before lyrics, two lines')?></label></div>
+                <div class="indented"><label><input type="radio" id="copyright-after" name="credit" value="after"><?=_('After lyrics, one line')?></label></div>
+                <div class="indented"><label><input type="radio" id="copyright-after-twoline" name="credit" value="after-twoline"><?=_('After lyrics, two lines')?></label></div>
+                <div class="indented"><label><input type="radio" id="copyright-none" name="credit" value="none" checked><?=_('None')?></label></div>
+              </div>
+            </div>
+            <h5><?=_('All-stanza actions')?>:</h5>
+            <div class="indented stanza-resets">
+              <button type="button" id="nochords" class="ui-button ui-corner-all"><?=_('Disable all chords')?></button>
+              <button type="button" id="allchords" class="ui-button ui-corner-all"><?=_('Enable all chords')?></button>
+              <button type="button" id="allprint" class="ui-button ui-corner-all"><?=_('Re-enable all printing')?></button>
+            </div>
           </fieldset>
           <fieldset>
-            <legend>Extra Elements</legend>
-            <strong>Instructions:</strong><br>
-            <div class="indented"><a id="instrshort" href="javascript:void(0)">Short (omit "[text in brackets]")</a></div>
-            <div class="indented"><a id="instrlong" href="javascript:void(0)">Long (include "[text]")</a></div>
-            <div class="indented"><a id="instrnone" href="javascript:void(0)">Remove</a></div>
-            <br>
-            <strong>Credits:</strong><br>
-            <div class="indented">Before lyrics: <a id="copyright-before" href="javascript:void(0)">One line</a> |
-            <a id="copyright-before-twoline" href="javascript:void(0)">Two lines</a></div>
-            <div class="indented">After lyrics: <a id="copyright-after" href="javascript:void(0)">One line</a> |
-            <a id="copyright-after-twoline" href="javascript:void(0)">Two lines</a></div>
-            <div class="indented"><a id="copyright-none" href="javascript:void(0)">Remove Credits</a></div>
-            <br>
-            <strong>Chords:</strong> <a id="nochords" href="javascript:void(0)">Disable all</a> |
-            <a id="allchords" href="javascript:void(0)">Enable all</a><br>
-            <br>
-            <a id="allprint" href="javascript:void(0)">Re-enable all printing</a><br>
-            <br>
-            <strong>Romaji</strong> (lines prefaced with "[r]")<strong>:</strong><br>
-            <div class="indented"><label><input type="radio" id="romaji-chordless" name="romaji" value="chordless" checked>Show all lines, but omit</div>
-            <div class="indentedmore">chords on romaji</label></div>
-            <div class="indented"><label><input type="radio" id="romaji-hide" name="romaji" value="hide">Hide romaji</label></div>
-            <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only">Show <u>only</u> romaji</div>
-            <div class="indentedmore">(in stanzas that have some)</label></div>
-            <div class="indented"><label><input type="radio" id="romaji-showall" name="romaji" value="showall">Show all content</label></div>
-          </fieldset>
-          <fieldset>
-            <legend>PDF Settings</legend>
-            Override paper size (optional): <select name="papersize" size="1">
-            <option value="" selected>Default</option>
+            <legend><?=_('PDF Settings')?></legend>
+            <?=_('Override paper size (optional)')?>: <select name="papersize" size="1">
+            <option value="" selected> </option>
             <option value="a4">A4</option>
             <option value="b5">B5</option>
             <option value="a5">A5</option>
-            </select><br>&nbsp;<br>
-            <label><input type="checkbox" id="usecolor" name="color" value="yes" checked> Use Color</label>
+            </select>
+            <label style="display:block; margin-top:1em;"><input type="checkbox" id="usecolor" name="color" value="yes" checked> <?=_('Use Color')?></label>
           </fieldset>
         </div>
       </div>
       <div>
-        <input type="submit" id="pdfgenerate" name="submit" value="Generate PDF"
+        <input type="submit" id="pdfgenerate" name="submit" value="<?=_('Generate PDF')?>"
                   class="ui-button ui-corner-all" style="font-size:120%; font-weight:bold; margin-top: 10px;">
       </div>
     </div>
 
     <div id="powerpoint-controls" class="output-section">
       <div class="accordion">
-        <h3 style="padding-left:25px;">Powerpoint Text Options</h3>
+        <h3 style="padding-left:25px;"><?=_('Powerpoint Text Options')?></h3>
         <div class="adjustments">
           <fieldset>
-            <legend>Content Settings</legend>
-            <label>Max lines per slide: <input name="pp_lines" value="8" style="width:2em"></label><br>
-            <label><input type="checkbox" name="pp_trim" checked>Trim leading spaces</label><br>
-            <label><input type="checkbox" name="pp_slidenum" checked>Include slide # ("[2/4]") after song title</label><br><br>
-            <strong>Romaji</strong> (lines prefaced with "[r]")<strong>:</strong><br>
-            <div class="indented"><label><input type="radio" id="ppromaji-all" name="pp_romaji" value="all" checked>Show all</div>
-            <div class="indented"><label><input type="radio" id="ppromaji-hide" name="pp_romaji" value="hide">Hide romaji</label></div>
-            <div class="indented"><label><input type="radio" id="ppromaji-only" name="pp_romaji" value="only">Show <u>only</u> romaji (where exists)</div>
+            <legend><?=_('Content Settings')?></legend>
+            <label><?=_('Max lines per slide')?>: <input name="pp_lines" value="8" style="width:2em"></label><br>
+            <label><input type="checkbox" name="pp_trim" checked><?=_('Trim leading spaces')?></label><br>
+            <label><input type="checkbox" name="pp_slidenum" checked><?=_('Include slide # ("[2/4]") after song title')?></label><br><br>
+            <h5><?=_('Romaji (lines prefaced with "[r]")')?>:</h5>
+            <div class="indented"><label><input type="radio" id="ppromaji-all" name="pp_romaji" value="all" checked><?=_('Show all')?></label></div>
+            <div class="indented"><label><input type="radio" id="ppromaji-hide" name="pp_romaji" value="hide"><?=_('Hide romaji')?></label></div>
+            <div class="indented"><label><input type="radio" id="ppromaji-only" name="pp_romaji" value="only"><?=_('Show <em>only</em> romaji (in stanzas that have it)')?></label></div>
           </fieldset>
           <fieldset>
-            <legend>Compatibility Settings</legend>
-            <label><input type="checkbox" name="pp_crlf" checked>Windows line endings</label><br>
-            <label><input type="checkbox" name="pp_ms" checked>Convert to UTF-16 LE (Microsoft)</label><br>
+            <legend><?=_('Compatibility Settings')?></legend>
+            <label><input type="checkbox" name="pp_crlf" checked><?=_('Windows line endings')?></label><br>
+            <label><input type="checkbox" name="pp_ms" checked><?=_('Convert to UTF-16 LE (Microsoft)')?></label><br>
           </fieldset>
         </div>
       </div>
       <div>
-        <input type="submit" id="powerpoint" name="submit" value="Generate Text for PP"
+        <input type="submit" id="powerpoint" name="submit" value="<?=_('Generate Text for PP')?>"
                   class="ui-button ui-corner-all" style="font-size:120%; font-weight:bold; margin-top: 10px;">
       </div>
     </div>
@@ -335,13 +374,21 @@ while ($row = mysqli_fetch_object($result)) {
   $("#help-section").css("visibility","visible");
   $("#layoutform").css("visibility","visible");
 
+  // Block interaction with PDF Layout Options until a preset is selected
+  $("#pdf-controls .adjustments").click(function() {
+    if ($(this).hasClass('preset-needed')) {
+      alert(<?=json_encode(_('Please select a layout preset first.'))?>);
+    }
+  });
+
   $("#formatname").change(function(e) {
+    var preset = $(this).val();
+    $("#pdf-controls .adjustments").toggleClass('preset-needed', preset === '');
+    if (preset === '') return;
     // Get options based on newly selected format, and change as needed on page
-    $.getJSON("ajax_db_row.php", {
-      table:'pdfformat',
-      key:'FormatName',
-      keyquoted:1,
-      value:$(this).val()
+    $.getJSON("pdflayout.php", {
+      action:'PdfFormatData',
+      value:preset
     }).done(function(r) {
       $('#title-num'+r.data.TitleNumbering).click();
       $('#title-key').prop('checked',(r.data.TitleWithKey=="1"));
@@ -361,18 +408,6 @@ while ($row = mysqli_fetch_object($result)) {
     $("#layout ul li.song").each(function() {
       thisid = this.className.match(/s([0-9]+)/)[1];
       switch(linkid) {
-        case "title-main":
-          $(this).children("div.left").children("span.title").html(songs[thisid].title);
-          //$("#ttype").val(linkid.substr(6));
-          break;
-        case "title-orig":
-          $(this).children("div.left").children("span.title").html(songs[thisid].origtitle);
-          //$("#ttype").val(linkid.substr(6));
-          break;
-        case "title-paren":
-          $(this).children("div.left").children("span.title").html(songs[thisid].title + " (" + songs[thisid].origtitle + ")");
-          //$("#ttype").val(linkid.substr(6));
-          break;
         case "title-numnone":
           $(this).children("div.left").children("span.songnum").html("");
           break;
@@ -393,17 +428,16 @@ while ($row = mysqli_fetch_object($result)) {
 
 
 // ACTIONS RELATED TO ADDING/REMOVING INSTRUCTIONS
-  $("a[id^='instr']").click(function(e) {
+  $("input[id^='instr']").click(function() {
     linkid = this.id;
-    e.preventDefault();
     $("#layout ul li ul li.instr").remove();
     if (linkid != "instrnone") {
       $("#layout ul li.song").each(function() {
         thisid = this.className.match(/s([0-9]+)/)[1];
         if (songs[thisid][linkid].length) {
           $(this).children("ul").prepend('<li class="s'+thisid+'i ui-state-default instr" title="'+songs[thisid][linkid]+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="Turn printing on or off">Instructions ('+
-              songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="Remove"></div><div class="clear"></div></li>');
+              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Instructions'),ENT_QUOTES)?> ('+
+              songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>');
         }
       });
     }
@@ -411,9 +445,8 @@ while ($row = mysqli_fetch_object($result)) {
   });
 
 // ACTIONS RELATED TO ADDING/REMOVING CREDITS
-  $("a[id^='copyright']").click(function(e) {
+  $("input[id^='copyright']").click(function() {
     linkid = this.id;
-    e.preventDefault();
     $("#layout ul li ul li.copyright").remove();
     if (linkid != "copyright-none") {
       $("#layout ul li.song").each(function() {
@@ -421,8 +454,8 @@ while ($row = mysqli_fetch_object($result)) {
         if (songs[thisid].composer.length || songs[thisid].copyright.length) {
           html = '<li class="s'+thisid+'c ui-state-default copyright" title="'+
               songs[thisid].composer+(linkid.match(/twoline/)?'\n':'; ')+songs[thisid].copyright+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="Turn printing on or off">Copyright Info ('+
-              songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="Remove"></div><div class="clear"></div></li>';
+              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Copyright info'),ENT_QUOTES)?> ('+
+              songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>';
           if (linkid.match(/before/)) $(this).children("ul").prepend(html); else $(this).children("ul").append(html);
         }
       });
@@ -435,12 +468,10 @@ while ($row = mysqli_fetch_object($result)) {
     if ($(this).attr("src") == "graphics/guitar.gif")  $(this).attr("src","graphics/noguitar.gif");
     else  $(this).attr("src","graphics/guitar.gif");
   });
-  $("#allchords").click(function(e) {
-    e.preventDefault();
+  $("#allchords").click(function() {
     $("img[src='graphics/noguitar.gif']").attr("src","graphics/guitar.gif");
   });
-  $("#nochords").click(function(e) {
-    e.preventDefault();
+  $("#nochords").click(function() {
     $("img[src='graphics/guitar.gif']").attr("src","graphics/noguitar.gif");
   });
 
@@ -449,8 +480,7 @@ while ($row = mysqli_fetch_object($result)) {
     if ($(this).attr("src") == "graphics/print.gif")  $(this).attr("src","graphics/noprint.gif");
     else  $(this).attr("src","graphics/print.gif");
   });
-  $("#allprint").click(function(e) {
-    e.preventDefault();
+  $("#allprint").click(function() {
     $("img[src='graphics/noprint.gif']").attr("src","graphics/print.gif");
   });
 
@@ -482,7 +512,7 @@ while ($row = mysqli_fetch_object($result)) {
     action = $(this).find("input[type=submit]:focus").attr("id");
 
     if (action == 'pdfgenerate' && $("#formatname").val() == "") {
-      alert("Please select a format.");
+      alert(<?=json_encode(_('Please select a layout preset first.'))?>);
       return false;
     }
     var items = [];

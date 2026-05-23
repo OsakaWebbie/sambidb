@@ -32,17 +32,17 @@ if ( !empty($_SERVER['CONTENT_LENGTH']) && empty($_FILES) && empty($_POST) ) {
 
 if (!empty($_POST['sid'])) {
   $sid = $_POST['sid'];
-  $sql = "UPDATE song SET Title='".mysqli_real_escape_string($db,str_replace("\n"," ",$_POST['title']))."',".
-  "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
-  "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
-  "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
-  "SongKey='".mysqli_real_escape_string($db,trim($_POST['songkey']))."',".
-  "Tempo='".mysqli_real_escape_string($db,trim($_POST['tempo']))."',".
-  "Source='".mysqli_real_escape_string($db,trim($_POST['source']))."',".
-  "Lyrics='".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",rtrim($_POST['lyrics'])))."',".
-  "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".
-  "Instruction='".mysqli_real_escape_string($db,trim($_POST['instruction']))."',".
-  "AudioComment='".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['audiocomment'])))."'".
+  $sql = "UPDATE song SET Title='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['title'])))."',".
+  "OrigTitle='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['origtitle'])))."',".
+  "Composer='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['composer'])))."',".
+  "Copyright='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['copyright'])))."',".
+  "SongKey='".mysqli_real_escape_string($db,jtrim($_POST['songkey']))."',".
+  "Tempo='".mysqli_real_escape_string($db,jtrim($_POST['tempo']))."',".
+  "Source='".mysqli_real_escape_string($db,jtrim($_POST['source']))."',".
+  "Lyrics='".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",rtrim($_POST['lyrics']," \n\r\t\v\x00　")))."',".
+  "Pattern='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['pattern'])))."',".
+  "Instruction='".mysqli_real_escape_string($db,jtrim($_POST['instruction']))."',".
+  "AudioComment='".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['audiocomment'])))."'".
   " WHERE SongID=$sid LIMIT 1";
   if (!$result = mysqli_query($db,$sql)) {
     $err = "SQL Error ".mysqli_errno($db).": ".mysqli_error($db);
@@ -56,17 +56,17 @@ if (!empty($_POST['sid'])) {
 } else {
   $sql = "INSERT INTO song (Title,OrigTitle,Composer,Copyright,SongKey,".
   "Tempo,Source,Lyrics,Pattern,Instruction,AudioComment) VALUES (".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['title'])))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['origtitle'])))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['composer'])))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['copyright'])))."',".
-  "'".mysqli_real_escape_string($db,trim($_POST['songkey']))."',".
-  "'".mysqli_real_escape_string($db,trim($_POST['tempo']))."',".
-  "'".mysqli_real_escape_string($db,trim($_POST['source']))."',".
-  "'".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",trim($_POST['lyrics'])))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['pattern'])))."',".
-  "'".mysqli_real_escape_string($db,trim($_POST['instruction']))."',".
-  "'".mysqli_real_escape_string($db,str_replace("\n"," ",trim($_POST['audiocomment'])))."')";
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['title'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['origtitle'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['composer'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['copyright'])))."',".
+  "'".mysqli_real_escape_string($db,jtrim($_POST['songkey']))."',".
+  "'".mysqli_real_escape_string($db,jtrim($_POST['tempo']))."',".
+  "'".mysqli_real_escape_string($db,jtrim($_POST['source']))."',".
+  "'".mysqli_real_escape_string($db,str_replace(chr(0x2019),"'",jtrim($_POST['lyrics'])))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['pattern'])))."',".
+  "'".mysqli_real_escape_string($db,jtrim($_POST['instruction']))."',".
+  "'".mysqli_real_escape_string($db,str_replace("\n"," ",jtrim($_POST['audiocomment'])))."')";
   if (!$result = mysqli_query($db,$sql)) {
     $err = "SQL Error ".mysqli_errno($db).": ".mysqli_error($db);
     if ($isAjax) { header('Content-Type: application/json'); die(json_encode(['success'=>false,'error'=>$err])); }

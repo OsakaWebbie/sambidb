@@ -13,10 +13,7 @@ $format = mysqli_fetch_object($result);
 
 $steps = explode(',',$_GET['order']);
 
-if ($_GET['ttype']=='main') $titlefield = 'Title';
-elseif ($_GET['ttype']=='orig') $titlefield = 'OrigTitle';
-else $titlefield = "IF(Title LIKE CONCAT('%',OrigTitle,'%'), Title, CONCAT(Title,' (',OrigTitle,')'))";  //ttype='paren'
-$sql = "SELECT SongID,$titlefield AS title,Composer,Copyright,SongKey,Lyrics,".
+$sql = "SELECT SongID,Title AS title,Composer,Copyright,SongKey,Lyrics,".
 "Instruction,Pattern FROM song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
 $result = sqlquery_checked($sql);
 
@@ -25,7 +22,7 @@ while ($song = mysqli_fetch_object($result)) {
   if (!isset($_GET['trans'.$song->SongID])) {
     $_GET['trans'.$song->SongID] = 0;
   }
-  $songs['s'.$song->SongID.'t'] = escape_all($song->title) . escape_most(($_GET['tkey']&&preg_match('/^[A-G]/',$song->SongKey) ?
+  $songs['s'.$song->SongID.'t'] = escape_all($song->title) . escape_most((!empty($_GET['tkey']) && preg_match('/^[A-G]/',$song->SongKey) ?
       ' ['.str_replace('#','\\Sharp{}',str_replace('b','\\Flat{}',transpose($song->SongKey,preg_replace('/^([A-G][#b]?m?).*$/',
       "$1",$song->SongKey),$_GET['trans'.$song->SongID]))).']' : ''));
   $songs['s'.$song->SongID.'i'] = ($_GET['ilong'] ? escape_all(mb_ereg_replace('\[|]','',$song->Instruction)) :
@@ -64,14 +61,14 @@ strrpos($format->LayoutParams,'paper'))) : $format->LayoutParams?>]{geometry}
 
 \newcommand\Sharp{\ensuremath{^{\sharp}}}
 \newcommand\Flat{\ensuremath{^{\flat}}}
-\newcommand\Bass[1]{{<?=$_GET['color']?'\color[rgb]{1,0.5,0.9}':''?>{\kern -0.4ex/\kern -0.2ex}#1}}
+\newcommand\Bass[1]{{<?=!empty($_GET['color'])?'\color[rgb]{1,0.5,0.9}':''?>{\kern -0.4ex/\kern -0.2ex}#1}}
 \newcommand\Sup[1]{\textsuperscript{#1}}
-\newcommand{\songtitle}[1]{\pagebreak[2]{\color<?=$_GET['color']?'[rgb]{0,0.3,0.8}':'{black}'?>%
+\newcommand{\songtitle}[1]{\pagebreak[2]{\color<?=!empty($_GET['color'])?'[rgb]{0,0.3,0.8}':'{black}'?>%
   \fontsize{<?=str_replace(',','}{',$format->TitleSizeSpace)?>}\selectfont<?=$format->TitleStyle?><?php
   if ($format->TitleHanging!='') echo '\hangpara{'.$format->TitleHanging.'}{1}'; ?>#1<?php
   echo str_repeat('}',substr_count($format->TitleStyle,'{')); ?>}\\}
 \newcommand{\instr}[1]{%
-  \nopagebreak[4]{<?=$_GET['color']?'\color[rgb]{0,0.5,0}':''?>%
+  \nopagebreak[4]{<?=!empty($_GET['color'])?'\color[rgb]{0,0.5,0}':''?>%
   \fontsize{<?=str_replace(',','}{',$format->InstructionSizeSpace)?>}\selectfont<?php
   if ($format->InstructionHanging!='') echo '\begin{hangparas}{'.$format->InstructionHanging.'}{1}'; ?>
 <?=$format->InstructionStyle?>{#1}<?php echo str_repeat('}',substr_count($format->InstructionStyle,'{')); ?>
@@ -86,7 +83,7 @@ strrpos($format->LayoutParams,'paper'))) : $format->LayoutParams?>]{geometry}
 
 \newcommand{\chord}[1]{%
     \fontsize{<?=str_replace(',','}{',$format->LyricsSizeSpace)?>}\selectfont%
-    \textcolor<?=$_GET['color']?'[rgb]{1,0,0}':'{black}'?>{\textbf{#1}}}
+    \textcolor<?=!empty($_GET['color'])?'[rgb]{1,0,0}':'{black}'?>{\textbf{#1}}}
 \newcommand{\lyric}[1]{\fontsize{<?=$lyricsize.'}{'.$lyricleading?>}\selectfont\textcolor{black}{#1}}
 \newcommand{\romaji}[1]{\begingroup\fontsize{<?=str_replace(',','}{',$format->RomajiSizeSpace)?>}\selectfont
   <?=$format->RomajiStyle?>{#1}<?php echo str_repeat('}',substr_count($format->RomajiStyle,'{')); ?>\endgroup}

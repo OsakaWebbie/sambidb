@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-20 12:14+0900\n"
-"PO-Revision-Date: 2026-05-20 12:51+0900\n"
+"POT-Creation-Date: 2026-05-23 22:12+0900\n"
+"PO-Revision-Date: 2026-05-23 22:22+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -377,7 +377,7 @@ msgstr "ファイルのアップロードに失敗しました。デバッグ情
 msgid "Song not found (ID: %s)."
 msgstr "曲が見つかりません。（ID: %s）"
 
-#: edit.php:44 functions.php:35
+#: edit.php:44 functions.php:36
 msgid "New Song"
 msgstr "新規の曲"
 
@@ -407,6 +407,7 @@ msgid "Fill in if the song is a translation from another language."
 msgstr "歌詞が他の言語から翻訳された場合は記入します。"
 
 #: edit.php:177 event_use.php:122 index.php:90 list.php:165 ms_text.php:21
+#: pdflayout.php:67
 msgid "Key"
 msgstr "調"
 
@@ -444,7 +445,7 @@ msgid ""
 "by blank lines."
 msgstr "印刷PDF用のパターン（例：ABABB、セクションは空行で区切られます）"
 
-#: edit.php:221
+#: edit.php:221 pdflayout.php:239 pdflayout.php:439
 msgid "Instructions"
 msgstr "指示"
 
@@ -564,7 +565,7 @@ msgstr "全部にチェックを付ける"
 msgid "Source"
 msgstr "参照"
 
-#: event_use.php:146 event_use.php:157 functions.php:43
+#: event_use.php:146 event_use.php:157 functions.php:44
 msgid "Song Use Chart"
 msgstr "曲使用の表"
 
@@ -697,47 +698,47 @@ msgstr "[閉じる]"
 msgid "Show Fewer Records"
 msgstr "表示を減らす"
 
-#: functions.php:32 index.php:18 index.php:32 index.php:66 index.php:116
+#: functions.php:33 index.php:18 index.php:32 index.php:66 index.php:116
 msgid "Search"
 msgstr "検索"
 
-#: functions.php:33
+#: functions.php:34
 msgid "(quick search)"
 msgstr "(クイック検索)"
 
-#: functions.php:37
+#: functions.php:38
 msgid "Basket/Tasks"
 msgstr "かご/作業"
 
-#: functions.php:39
+#: functions.php:40
 msgid "List Basket"
 msgstr "かごを表示"
 
-#: functions.php:40 task.php:4
+#: functions.php:41 task.php:4
 msgid "Tasks"
 msgstr "曲の作業"
 
-#: functions.php:41
+#: functions.php:42
 msgid "Empty Basket"
 msgstr "かごを空にする"
 
-#: functions.php:45
+#: functions.php:46
 msgid "DB Settings"
 msgstr "基本データ設定"
 
-#: functions.php:47
+#: functions.php:48
 msgid "(Raw SQL)"
 msgstr "(SQL直接実行)"
 
-#: functions.php:52
+#: functions.php:53
 msgid "User"
 msgstr "ユーザー"
 
-#: functions.php:54 user_settings.php:33 user_settings.php:37
+#: functions.php:55 user_settings.php:33 user_settings.php:37
 msgid "User Settings"
 msgstr "私のユーザー設定"
 
-#: functions.php:55
+#: functions.php:56
 msgid "Log Out"
 msgstr "ログアウト"
 
@@ -789,7 +790,7 @@ msgstr "曲名／原曲名"
 msgid "Lyrics"
 msgstr "歌詞"
 
-#: index.php:71 song.php:299
+#: index.php:71 song.php:317
 msgid "Tags"
 msgstr "タグ"
 
@@ -801,7 +802,7 @@ msgstr "作曲家・著作権"
 msgid "Search!"
 msgstr "検索！"
 
-#: index.php:111
+#: index.php:111 pdflayout.php:206
 msgid "Select..."
 msgstr "選択…"
 
@@ -875,7 +876,7 @@ msgstr "この条件の結果（%d曲）："
 msgid "Show usage history for: %s"
 msgstr "%sの使用履歴を表示"
 
-#: list.php:147 song.php:198 song.php:390
+#: list.php:147 song.php:213
 msgid "In Basket"
 msgstr "かごに入っている"
 
@@ -899,7 +900,7 @@ msgstr "オーディオ"
 msgid "Go to task page with this list in this order"
 msgstr "この順番で作業ページへ移動"
 
-#: list.php:255 song.php:402
+#: list.php:255 song.php:418
 msgid "Error updating basket."
 msgstr "かごの更新中にエラーが発生しました。"
 
@@ -1036,100 +1037,399 @@ msgstr "出力するフィールドを選択してボタンをクリックして
 msgid "Make Page to Copy or Print"
 msgstr "コピーまたは印刷用のページを作成"
 
-#: pdflayout.php:151
-msgid "Floating Guide for PDFs"
-msgstr "PDF作成のガイドを表示する"
+#: pdflayout.php:18
+msgid "Layout Prep for PDF or Powerpoint"
+msgstr "PDF・Powerpointのレイアウト準備"
 
-#: pdflayout.php:152
-msgid "Floating Guide for Powerpoint"
-msgstr "Powerpoint作成のガイドを表示する"
+#: pdflayout.php:73 pdflayout.php:85 task.php:51
+msgid "Duplicate"
+msgstr "複製"
 
-#: song.php:198 song.php:394
-msgid "Not in Basket"
-msgstr "かごに入っていない"
+#: pdflayout.php:74 pdflayout.php:85 pdflayout.php:440 pdflayout.php:458
+#: task.php:52
+msgid "Remove"
+msgstr "削除"
 
-#: song.php:200
-msgid "Click to toggle"
-msgstr "クリックで切り替え"
+#: pdflayout.php:81 pdflayout.php:439 pdflayout.php:457
+msgid "Turn printing on or off"
+msgstr "印刷のオン・オフを切り替え"
 
-#: song.php:208
-msgid "Show:"
-msgstr "表示："
+#: pdflayout.php:82
+msgid "Turn chord printing on or off"
+msgstr "コード印刷のオン・オフを切り替え"
 
-#: song.php:210
+#: pdflayout.php:136
+msgid "How to make a PDF for printing or tablet"
+msgstr "印刷やタブレット用のPDFの作り方"
+
+#: pdflayout.php:137 pdflayout.php:159
+msgid "Stanzas and order"
+msgstr "節と順番"
+
+#: pdflayout.php:138 pdflayout.php:160
+msgid ""
+"Drag stanzas (or even whole songs) into the order you want. Hover over any "
+"part to see the complete content."
+msgstr ""
+"節（または曲全体）をお好みの順番にドラッグしてください。どの部分でもカーソル"
+"を合わせると全内容が表示されます。"
+
+#: pdflayout.php:140 pdflayout.php:162
+#, php-format
+msgid ""
+"Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an "
+"item temporarily without deleting it."
+msgstr ""
+"%1$s をクリックすると項目を複製、%2$s をクリックすると削除、%3$s をクリックす"
+"ると削除せずに一時的に無効にできます。"
+
+#: pdflayout.php:145 song.php:227
 msgid "Chords"
 msgstr "コード"
 
-#: song.php:213
+#: pdflayout.php:147
+#, php-format
+msgid ""
+"Selecting a layout preset will enable or disable all chords, but after that, "
+"you can show/hide them individually by clicking %s."
+msgstr ""
+"レイアウトプリセットを選択するとコードの表示・非表示が一括で切り替わります"
+"が、その後 %s をクリックすれば個別に切り替えることもできます。"
+
+#: pdflayout.php:150
+msgid ""
+"Next to the song title and key is a menu you can use to transpose the chords "
+"of that song in the PDF."
+msgstr ""
+"曲名と調の横にあるメニューを使えば、その曲のコードをPDFで移調できます。"
+
+#: pdflayout.php:151
+msgid "Preset and options"
+msgstr "プリセットとオプション"
+
+#: pdflayout.php:152
+msgid ""
+"First select a PDF Layout Preset. Then you can optionally click on \"PDF "
+"Layout Options\" and change any of those settings to customize your output."
+msgstr ""
+"まず「PDFレイアウトプリセット」を選択してください。その後、必要に応じて「PDF"
+"レイアウトオプション」をクリックし、設定を変更して出力をカスタマイズできま"
+"す。"
+
+#: pdflayout.php:154 pdflayout.php:175
+msgid "How to use"
+msgstr "使い方"
+
+#: pdflayout.php:155
+msgid ""
+"When printing the PDF, for best results, turn off any setting that \"fits\" "
+"to the page - set to \"actual size\"."
+msgstr ""
+"PDFを印刷する際は、より良い結果のために、ページに「合わせる」設定をオフにし、"
+"「実際のサイズ」に設定してください。"
+
+#: pdflayout.php:156
+msgid "Contact Karen if you need new/different layout presets."
+msgstr ""
+"レイアウトプリセットの変更や新規作成が必要な場合はカレンにご連絡ください。"
+
+#: pdflayout.php:158
+msgid "How to make Powerpoint slides"
+msgstr "Powerpointスライドの作り方"
+
+#: pdflayout.php:167
+msgid "(Chords are never used for Powerpoint.)"
+msgstr "（Powerpointではコードは使用されません。）"
+
+#: pdflayout.php:168
+msgid "Options"
+msgstr "オプション"
+
+#: pdflayout.php:169
+msgid ""
+"You can optionally click on \"Powerpoint Text Options\" and change any of "
+"those settings to customize your output. The \"max lines\" setting controls "
+"whether multiple short stanzas will fit on one slide. (NOTE: Single stanzas "
+"are not split between slides, so a very long one might overfill a slide by "
+"itself.)"
+msgstr ""
+"必要に応じて「Powerpointテキストオプション」をクリックし、設定を変更して出力"
+"をカスタマイズできます。「最大行数」の設定は、短い節を複数まとめて一つのスラ"
+"イドに収めるかどうかを制御します。（注意：一つの節が複数のスライドにまたがっ"
+"て分割されることはないため、非常に長い節は単独でスライドからはみ出すことがあ"
+"ります。）"
+
+#: pdflayout.php:173
+msgid ""
+"The combatibility defaults are the best settings for Windows. Powerpoint on "
+"Mac might need different settings (I cannot test that, so I'm not sure)."
+msgstr ""
+"互換性のデフォルト設定はWindowsに最適です。Mac版のPowerpointでは別の設定が必"
+"要かもしれません（私は確認できないため不明です）。"
+
+#: pdflayout.php:176
+msgid ""
+"Save the text file. Open Powerpoint, preferably with a template that has "
+"been prepared for your usage. With a slide of the desired layout selected, "
+"click \"New Slide\" on the Home tab, click \"do \"Slides from Outline\" (it "
+"might be worded differently depending on the Powerpoint version), and choose "
+"the text file you saved. It will make new slides using the styles of the "
+"master layout: song titles will be in the Title block and everything else in "
+"the Text block - main lyrics as Outline Level 1, romaji as Level 2, and "
+"composer/copyright as Level 3."
+msgstr ""
+"テキストファイルを保存してください。可能であれば、用途に合わせて用意されたテ"
+"ンプレートを使ってPowerpointを開いてください。希望のレイアウトのスライドを選"
+"択した状態で、「ホーム」タブの「新しいスライド」をクリックし、「アウトライン"
+"からスライド」をクリック（Powerpointのバージョンによって表現が異なる場合があ"
+"ります）し、保存したテキストファイルを選んでください。マスターレイアウトのス"
+"タイルを使って新しいスライドが作成され、曲名はタイトル枠に、その他はテキスト"
+"枠に入ります。歌詞本文はアウトラインレベル1、ローマ字はレベル2、作曲家・著作"
+"権はレベル3になります。"
+
+#: pdflayout.php:183
+#, php-format
+msgid ""
+"%1$sClick here%2$s to download a starter template you can modify for your "
+"needs."
+msgstr ""
+"用途に合わせて改変できるサンプルテンプレートは %1$sこちら%2$s からダウンロー"
+"ドできます。"
+
+#: pdflayout.php:188
+msgid "Floating Guide for PDFs"
+msgstr "PDF作成のガイドを表示する"
+
+#: pdflayout.php:189
+msgid "Floating Guide for Powerpoint"
+msgstr "Powerpoint作成のガイドを表示する"
+
+#: pdflayout.php:204
+msgid "PDF Layout Preset"
+msgstr "PDFレイアウトプリセット"
+
+#: pdflayout.php:217
+msgid "PDF Layout Options"
+msgstr "PDFレイアウトオプション"
+
+#: pdflayout.php:220 pdflayout.php:283
+msgid "Content Settings"
+msgstr "コンテンツ設定"
+
+#: pdflayout.php:223
+msgid "Song numbering"
+msgstr "曲の通し番号"
+
+#: pdflayout.php:224 pdflayout.php:242 pdflayout.php:250
+msgid "None"
+msgstr "なし"
+
+#: pdflayout.php:227
+msgid "Include \"[key]\" after titles"
+msgstr "曲名の後に [調] を含む"
+
+#: pdflayout.php:230 pdflayout.php:287
+msgid "Romaji (lines prefaced with \"[r]\")"
+msgstr "ローマ字（[r]で始まる行）"
+
+#: pdflayout.php:231
+msgid "Show all lines, but omit chords on romaji"
+msgstr "全行を表示するが、ローマ字行に付くコードは省略"
+
+#: pdflayout.php:232 pdflayout.php:289
+msgid "Hide romaji"
+msgstr "ローマ字を非表示"
+
+#: pdflayout.php:233 pdflayout.php:290
+msgid "Show <em>only</em> romaji (in stanzas that have it)"
+msgstr "ローマ字<strong>のみ</strong>を表示（ローマ字がある節のみ）"
+
+#: pdflayout.php:234
+msgid "Show all content"
+msgstr "すべての内容を表示"
+
+#: pdflayout.php:240
+msgid "Short (omit \"[text in brackets]\")"
+msgstr "簡略版（[角括弧内のテキスト]を省略）"
+
+#: pdflayout.php:241
+msgid "Long (include \"[text]\")"
+msgstr "完全版（[角括弧内のテキスト]も含む）"
+
+#: pdflayout.php:245 pdflayout.php:457
+msgid "Copyright info"
+msgstr "作曲者・著作権"
+
+#: pdflayout.php:246
+msgid "Before lyrics, one line"
+msgstr "歌詞の前、一行"
+
+#: pdflayout.php:247
+msgid "Before lyrics, two lines"
+msgstr "歌詞の前、二行"
+
+#: pdflayout.php:248
+msgid "After lyrics, one line"
+msgstr "歌詞の後、一行"
+
+#: pdflayout.php:249
+msgid "After lyrics, two lines"
+msgstr "歌詞の後、二行"
+
+#: pdflayout.php:253
+msgid "All-stanza actions"
+msgstr "全節への一括操作"
+
+#: pdflayout.php:255
+msgid "Disable all chords"
+msgstr "コードすべて無効"
+
+#: pdflayout.php:256
+msgid "Enable all chords"
+msgstr "コードすべて有効"
+
+#: pdflayout.php:257
+msgid "Re-enable all printing"
+msgstr "印刷すべて有効に戻す"
+
+#: pdflayout.php:261
+msgid "PDF Settings"
+msgstr "PDF設定"
+
+#: pdflayout.php:262
+msgid "Override paper size (optional)"
+msgstr "プリセットの用紙サイズを上書き（任意）"
+
+#: pdflayout.php:268
+msgid "Use Color"
+msgstr "カラーを使用"
+
+#: pdflayout.php:273
+msgid "Generate PDF"
+msgstr "PDFを作成"
+
+#: pdflayout.php:280
+msgid "Powerpoint Text Options"
+msgstr "Powerpointテキストオプション"
+
+#: pdflayout.php:284
+msgid "Max lines per slide"
+msgstr "1スライドの最大行数"
+
+#: pdflayout.php:285
+msgid "Trim leading spaces"
+msgstr "行頭のスペースを削除"
+
+#: pdflayout.php:286
+msgid "Include slide # (\"[2/4]\") after song title"
+msgstr "曲名の後にスライド番号（「[2/4]」）を含む"
+
+#: pdflayout.php:288
+msgid "Show all"
+msgstr "すべて表示"
+
+#: pdflayout.php:293
+msgid "Compatibility Settings"
+msgstr "互換性設定"
+
+#: pdflayout.php:294
+msgid "Windows line endings"
+msgstr "Windows形式の改行"
+
+#: pdflayout.php:295
+msgid "Convert to UTF-16 LE (Microsoft)"
+msgstr "UTF-16 LE（Microsoft）に変換"
+
+#: pdflayout.php:300
+msgid "Generate Text for PP"
+msgstr "Powerpoint用テキストを作成"
+
+#: pdflayout.php:380 pdflayout.php:515
+msgid "Please select a layout preset first."
+msgstr "まず「PDFレイアウトプリセット」を選択してください。"
+
+#: song.php:214
+msgid "Not in Basket"
+msgstr "かごに入っていない"
+
+#: song.php:217
+msgid "Click to toggle"
+msgstr "クリックで切り替え"
+
+#: song.php:225
+msgid "Show:"
+msgstr "表示："
+
+#: song.php:230
 msgid "Romaji"
 msgstr "ローマ字"
 
-#: song.php:241
+#: song.php:258
 msgid "Original Title:"
 msgstr "原曲名："
 
-#: song.php:244
+#: song.php:261
 msgid "Key:"
 msgstr "調："
 
-#: song.php:246
+#: song.php:263
 msgid "Tempo:"
 msgstr "テンポ："
 
-#: song.php:251
+#: song.php:269
 msgid "Composer:"
 msgstr "作曲家："
 
-#: song.php:255
+#: song.php:273
 msgid "Copyright:"
 msgstr "著作権："
 
-#: song.php:259
+#: song.php:277
 msgid "Source(s):"
 msgstr "参照："
 
-#: song.php:264
+#: song.php:283
 msgid "Pattern of Stanzas:"
 msgstr "節のパターン："
 
-#: song.php:268
+#: song.php:287
 msgid "Instruction (intro, etc.):"
 msgstr "指示（イントロなど）："
 
-#: song.php:273
+#: song.php:291
 msgid "Audio for learning:"
 msgstr "練習用オーディオ："
 
-#: song.php:278 song.php:445
+#: song.php:296 song.php:461
 msgid "Play in loop"
 msgstr "ループ再生"
 
-#: song.php:282
+#: song.php:300
 msgid "Comment about audio recording:"
 msgstr "オーディオ録音についての備考："
 
-#: song.php:289
+#: song.php:307
 msgid "Edit This Song"
 msgstr "この曲を編集"
 
-#: song.php:301
+#: song.php:319
 msgid "Save Tag Changes"
 msgstr "タグの変更を保存"
 
-#: song.php:343
+#: song.php:361
 msgid "No history records."
 msgstr "使用記録はありません。"
 
-#: song.php:347
+#: song.php:365
 msgid "Usage History"
 msgstr "使用履歴"
 
-#: song.php:356
+#: song.php:374
 #, php-format
 msgid "%s to<br>%s (%sx)"
 msgstr "%s〜<br>%s（%s回）"
 
-#: song.php:445
+#: song.php:461
 msgid "Disable looping"
 msgstr "ループ再生をオフにする"
 
@@ -1152,14 +1452,6 @@ msgid ""
 msgstr ""
 "曲をドラッグして並べ替え、必要に応じて「複製」または「削除」アイコンをクリッ"
 "クしてください。その後、右側のボタンから作業を選択してください。"
-
-#: task.php:51
-msgid "Duplicate"
-msgstr "複製"
-
-#: task.php:52
-msgid "Remove"
-msgstr "削除"
 
 #: task.php:62
 msgid "Choose a task:"
@@ -1234,3 +1526,50 @@ msgstr "確証のため、現在のパスワードを入力してください。
 #: user_settings.php:72
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#, fuzzy
+#~ msgid "Credits"
+#~ msgstr "クレジット"
+
+#~ msgid "Default"
+#~ msgstr "デフォルト"
+
+#~ msgid "Title Line Settings"
+#~ msgstr "タイトル行の設定"
+
+#, fuzzy
+#~ msgid "Multilingual Song Titles"
+#~ msgstr "多言語タイトル"
+
+#, fuzzy
+#~ msgid "Actual Title (first if group)"
+#~ msgstr "実際のタイトル（グループの場合は最初）"
+
+#, fuzzy
+#~ msgid "\"Actual (Original)\""
+#~ msgstr "「実際（原曲名）」"
+
+#, fuzzy
+#~ msgid "Append \"[Song Key]\""
+#~ msgstr "「[調]」を追加"
+
+#, fuzzy
+#~ msgid "Extra Elements"
+#~ msgstr "追加要素"
+
+#, fuzzy
+#~ msgid "One line"
+#~ msgstr "1行"
+
+#, fuzzy
+#~ msgid "Two lines"
+#~ msgstr "2行"
+
+#, fuzzy
+#~ msgid "Remove Credits"
+#~ msgstr "クレジットを削除"
+
+#, fuzzy
+#~| msgid "Usage Count"
+#~ msgid "Usage"
+#~ msgstr "使用数"

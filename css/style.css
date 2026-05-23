@@ -3,8 +3,9 @@
   /* ── Brand palette: change these to retheme ───────────────── */
   --primary-light:    #d7e4f9;
   --primary-medium:   #51579A;
-  --secondary-medium: #da0033;
-  --secondary-dark:   #85001f;
+  --secondary-light:  #fae0f0;
+  --secondary-medium: #da0044;
+  --secondary-dark:   #980023;
 
   /* ── Derived semantic variables ───────────────────────────── */
 
@@ -342,7 +343,7 @@ input.text {
   border: var(--input-border) solid 1px;
 }
 fieldset, input, select, label, label textarea { vertical-align: middle; }
-.label-n-input { white-space: nowrap; margin: 0.2em 2em 0.2em 0 }
+.label-n-input { display: inline-block; white-space: nowrap; margin: 0.4em 2em 0.4em 0 }
 td.button-in-table { text-align: center; }
 
 div#actions { margin: 8px 0; text-align: center; }
