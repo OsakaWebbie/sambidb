@@ -268,10 +268,11 @@ function escape_quotes($text) {
   return $text;
 }
 
-// trim() plus the Japanese ideographic space U+3000 (UTF-8 bytes E3 80 80).
-// UTF-8 is self-synchronizing so the byte-based trim() handles this safely.
+// trim() plus the Japanese ideographic space U+3000.
+// trim() is byte-based and corrupts multibyte chars when the trim mask contains
+// multibyte chars, so use a Unicode-aware regex instead.
 function jtrim($text) {
-  return trim($text, " \n\r\t\v\x00　");
+  return preg_replace('/^[\s\x{3000}]+|[\s\x{3000}]+$/u', '', $text) ?? $text;
 }
 
 function url2link($text) {
@@ -369,8 +370,14 @@ define('CLIENT_PATH',"/var/www/sambidb/client/".CLIENT);
 $configfile = CLIENT_PATH."/sambidb.ini";
 if (!is_readable($configfile)) die("No SambiDB configuration file. Notify the developer.");
 $config = parse_ini_file($configfile);
-$db = mysqli_connect("localhost", "sambi_".CLIENT, $config['password'], "sambi_".CLIENT)
-    or die("Failed to connect to database. Notify the developer.");
+
+try {
+  $db = mysqli_connect("localhost", "sambi_".CLIENT, $config['password'], "sambi_".CLIENT);
+} catch (mysqli_sql_exception $e) {
+  // Log the real reason for the developer; show users a generic message (no credentials leaked).
+  error_log('SambiDB DB connect failed for client "'.CLIENT.'": '.$e->getMessage());
+  die("Failed to connect to database. Notify the developer.");
+}
 
 mysqli_set_charset($db, "utf8mb4");
 

@@ -176,7 +176,6 @@ if (!$showRomaji) {
 .checkboxes {
   border-top: 2px solid #85001f;
   padding: 10px;
-  text-align: left;
 }
 
 label.tag {
@@ -280,7 +279,7 @@ foreach ($lines as $line) {
     </div>
 
     <?php if ($song->Pattern) { ?>
-      <div style="margin-bottom:1em"><strong><?=_('Pattern of Stanzas:')?></strong> <?=d2h($song->Pattern)?></div>
+      <div style="margin-bottom:1em"><strong><?=_('Pattern of Sections:')?></strong> <?=d2h($song->Pattern)?></div>
     <?php } ?>
 
     <?php if ($song->Instruction) { ?>

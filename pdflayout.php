@@ -30,6 +30,7 @@ if (!$result = mysqli_query($db,$sql)) die("<b>SQL Error ".mysqli_errno($db).": 
 var songs = {};
 <?php
 $html = '';
+$bad_songs = [];  // songs whose Pattern references nonexistent stanzas
 while ($song = mysqli_fetch_object($result)) {
   echo "songs['".$song->SongID."']={title:'".htmlspecialchars($song->Title,ENT_QUOTES)."',".
   "origtitle:'".htmlspecialchars($song->OrigTitle,ENT_QUOTES)."',".
@@ -74,19 +75,30 @@ while ($song = mysqli_fetch_object($result)) {
   "<img src=\"graphics/delete.gif\" class=\"delete\" title=\"".htmlspecialchars(_('Remove'),ENT_QUOTES)."\"></div><div class=\"clear\"></div>\n";
   if (trim($song->Lyrics) != "") {
     $html .= "  <ul>\n";
+    $has_bad_pattern = false;
     foreach ($patternarray as $letter) {
       $i = ord($letter)-65;
+      if (!isset($stanzas[$i])) {  // Pattern references a stanza that doesn't exist
+        $has_bad_pattern = true;
+        continue;
+      }
       $html .= "    <li class='s".$song->SongID.$letter." ui-state-default stanza' title='".$stripped[$i].
       "'>";
-      $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"".htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)."\">";
-      $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title=\"".htmlspecialchars(_('Turn chord printing on or off'),ENT_QUOTES)."\"" :
+      $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"".htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)."\">";
+      $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title=\"".htmlspecialchars(_('Turn chords on or off'),ENT_QUOTES)."\"" :
       "clear_pixel.gif' width='16'")." class='chords'>";
       $html .= "[".$letter."] ".$snippets[$i]."...(".$linecounts[$i].")";
       $html .= "</div><div class=\"right\"><img src=\"graphics/copy.gif\" class=\"copy\" title=\"".htmlspecialchars(_('Duplicate'),ENT_QUOTES)."\"><img src=\"graphics/delete.gif\" class=\"delete\" title=\"".htmlspecialchars(_('Remove'),ENT_QUOTES)."\"></div><div class=\"clear\"></div></li>\n";
     }
     $html .= "  </ul>\n";
+    if ($has_bad_pattern) $bad_songs[] = $song->Title;
   }
   $html .= "</li>\n";
+}
+if (!empty($bad_songs)) {
+  echo "alert(".json_encode(_("These song(s) have a Pattern that references more sections than exist in the Lyrics ".
+      "(likely because the Lyrics were edited without updating the Pattern):")."\n\n".implode("\n", $bad_songs).
+      "\n\n"._("The output will skip the missing parts but may look wrong. You can edit the song(s) in another tab and then refresh this page.")).");\n";
 }
 ?>
 </script>
@@ -134,8 +146,8 @@ while ($song = mysqli_fetch_object($result)) {
 </style>
 <div id="help-section">
   <div class="help" id="pdf-help" title="<?=_('How to make a PDF for printing or tablet')?>">
-    <h4><?=_('Stanzas and order')?></h4>
-    <p><?=_('Drag stanzas (or even whole songs) into the order you want. Hover over any part to see the complete content.')?></p>
+    <h4><?=_('Sections and order')?></h4>
+    <p><?=_('Drag sections (or even whole songs) into the order you want. Hover over any section to see the complete content.')?></p>
     <p><?=sprintf(
       _('Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an item temporarily without deleting it.'),
       '<img src="graphics/copy.gif">',
@@ -156,8 +168,8 @@ while ($song = mysqli_fetch_object($result)) {
     <h4><?=_('Contact Karen if you need new/different layout presets.')?></h4>
   </div>
   <div class="help" id="pp-help" title="<?=_('How to make Powerpoint slides')?>">
-    <h4><?=_('Stanzas and order')?></h4>
-    <p><?=_('Drag stanzas (or even whole songs) into the order you want. Hover over any part to see the complete content.')?></p>
+    <h4><?=_('Sections and order')?></h4>
+    <p><?=_('Drag sections (or even whole songs) into the order you want. Hover over any section to see the complete content.')?></p>
     <p><?=sprintf(
       _('Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an item temporarily without deleting it.'),
       '<img src="graphics/copy.gif">',
@@ -168,7 +180,7 @@ while ($song = mysqli_fetch_object($result)) {
     <h4><?=_('Options')?></h4>
     <p><?=_('You can optionally click on "Powerpoint Text Options" and'
       .' change any of those settings to customize your output. The "max lines" setting controls whether multiple'
-      .' short stanzas will fit on one slide. (NOTE: Single stanzas are not split between slides, so a very'
+      .' short sections will fit on one slide. (NOTE: Single sections are not split between slides, so a very'
       .' long one might overfill a slide by itself.)')?></p>
     <p><?=_('The combatibility defaults are the best settings for Windows. Powerpoint on Mac might need different'
       .' settings (I cannot test that, so I\'m not sure).')?></p>
@@ -230,7 +242,7 @@ while ($row = mysqli_fetch_object($result)) {
                 <h5><?=_('Romaji (lines prefaced with "[r]")')?>:</h5>
                 <div class="indented"><label><input type="radio" id="romaji-chordless" name="romaji" value="chordless" checked><?=_('Show all lines, but omit chords on romaji')?></label></div>
                 <div class="indented"><label><input type="radio" id="romaji-hide" name="romaji" value="hide"><?=_('Hide romaji')?></label></div>
-                <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only"><?=_('Show <em>only</em> romaji (in stanzas that have it)')?></label></div>
+                <div class="indented"><label><input type="radio" id="romaji-only" name="romaji" value="only"><?=_('Show <em>only</em> romaji (in sections that have it)')?></label></div>
                 <div class="indented"><label><input type="radio" id="romaji-showall" name="romaji" value="showall"><?=_('Show all content')?></label></div>
               </div>
             </div>
@@ -250,11 +262,11 @@ while ($row = mysqli_fetch_object($result)) {
                 <div class="indented"><label><input type="radio" id="copyright-none" name="credit" value="none" checked><?=_('None')?></label></div>
               </div>
             </div>
-            <h5><?=_('All-stanza actions')?>:</h5>
+            <h5><?=_('All-section actions')?>:</h5>
             <div class="indented stanza-resets">
               <button type="button" id="nochords" class="ui-button ui-corner-all"><?=_('Disable all chords')?></button>
               <button type="button" id="allchords" class="ui-button ui-corner-all"><?=_('Enable all chords')?></button>
-              <button type="button" id="allprint" class="ui-button ui-corner-all"><?=_('Re-enable all printing')?></button>
+              <button type="button" id="allprint" class="ui-button ui-corner-all"><?=_('Re-enable all output')?></button>
             </div>
           </fieldset>
           <fieldset>
@@ -287,7 +299,7 @@ while ($row = mysqli_fetch_object($result)) {
             <h5><?=_('Romaji (lines prefaced with "[r]")')?>:</h5>
             <div class="indented"><label><input type="radio" id="ppromaji-all" name="pp_romaji" value="all" checked><?=_('Show all')?></label></div>
             <div class="indented"><label><input type="radio" id="ppromaji-hide" name="pp_romaji" value="hide"><?=_('Hide romaji')?></label></div>
-            <div class="indented"><label><input type="radio" id="ppromaji-only" name="pp_romaji" value="only"><?=_('Show <em>only</em> romaji (in stanzas that have it)')?></label></div>
+            <div class="indented"><label><input type="radio" id="ppromaji-only" name="pp_romaji" value="only"><?=_('Show <em>only</em> romaji (in sections that have it)')?></label></div>
           </fieldset>
           <fieldset>
             <legend><?=_('Compatibility Settings')?></legend>
@@ -436,7 +448,7 @@ while ($row = mysqli_fetch_object($result)) {
         thisid = this.className.match(/s([0-9]+)/)[1];
         if (songs[thisid][linkid].length) {
           $(this).children("ul").prepend('<li class="s'+thisid+'i ui-state-default instr" title="'+songs[thisid][linkid]+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Instructions'),ENT_QUOTES)?> ('+
+              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Instructions'),ENT_QUOTES)?> ('+
               songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>');
         }
       });
@@ -454,7 +466,7 @@ while ($row = mysqli_fetch_object($result)) {
         if (songs[thisid].composer.length || songs[thisid].copyright.length) {
           html = '<li class="s'+thisid+'c ui-state-default copyright" title="'+
               songs[thisid].composer+(linkid.match(/twoline/)?'\n':'; ')+songs[thisid].copyright+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn printing on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Copyright info'),ENT_QUOTES)?> ('+
+              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Copyright info'),ENT_QUOTES)?> ('+
               songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>';
           if (linkid.match(/before/)) $(this).children("ul").prepend(html); else $(this).children("ul").append(html);
         }

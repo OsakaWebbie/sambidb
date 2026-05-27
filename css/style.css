@@ -62,23 +62,19 @@
 /* theme layout and styling */
 
 body.full {
-  text-align: center;
   background-color: var(--body-bg);
 }
 body.simple {
-  text-align: center;
   background-color: White;
 }
 
 body.full div#main-container {
   background-color: var(--main-bg);
-  text-align: left;
   width: auto;
   border: 1px solid var(--main-border);
   margin: 10px;
 }
 body.simple div#main-container {
-  text-align: left;
   background-color: White;
 }
 
@@ -290,14 +286,12 @@ h1 {
   color: var(--h1);
 }
 h2 {
-  text-align: left;
   font-size: 1.5em;
   line-height: 1.1;
   color: var(--h2);
   font-weight: bold;
 }
 h3 {
-  text-align: left;
   font-size: 1.3em;
   font-weight: bold;
   font-style: italic;
@@ -305,7 +299,6 @@ h3 {
   margin: 10px 0 4px 0;
 }
 h4 {
-  text-align: left;
   font-size: 1.2em;
   font-weight: bold;
   color: var(--h4);
@@ -315,6 +308,9 @@ a:link, a:visited { color: var(--link); }
 a:hover, a:active { color: var(--link-hover); }
 a.more { cursor: pointer; color: var(--link-more); text-decoration: underline; }
 .ui-widget-header a { color: white; }  /* for links in jQuery UI multiselects */
+
+.dropdown-closed::after { content: ' ▼'; }
+.dropdown-open::after { content: ' ▲'; }
 
 .alert { color: var(--alert); }
 .comment { font-size: 0.8em; font-style: italic; }
@@ -361,7 +357,6 @@ section {
   margin: 0 0 3px 5px;
   padding: 2px 7px 2px 7px;
   border: 2px solid var(--section-title-border);
-  text-align: left;
   display: inline;
   position: relative;
   top: -12px;
@@ -480,6 +475,16 @@ option.inactive, li.inactive { background-color: var(--inactive-event-bg); }
   font-weight: 700;
   white-space: nowrap;
   box-shadow: 2px 0 2px -1px rgba(0, 0, 0, 0.4);
+}
+/* Cap the anchored title column at half the viewport so a few date columns
+   stay visible on narrow screens; long titles truncate with an ellipsis. */
+.use-chart .sticky-col a {
+  display: inline-block;
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
 }
 .use-chart .sticky-corner {
   position: sticky;

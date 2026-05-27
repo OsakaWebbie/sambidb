@@ -159,9 +159,10 @@ CREATE TABLE `user` (
   `Language` varchar(6) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ja_JP' COMMENT 'en_US or ja_JP',
   `IncludeTags` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'for filter',
   `ExcludeTags` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'for filter',
+  `DefaultEvent` smallint(3) NOT NULL COMMENT 'EventID this user uses most',
   `Basket` varchar(2000) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'persistent save of session variable',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- 2026-05-12 06:03:38 UTC
+-- 2026-05-27 13:07:33 UTC
