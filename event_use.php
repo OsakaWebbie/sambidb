@@ -125,7 +125,7 @@ if (!empty($_REQUEST['action'])) {
       $checked = in_array($sid, $_SESSION['basket'] ?? [], true) ? ' checked' : '';
       echo "<tr>\n";
       echo "  <td>" . intval($r->UseOrder) . "</td>\n";
-      echo "  <td style='white-space:nowrap; text-align:left'><a href='song.php?sid=$sid' target='_blank'>" . d2h($r->Title) . "</a>";
+      echo "  <td style='white-space:nowrap'><a href='song.php?sid=$sid' target='_blank'>" . d2h($r->Title) . "</a>";
       if ($r->OrigTitle && strpos(strtolower($r->Title), strtolower($r->OrigTitle)) === false)
         echo " (" . d2h($r->OrigTitle) . ")";
       if ($r->Audio == "1") echo "&nbsp;<img src='graphics/audio.gif' height='16' width='16' alt=''>";
@@ -134,10 +134,24 @@ if (!empty($_REQUEST['action'])) {
       echo "  <td style='text-align:center'><input type='checkbox' class='row-cb' name='$sid'$checked></td>\n";
       echo "  <td style='white-space:nowrap'>" . d2h($r->SongKey) . "</td>\n";
       echo "  <td>" . d2h($r->Tempo) . "</td>\n";
-      echo "  <td style='text-align:left'>" . ($r->Source ? d2h($r->Source) : '') . "</td>\n";
+      echo "  <td>" . ($r->Source ? d2h($r->Source) : '') . "</td>\n";
       echo "</tr>\n";
     }
     echo "</table>\n";
+    exit;
+  } elseif ($action === 'deleteSession') {
+    header('Content-Type: application/json');
+    if ($_SESSION['access'] < 1) {
+      echo json_encode(['success' => false, 'error' => _('Access denied.')]);
+      exit;
+    }
+    $ud = mysqli_real_escape_string($db, $_REQUEST['ud'] ?? '');
+    if (!$eid || !$ud) {
+      echo json_encode(['success' => false, 'error' => 'Missing parameters.']);
+      exit;
+    }
+    sqlquery_checked("DELETE FROM history WHERE EventID=$eid AND UseDate='$ud'");
+    echo json_encode(['success' => true, 'deleted' => mysqli_affected_rows($db)]);
     exit;
   }
 }
@@ -149,6 +163,37 @@ header1(_("Song Use Chart"));
 <style>
     td.sticky-col { text-align:left !important; }
     #session-dialog-content { overflow-x: auto; }
+    /* Sort-direction arrows on the sort buttons (like tablesorter column headers):
+       active button shows a single ▲/▼, the others a faint double triangle. */
+    .sort-arrow {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 0.5;
+      font-size: 0.62em;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .sort-arrow::before { content: '\25B2'; }  /* ▲ */
+    .sort-arrow::after  { content: '\25BC'; }  /* ▼ */
+    .sort-btn .sort-arrow::before,
+    .sort-btn .sort-arrow::after { opacity: 0.35; }
+    .sort-btn.sort-asc  .sort-arrow::before { opacity: 1; }
+    .sort-btn.sort-asc  .sort-arrow::after  { visibility: hidden; }
+    .sort-btn.sort-desc .sort-arrow::after  { opacity: 1; }
+    .sort-btn.sort-desc .sort-arrow::before { visibility: hidden; }
+    #delete-session-btn {
+      display: block;
+      margin: 0.6em 0 0 0;
+      padding: 2px 10px;
+      background: var(--secondary-dark);
+      color: white;
+      border: 1px solid var(--secondary-medium);
+      font-weight: bold;
+      font-size: 80%;
+      cursor: pointer;
+    }
+    #delete-session-btn:hover { background: var(--secondary-medium); }
 </style>
 <?php
 header2(1);
@@ -158,16 +203,16 @@ header2(1);
 <form name="eform">
   <p style="display: inline-block; margin-right: 20px;">
     <?= _("Event:") ?> <select size="1" name="event" onchange="loadChart();">
+<?php if (empty($_SESSION['default_event'])): ?>
       <option value=""><?= _("Select an event...") ?></option>
+<?php endif; ?>
 <?php
 // Build option list from event table contents
-if (!$result = mysqli_query($db,"SELECT * FROM event ORDER BY Active DESC, Event")) {
-  echo("<b>SQL Error ".mysqli_errno($db).": ".mysqli_error($db)."</b>");
-} else {
-  while ($row = mysqli_fetch_object($result)) {
-    echo "      <option value=$row->EventID>{$row->Event} (";
-    echo ($row->Active ? _("current") : _("archive")) . ")</option>\n";
-  }
+$result = sqlquery_checked('SELECT * FROM event ORDER BY '.
+      (isset($_SESSION['default_event'])?'IF (EventID='.$_SESSION['default_event'].',0,1), ':'') . 'Active DESC, Event');
+while ($row = mysqli_fetch_object($result)) {
+  echo '      <option class="'.($row->Active ? 'active' : 'inactive').'" value="'.$row->EventID.'">'.$row->Event.
+      ($row->Active ? '' : ' ('._('archive').')') . "</option>\n";
 }
 ?>
     </select>
@@ -178,9 +223,9 @@ if (!$result = mysqli_query($db,"SELECT * FROM event ORDER BY Active DESC, Event
 <div id="chart-controls" class="chart-controls" style="display: none;">
   <span class="sort-controls">
     <?= _("Sort by:") ?>
-    <button class="sort-btn ui-state-active ui-button ui-corner-all" data-sort="origTitle" onclick="sortSongs('origTitle')"><?= _("Original Title") ?></button>
-    <button class="sort-btn ui-button ui-corner-all" data-sort="title" onclick="sortSongs('title')"><?= _("Title") ?></button>
-    <button class="sort-btn ui-button ui-corner-all" data-sort="count" onclick="sortSongs('count')"><?= _("Usage Count") ?></button>
+    <button class="sort-btn ui-state-active sort-asc ui-button ui-corner-all" data-sort="origTitle" onclick="sortSongs('origTitle')"><?= _("Original Title") ?><span class="sort-arrow"></span></button>
+    <button class="sort-btn ui-button ui-corner-all" data-sort="title" onclick="sortSongs('title')"><?= _("Title") ?><span class="sort-arrow"></span></button>
+    <button class="sort-btn ui-button ui-corner-all" data-sort="count" onclick="sortSongs('count')"><?= _("Usage Count") ?><span class="sort-arrow"></span></button>
   </span>
   <button id="load-more-dates" class="ui-button ui-corner-all" style="display: none;" onclick="loadMoreDates()"><?= _("Load Earlier Dates") ?></button>
 </div>
@@ -201,6 +246,7 @@ function song_session(eventid, usedate) {
   $dlg.dialog('option', 'width', defaultWidth);
   $('#session-dialog-content').html('<p><?=_('Loading...')?></p>');
   var eventName = $('select[name="event"] option:selected').text().replace(/\s*\([^)]+\)$/, '');
+  currentSession = { eid: eventid, ud: usedate, eventName: eventName };
   $dlg.dialog('option', 'title', usedate + ' — ' + eventName);
   $dlg.dialog('open');
   $.get('event_use.php', {action: 'loadSession', eid: eventid, ud: usedate}, function(html) {
@@ -217,6 +263,9 @@ function song_session(eventid, usedate) {
     }
   });
 }
+
+// Currently-open session, set when the popup opens so the delete button knows what to remove
+var currentSession = { eid: null, ud: null, eventName: '' };
 
 // Chart state
 var chartState = {
@@ -280,9 +329,9 @@ function loadChart() {
       // Show/hide load more button
       document.getElementById('load-more-dates').style.display = chartState.hasMore ? 'inline-block' : 'none';
 
-      // Reset sort to default
-      chartState.sortBy = 'origTitle';
-      chartState.sortDir = 'asc';
+      // Reset sort to default. Clear sortBy first so sortSongs() takes the
+      // "new column" branch (sets asc) rather than toggling the direction.
+      chartState.sortBy = null;
 
       // Sort and render
       sortSongs('origTitle');
@@ -419,12 +468,28 @@ function renderTable() {
     '<tbody>' + rowsHTML + '</tbody>' +
     '</table></div>';
 
-  // Update sort button states
+  updateSortButtons();
+  sizeChartContainer();
+}
+
+// Size the scroll container so it ends just above the bottom of the window.
+// The container sits below a variable-height header (nav, title, event form,
+// sort controls), so a fixed vh value either overflows the window or leaves a
+// gap. Measuring the container's actual top keeps it tracking the window.
+function sizeChartContainer() {
+  var el = document.querySelector('.use-chart-container');
+  if (!el || el.offsetParent === null) return; // not rendered / hidden
+  var top = el.getBoundingClientRect().top;
+  el.style.maxHeight = Math.max(window.innerHeight - top - 16, 200) + 'px';
+}
+
+// Highlight the active sort button and point its arrow in the current direction
+function updateSortButtons() {
   $('.sort-btn').each(function() {
-    if ($(this).attr('data-sort') === chartState.sortBy) {
-      $(this).addClass('ui-state-active');
-    } else {
-      $(this).removeClass('ui-state-active');
+    var $btn = $(this);
+    $btn.removeClass('ui-state-active sort-asc sort-desc');
+    if ($btn.attr('data-sort') === chartState.sortBy) {
+      $btn.addClass('ui-state-active ' + (chartState.sortDir === 'asc' ? 'sort-asc' : 'sort-desc'));
     }
   });
 }
@@ -465,11 +530,41 @@ $(function() {
           if (sids.length) window.location.href = 'task.php?sid_list=' + sids.join(',');
         }
       }
+<?php if ($_SESSION['access'] > 0): ?>
+      ,{
+        text: '<?=_('Remove this session from usage history')?>',
+        id: 'delete-session-btn',
+        click: function() {
+          var msg = '<?=_('Remove all usage records for "%event%" on %date%?')?>'
+                  .replace('%event%', currentSession.eventName)
+                  .replace('%date%', currentSession.ud);
+          if (!confirm(msg)) return;
+          $.post('event_use.php',
+            { action: 'deleteSession', eid: currentSession.eid, ud: currentSession.ud },
+            function(r) {
+              if (r && r.success) {
+                $('#session-dialog').dialog('close');
+                loadChart();
+              } else {
+                alert((r && r.error) ? r.error : '<?=_('Could not delete the session.')?>');
+              }
+            }, 'json');
+        }
+      }
+<?php endif; ?>
     ]
   });
   $('#session-dialog').on('change', '#checkall', function() {
     $('#session-dialog-content .row-cb').prop('checked', this.checked);
   });
+
+  $(window).on('resize', sizeChartContainer);
+
+  // When a default event is set, the placeholder option is omitted, so the
+  // default event is preselected — load its chart automatically.
+  if (document.eform.event.value) {
+    loadChart();
+  }
 });
 </script>
 <?php

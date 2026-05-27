@@ -128,7 +128,6 @@ header1($pageTitle);
 .ui-dialog { font-family: Arial, sans-serif; }
 .ui-dialog .ui-dialog-content {
   font-size: 0.88em;
-  text-align: left;
 }
 .ui-dialog .ui-dialog-content p { margin: 6px 0; }
 .ui-dialog .ui-dialog-content code {
@@ -213,13 +212,15 @@ header1($pageTitle);
 
   <div class="form-group form-group-sidebar">
     <label for="pattern"><?=_('Pattern')?>
-      <span class="help-icon" data-help="<?=htmlspecialchars(_('Print pattern for PDF output, e.g. ABABB. Sections in the lyrics are divided by blank lines.'), ENT_QUOTES, 'UTF-8')?>">?</span>
+      <span class="help-icon" data-help="<?=htmlspecialchars(_('Pattern for PDF/Powerpoint output, e.g. ABABB. Sections in the lyrics are divided by blank lines.'),
+          ENT_QUOTES, 'UTF-8')?>">?</span>
     </label>
     <input type="text" name="pattern" id="pattern" maxlength="80"
       value="<?php echo htmlspecialchars($rec->Pattern, ENT_QUOTES, 'UTF-8'); ?>">
 
     <label for="instruction" style="margin-top:10px"><?=_('Instructions')?>
-      <span class="help-icon" data-help="<?=htmlspecialchars(_('Notes for playing (intro, etc.). Put [brackets] around pattern descriptions and other text not needed when the full pattern is printed.'), ENT_QUOTES, 'UTF-8')?>">?</span>
+      <span class="help-icon" data-help="<?=htmlspecialchars(_('Notes for playing (intro, etc.). Put [brackets] around pattern descriptions '.
+          'and other text not needed when generating the full arrangement.'), ENT_QUOTES, 'UTF-8')?>">?</span>
     </label>
     <textarea name="instruction" id="instruction" rows="3"><?php echo htmlspecialchars($rec->Instruction, ENT_QUOTES, 'UTF-8'); ?></textarea>
 
@@ -230,7 +231,8 @@ header1($pageTitle);
 
     <div class="audio-section">
       <label for="audiofile"><?=_('Upload Audio')?>
-        <span class="help-icon" data-help="<?=htmlspecialchars(sprintf(_('MP3 format only. Maximum file size: %s.'), ini_get("upload_max_filesize")), ENT_QUOTES, 'UTF-8')?>">?</span>
+        <span class="help-icon" data-help="<?=htmlspecialchars(sprintf(_('MP3 format only. Maximum file size: %s.'),
+            ini_get("upload_max_filesize")), ENT_QUOTES, 'UTF-8')?>">?</span>
       </label>
       <input type="file" name="audiofile" id="audiofile" accept=".mp3,audio/mpeg">
       <div id="audio-size-warning" style="color: darkred; font-weight: bold; font-size: 0.9em"></div>
@@ -265,7 +267,7 @@ header1($pageTitle);
   <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>[ E]驚[E7/G#]くば[A]かり[E]の[ C#m]恵み[F#]なり[B B7]き</code></p>
   <p><?=_('To indicate Japanese lyrics written in romaji, start the line with [r]:')?></p>
   <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>[r]o[E]doro[E7/G#]ku ba[A]kari [E]no me[C#m]gumi [F#]nari[B B7]ki</code></p>
-  <p><?=_('To mark a section that is only needed when the full pattern is printed (e.g. chorus with repeated line for the song ending), precede it with a line containing only hyphens:')?></p>
+  <p><?=_('To mark a section that the "Main sections only" option leaves out (e.g. a chorus with a repeated last line for the ending), precede it with a line containing only hyphens:')?></p>
   <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>---</code></p>
 </div>
 
@@ -309,7 +311,8 @@ function validateForm() {
     return false;
   }
   if (f.audiofile.files.length && f.audiofile.files[0].size > maxUploadSize) {
-    alert('<?=addslashes(sprintf(_("The selected file is too large (%1\$s, limit: %2\$s). Please choose a smaller file."), "{SIZE}", ini_get("upload_max_filesize")))?>'.replace('{SIZE}', formatBytes(f.audiofile.files[0].size)));
+    alert('<?=addslashes(sprintf(_("The selected file is too large (%1\$s, limit: %2\$s). Please choose a smaller file."),
+        "{SIZE}", ini_get("upload_max_filesize")))?>'.replace('{SIZE}', formatBytes(f.audiofile.files[0].size)));
     f.audiofile.value = '';
     $('#audio-size-warning').text('');
     return false;
@@ -321,6 +324,21 @@ function validateForm() {
     return false;
   }
   <?php endif; ?>
+  // Pattern letters must reference sections that exist in Lyrics.
+  // Section regex matches pdflayout.php: blank line optionally containing dashes.
+  var patternLetters = f.pattern.value.replace(/[^A-Z]/g, '').split('');
+  if (patternLetters.length > 0) {
+    var stanzaCount = f.lyrics.value.replace(/\s+$/, '').split(/\n-*\s*\n/).length;
+    for (var i = 0; i < patternLetters.length; i++) {
+      if (patternLetters[i].charCodeAt(0) - 65 >= stanzaCount) {
+        alert('<?=addslashes(_("Pattern letter {LETTER} (and any higher letters) refers to a section that doesn't exist. ".
+            "The Lyrics have only {COUNT} section(s) (separated by blank lines or dashes). Please update the Pattern or add more sections."))?>'
+          .replace('{LETTER}', patternLetters[i]).replace('{COUNT}', stanzaCount));
+        f.pattern.focus();
+        return false;
+      }
+    }
+  }
   if (!f.origtitle.value.trim()) {
     f.origtitle.value = f.title.value;
   }
@@ -347,7 +365,8 @@ $(document).ready(function() {
   // --- Client-side audio file size pre-check (warning only) ---
   $('#audiofile').on('change', function() {
     if (this.files.length && this.files[0].size > maxUploadSize) {
-      $('#audio-size-warning').text('<?=addslashes(sprintf(_("The selected file is too large (%1\$s, limit: %2\$s). Please choose a smaller file."), "{SIZE}", ini_get("upload_max_filesize")))?>'.replace('{SIZE}', formatBytes(this.files[0].size)));
+      $('#audio-size-warning').text('<?=addslashes(sprintf(_("The selected file is too large (%1\$s, limit: %2\$s). Please choose a smaller file."),
+          "{SIZE}", ini_get("upload_max_filesize")))?>'.replace('{SIZE}', formatBytes(this.files[0].size)));
     } else {
       $('#audio-size-warning').text('');
     }
@@ -413,7 +432,12 @@ $(document).ready(function() {
         }
       },
       error: function(xhr) {
-        $statuses.text('<?=addslashes(sprintf(_("Upload failed. The file may exceed the %s limit."), ini_get("upload_max_filesize")))?>').css('color', 'red');
+        console.error('Save failed:', xhr.status, xhr.responseText);
+        var hasFile = $('#audiofile')[0].files.length > 0;
+        var msg = hasFile
+          ? '<?=addslashes(sprintf(_("Upload failed. The file may exceed the %s limit."), ini_get("upload_max_filesize")))?>'
+          : '<?=addslashes(_("Save failed. Please try again or check with the administrator."))?>';
+        $statuses.text(msg).css('color', 'red');
         $btns.text(originalBtnText).prop('disabled', false);
       }
     });

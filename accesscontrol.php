@@ -58,7 +58,7 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
     $_SESSION['basket'] = !empty($user->Basket) ? array_map('intval', explode(',', $user->Basket)) : [];
     $_SESSION['intags'] = $user->IncludeTags ?? '';
     $_SESSION['extags'] = $user->ExcludeTags ?? '';
-    if (!empty($user->DefaultEvent))  $_SESSION['default_ event'] = $user->DefaultEvent;  // overwrite instance default if user setting != 0
+    if (!empty($user->DefaultEvent))  $_SESSION['default_event'] = $user->DefaultEvent;  // overwrite instance default if user setting != 0
     //echo "<pre>";
     //print_r($user);
     //echo "\n\n";

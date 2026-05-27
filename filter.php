@@ -28,6 +28,7 @@ $result = sqlquery_checked("SELECT * FROM tag ORDER BY Tag");
 
 header1(_('Filtering for Search'));
 ?>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <style>
 .filter-wrapper {
   display: flex;
@@ -43,24 +44,24 @@ header1(_('Filtering for Search'));
 </style>
 <?php header2(1); ?>
 
-<h1><?= _('Search Filtering') ?></h1>
-<p><?= sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Apply Filter')) ?></p>
-<form name="filterform" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST">
-  <p><button type="submit" name="filter_submit"><?= _('Apply Filter') ?></button></p>
+<h1><?=_('Search Filtering')?></h1>
+<p><?= sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Apply Filter'))?></p>
+<form name="filterform" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="POST">
+  <p><button type="submit" name="filter_submit" class="ui-button ui-corner-all"><?=_('Apply Filter')?></button></p>
   <div class="filter-wrapper">
     <table id="filter-table" class="filter-table">
       <thead>
         <tr>
-          <th><?= _('Tag') ?></th>
-          <th><?= _('Filter<br>Off') ?></th>
-          <th><?= _('Must<br>Include') ?></th>
-          <th><?= _('Must Not<br>Include') ?></th>
+          <th><?=_('Tag')?></th>
+          <th><?=_('Filter<br>Off')?></th>
+          <th><?=_('Must<br>Include')?></th>
+          <th><?=_('Must Not<br>Include')?></th>
         </tr>
       </thead>
       <tbody>
 <?php while ($row = mysqli_fetch_object($result)): ?>
         <tr>
-          <td><?= htmlspecialchars($row->Tag) ?></td>
+          <td><?= htmlspecialchars($row->Tag)?></td>
           <td><input type="radio" name="<?= (int)$row->TagID ?>" value=""<?= (strpos(','.$_SESSION['intags'].','.$_SESSION['extags'].',', ','.$row->TagID.',') === false) ? ' checked' : '' ?>></td>
           <td><input type="radio" name="<?= (int)$row->TagID ?>" value="in"<?= (strpos(','.$_SESSION['intags'].',', ','.$row->TagID.',') !== false) ? ' checked' : '' ?>></td>
           <td><input type="radio" name="<?= (int)$row->TagID ?>" value="ex"<?= (strpos(','.$_SESSION['extags'].',', ','.$row->TagID.',') !== false) ? ' checked' : '' ?>></td>
@@ -69,7 +70,7 @@ header1(_('Filtering for Search'));
       </tbody>
     </table>
   </div>
-  <p><button type="submit" name="filter_submit"><?= _('Apply Filter') ?></button></p>
+  <p><button type="submit" name="filter_submit" class="ui-button ui-corner-all"><?=_('Apply Filter')?></button></p>
 </form>
 <?php load_scripts(array('jquery')); ?>
 <script>

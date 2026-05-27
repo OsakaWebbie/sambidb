@@ -83,7 +83,16 @@ header1(_("Search Results"));
   <link rel="stylesheet" type="text/css" href="css/tablesorter.css">
 <?php
 header2(1);
-
+?>
+<style>
+  /* Center the data cells for the basket checkbox and the short value columns */
+  #songlist-table tbody td.inbasket,
+  #songlist-table tbody td.tempo,
+  #songlist-table tbody td.songkey,
+  #songlist-table tbody td.lastuse,
+  #songlist-table tbody td.numuse { text-align: center; }
+</style>
+<?php
 if ($_SESSION['access'] > 1) {
   echo '<p style="font-size:10px">' . $idsql . '</p>';
 }
@@ -97,10 +106,10 @@ if (!empty($_GET['basket'])) {
 
 /* EVENT DROPDOWN */
 $eventOptions = '';
-$events = sqlquery_checked('SELECT * FROM event WHERE Active=1 ORDER BY ' .
-  (isset($_SESSION['default_event']) ? 'IF (EventID=' . (int)$_SESSION['default_event'] . ',0,1), ' : '') . 'Event');
+$events = sqlquery_checked('SELECT * FROM event ORDER BY ' .
+  (isset($_SESSION['default_event']) ? 'IF (EventID=' . (int)$_SESSION['default_event'] . ',0,1), ' : '') . 'Active DESC, Event');
 while ($ev = mysqli_fetch_object($events)) {
-  $eventOptions .= "  <option value='" . $ev->EventID . "'>" . $ev->Event . "</option>\n";
+  $eventOptions .= "  <option class='" . ($ev->Active ? 'active' : 'inactive') . "' value='" . $ev->EventID . "'>" . $ev->Event . ($ev->Active ? '' : ' (' . _('archive') . ')') . "</option>\n";
 }
 echo "<div id='event-selector' style='display:none'>";
 echo sprintf(_('Show usage history for: %s'), "<select id='event' name='event'>\n$eventOptions</select>");
@@ -231,6 +240,29 @@ flextable($tableopt);
 $(function() {
   $('#event-selector').insertAfter('#songlist-colsel-toggle').show();
   $('audio').bind('contextmenu', function() { return false; });
+
+  // --- Basket column: toggle-all checkbox in the header (like the popup in event_use.php) ---
+  // flextable renders a "In Basket:" label + "Check All" button above the table; replace that
+  // with a single toggle-all checkbox in the column header, keeping the word "Basket" for clarity.
+  $('#songlist-table thead th.inbasket')
+    .css('text-align', 'center')
+    .html('<div style="display:flex;flex-direction:column;align-items:center;line-height:1.3">' +
+          '<span><?=_('Basket')?></span>' +
+          '<input type="checkbox" id="songlist-checkall-header" title="<?=htmlspecialchars(_('Check/uncheck all'), ENT_QUOTES, 'UTF-8')?>">' +
+          '</div>');
+
+  // Remove flextable's "In Basket:" label and "Check All" button from the row above the table
+  $('#songlist-checkall').prev('strong').remove();
+  $('#songlist-checkall').remove();
+
+  // Reword the save button to match event_use.php
+  $('#songlist-savechecks').button('option', 'label', '<?=addslashes(_('Update basket according to checkboxes'))?>');
+
+  // Header toggle-all: check/uncheck every basket checkbox, then enable the save button
+  $('#songlist-table').on('change', '#songlist-checkall-header', function() {
+    $('#songlist-table .table-checkbox').prop('checked', this.checked);
+    $('#songlist-savechecks').button('enable');
+  });
 
   // Override flextable's Save Checkbox Changes handler for basket-aware JSON response
   $('#songlist-savechecks').off('click').on('click', function() {

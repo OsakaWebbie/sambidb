@@ -35,7 +35,7 @@ header1(_("User Settings"));
 <link rel="stylesheet" href="css/jquery-ui.css">
 <?php header2(1); ?>
 <h1><?=_("User Settings")?></h1>
-<?php if (!empty($_GET['err'])) echo '<h4 class="ui-icon-alert">'.$_GET['err'].'</h4>';
+<?php if (!empty($_GET['err'])) echo '<h4>'.$_GET['err'].'</h4>';
     elseif (!empty($_GET['msg'])) echo '<h4>'.$_GET['msg'].'</h4>';
 ?>
 
