@@ -2,7 +2,7 @@
 include("functions.php");
 include("accesscontrol.php");
 
-$eid = !empty($_GET['eid']) ? (int)$_GET['eid'] : (int)$_SESSION['default_event'];
+$eid = !empty($_GET['eid']) ? (int)$_GET['eid'] : (int)($_SESSION['default_event'] ?? 0);
 $basketids = !empty($_SESSION['basket']) ? implode(',', array_map('intval', $_SESSION['basket'])) : '0';
 
 /* BUILD WHERE CLAUSE */
@@ -93,7 +93,7 @@ header2(1);
   #songlist-table tbody td.numuse { text-align: center; }
 </style>
 <?php
-if ($_SESSION['access'] > 1) {
+if ($_SESSION['userid'] == 'dev') {
   echo '<p style="font-size:10px">' . $idsql . '</p>';
 }
 

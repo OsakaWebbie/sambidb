@@ -339,7 +339,12 @@ input.text {
   border: var(--input-border) solid 1px;
 }
 fieldset, input, select, label, label textarea { vertical-align: middle; }
-.label-n-input { display: inline-block; white-space: nowrap; margin: 0.4em 2em 0.4em 0 }
+.label-n-input { display: inline-block; max-width: 100%; line-height: normal; margin: 0.4em 2em 0.4em 0; }
+.label-n-input input[type=text], .label-n-input input[type=password],
+.label-n-input select, .label-n-input textarea {
+  max-width: 100%; box-sizing: border-box;
+}
+.label-n-checkbox { display: inline-block; white-space: nowrap; margin: 0.4em 2em 0.4em 0; }
 td.button-in-table { text-align: center; }
 
 div#actions { margin: 8px 0; text-align: center; }
@@ -400,6 +405,7 @@ option.inactive, li.inactive { background-color: var(--inactive-event-bg); }
 /* MOBILE MEDIA QUERIES */
 
 @media screen and (max-width: 900px) {
+  body.full { background-color: White; }
   body.full div#main-container {
     border: none;
     margin: 0;

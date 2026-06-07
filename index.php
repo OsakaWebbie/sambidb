@@ -105,7 +105,7 @@ header2(1); ?>
       <label class="label-n-input"><?=_('Title/Original Title')?>: <input type="text" name="title" style="width:15em"></label>
       <label class="label-n-input"><?=_('Lyrics')?>: <input type="text" name="lyrics" style="width:15em"></label>
 
-      <label class="label-n-input"><?=_('Tags')?>: <select size="3" name="tagid[]" multiple="multiple" id="tagselect">
+      <label class="label-n-input"><?=_('Tags')?>: <select size="1" name="tagid[]" multiple="multiple" id="tagselect">
 <?php // Build option list from tags not filtered
 foreach ($tag as $tagid => $tagname) {
   if (strpos(",".$_SESSION['intags'].",",",".$tagid.",")===FALSE &&
@@ -131,7 +131,7 @@ foreach ($tag as $tagid => $tagname) {
 <?php
 if ($_SESSION['access'] == 2) {
   echo "  <div><label>Freeform SQL: SELECT this stuff FROM wherever WHERE...</label><br>\n";
-  echo "  <textarea name='freesql' style='height:2em; width:95%; margin-bottom:1em;'></textarea></div>\n";
+  echo "  <textarea name='freesql' style='height:2em; width:100%; box-sizing:border-box; margin-bottom:1em;'></textarea></div>\n";
 }
 
 ?>
