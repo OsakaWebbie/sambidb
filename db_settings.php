@@ -50,8 +50,9 @@ header1(_("Database Settings"));
         ?>
       </select>
       <label class="label-n-input"><?=_('Event:')?> <input type="text" id="event" name="event" style="width:20em" maxlength="60"></label>
-      <label class="label-n-input"><input type="checkbox" id="active" name="active" checked><?=_("Currently Occurring Event")?></label>
-      <label class="label-n-input"><?=_('Description:')?> <textarea id="remarks" name="remarks" rows="3" cols="50"></textarea></label>
+      <label class="label-n-checkbox"><input type="checkbox" id="active" name="active" checked><?=_("Currently Occurring Event")?></label>
+      <div style="margin:0.4em 0;"><label for="remarks"><?=_('Description:')?></label><br>
+        <textarea id="remarks" name="remarks" rows="3" style="width:100%; max-width:25em; box-sizing:border-box;"></textarea></div>
       <div class="submits">
         <button type="button" id="event_add_upd" class="ui-button ui-corner-all"><?=_("Add or Update")?></button>
         <button type="button" id="event_del" class="ui-button ui-corner-all" disabled><?=_("Delete")?></button>

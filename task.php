@@ -270,6 +270,18 @@ header2(1);
   #tagged li span.tempoSlow { color:#0000F0; }
   #tagged li span.songtitle { font-weight:bold; }
   #tagged li img { margin-left:5px; cursor:pointer; }
+  .drag-handle {
+    display: inline-block;
+    padding: 6px 6px;
+    margin: -2px 6px -2px -4px;
+    cursor: grab;
+    color: #888;
+    user-select: none;
+    font-size: 22px;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .drag-handle:active { cursor: grabbing; }
   #ResultFrame {
     min-height: 100px;
     max-height: 500px;
@@ -306,7 +318,7 @@ while ($song = mysqli_fetch_object($result)) {
   echo '      <li>';
   echo '<div class="right"><img src="graphics/copy.gif" class="copy" alt="" title="'._('Duplicate').'">';
   echo '<img src="graphics/delete.gif" class="delete" alt="" title="'._('Remove').'"></div>';
-  echo '<div class="left"><span class="songid">'.$song->SongID.'</span>['.$song->SongKey.']';
+  echo '<div class="left"><span class="drag-handle">&#9776;</span><span class="songid">'.$song->SongID.'</span>['.$song->SongKey.']';
   echo '<span class="tempo'.$song->Tempo.'">['.$song->Tempo.']</span> <span class="songtitle">'.$song->Title;
   if (preg_replace('/^[[:digit:]]{3}: /','',$song->Title) != $song->OrigTitle) echo ' ('.$song->OrigTitle.')';
   echo '</span></div>';
@@ -352,6 +364,7 @@ $(document).ready(function(){
   $("#tagged").sortable({
     placeholder: "ui-state-highlight",
     forcePlaceholderSize: true,
+    handle: ".drag-handle",
     update: function() { $("#ResultFrame").empty(); }
   });
 

@@ -63,7 +63,7 @@ while ($song = mysqli_fetch_object($result)) {
   }
   $key = 65;  //the ASCII for "A"
   $html .= "<li class=\"s".$song->SongID."t ui-state-default song".(trim($song->Lyrics)==""?" empty":"")."\">".
-  "<div class=\"left\"><span class=\"songnum\"></span><span class=\"title\">".$song->Title."</span><span class=\"songkey\"></span>";
+  "<div class=\"left\"><span class=\"drag-handle\">&#9776;</span><span class=\"songnum\"></span><span class=\"title\">".$song->Title."</span><span class=\"songkey\"></span>";
   if (preg_match("/^[A-G]/",$song->SongKey)) {
     $html .= " (".htmlspecialchars(_('Key'),ENT_QUOTES).":".preg_replace("/^([A-G][#b]?m?).*$/","$1",$song->SongKey)."<select name='trans".$song->SongID."'>\n";
     for ($i=-6;$i<6;$i++) {
@@ -84,7 +84,7 @@ while ($song = mysqli_fetch_object($result)) {
       }
       $html .= "    <li class='s".$song->SongID.$letter." ui-state-default stanza' title='".$stripped[$i].
       "'>";
-      $html .= "<div class=\"left\"><img src=\"graphics/print.gif\" class=\"print\" title=\"".htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)."\">";
+      $html .= "<div class=\"left\"><span class=\"drag-handle\">&#9776;</span><img src=\"graphics/print.gif\" class=\"print\" title=\"".htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)."\">";
       $html .= "<img src='graphics/".(preg_match('/\[[^rR]/ui',$stanzas[$i]) ? "guitar.gif' title=\"".htmlspecialchars(_('Turn chords on or off'),ENT_QUOTES)."\"" :
       "clear_pixel.gif' width='16'")." class='chords'>";
       $html .= "[".$letter."] ".$snippets[$i]."...(".$linecounts[$i].")";
@@ -133,6 +133,19 @@ if (!empty($bad_songs)) {
   div.adjustments.preset-needed { cursor:not-allowed; }
   div.adjustments.preset-needed > * { pointer-events:none; }
   
+  .drag-handle {
+    display: inline-block;
+    padding: 6px 6px;
+    margin: -4px 6px -4px -4px;
+    cursor: grab;
+    color: #888;
+    user-select: none;
+    font-size: 22px;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .drag-handle:active { cursor: grabbing; }
+
   #layout ul, #layout ul li ul { list-style-type: none; margin: 0; padding: 0; }
   #layout ul li { margin: 3px 0 3px 0; padding: 4px; white-space:nowrap; background:#E0E0E0; }
   #layout ul li.empty { background:#f0c0c0; border-color:#906060; }
@@ -365,7 +378,17 @@ while ($row = mysqli_fetch_object($result)) {
     }
     <?php } //end handling of multilingual song consolidation ?>
 
-  $(".help").dialog({ autoOpen:false, width:450 });
+  var isTouch = window.matchMedia('(pointer:coarse)').matches;
+  $(".help").dialog({
+    autoOpen: false,
+    width: 450,
+    draggable: !isTouch,
+    resizable: !isTouch,
+    open: function() {
+      $(this).dialog('option', 'width', Math.min(450, $(window).width() - 20))
+             .dialog('option', 'position', { my: 'center', at: 'center', of: window });
+    }
+  });
   $("#pdf-help-btn").click(function() {
     $("#pdf-help").dialog("open");
   });
@@ -379,7 +402,8 @@ while ($row = mysqli_fetch_object($result)) {
   });
 
   $("#layout ul").sortable({
-    placeholder: "ui-state-highlight"
+    placeholder: "ui-state-highlight",
+    handle: ".drag-handle"
   });
 
   // Reveal all the stuff that was twitching during setup
@@ -448,7 +472,7 @@ while ($row = mysqli_fetch_object($result)) {
         thisid = this.className.match(/s([0-9]+)/)[1];
         if (songs[thisid][linkid].length) {
           $(this).children("ul").prepend('<li class="s'+thisid+'i ui-state-default instr" title="'+songs[thisid][linkid]+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Instructions'),ENT_QUOTES)?> ('+
+              '"><div class="left"><span class="drag-handle">&#9776;</span><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Instructions'),ENT_QUOTES)?> ('+
               songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>');
         }
       });
@@ -466,7 +490,7 @@ while ($row = mysqli_fetch_object($result)) {
         if (songs[thisid].composer.length || songs[thisid].copyright.length) {
           html = '<li class="s'+thisid+'c ui-state-default copyright" title="'+
               songs[thisid].composer+(linkid.match(/twoline/)?'\n':'; ')+songs[thisid].copyright+
-              '"><div class="left"><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Copyright info'),ENT_QUOTES)?> ('+
+              '"><div class="left"><span class="drag-handle">&#9776;</span><img src="graphics/print.gif" class="print" title="<?=htmlspecialchars(_('Turn output on or off'),ENT_QUOTES)?>"><?=htmlspecialchars(_('Copyright info'),ENT_QUOTES)?> ('+
               songs[thisid].title+')</div><div class="right"><img src="graphics/delete.gif" class="delete" title="<?=htmlspecialchars(_('Remove'),ENT_QUOTES)?>"></div><div class="clear"></div></li>';
           if (linkid.match(/before/)) $(this).children("ul").prepend(html); else $(this).children("ul").append(html);
         }

@@ -15,14 +15,14 @@ function header1($title='') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <title><?=$title.(isset($_SESSION['dbtitle']) ? ' ('.$_SESSION['dbtitle'].')' : '')?></title>
-  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/reset.css?v=<?=filemtime('css/reset.css')?>">
 <?php
 }
 
 function header2($nav=0) {
   global $_nav_shown;
   $_nav_shown = $nav;
-  echo '<link rel="stylesheet" type="text/css" href="css/style.css">'."\n";
+  echo '<link rel="stylesheet" type="text/css" href="css/style.css?v='.filemtime('css/style.css').'">'."\n";
   echo "</head>\n";
   $fileroot = substr($_SERVER['PHP_SELF'],(strrpos($_SERVER['PHP_SELF'],"/")+1),(strrpos($_SERVER['PHP_SELF'],".")-strrpos($_SERVER['PHP_SELF'],"/")-1));
   echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
