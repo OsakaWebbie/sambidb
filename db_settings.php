@@ -2,9 +2,8 @@
 include("functions.php");
 include("accesscontrol.php");
 
-header1(_("Database Settings"));
+pageheader(_("Database Settings"), 1);
 ?>
-<link rel="stylesheet" href="css/jquery-ui.css">
 <style>
 #status-msg {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -12,7 +11,6 @@ header1(_("Database Settings"));
   box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 10000; display: none;
 }
 </style>
-<?php header2(1); ?>
 <h1 id="title"><?=_("Database Settings")?></h1>
 
 <?php if ($_SESSION['access'] > 0) { ?>
@@ -106,8 +104,7 @@ header1(_("Database Settings"));
     </fieldset></form>
 <?php } // end of if admin == 2 ?>
 
-<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>
-<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
 
 <script type="text/javascript">
 

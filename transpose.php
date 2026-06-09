@@ -38,7 +38,7 @@ function transpose($input,$key,$offset) {
         if (($i+1<$cnt && $ch[$i+1]=="m") && ($i+2==$cnt || $ch[$i+2]!=="a")) {  //minor
           $tempkey .= $ch[$i+1];
         }
-        $tempkeynum = (array_key_exists($notearray[($tempkeynum+$offset)%12][$notenum],$keyarray) ? $keyarray[$tempkey] : $keynum);
+        $tempkeynum = (array_key_exists($tempkey,$keyarray) ? $keyarray[$tempkey] : $keynum);
         $notenum = array_search($note, $notearray[$keynum]);
         $output .= ($notenum!==FALSE ? $notearray[($keynum+$offset)%12][$notenum] : "??");
       } else {  //additional note (bass, etc.)

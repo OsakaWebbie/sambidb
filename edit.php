@@ -44,9 +44,8 @@ $isNew = empty($sid);
 $pageTitle = $isNew ? _('New Song') : sprintf(_('Edit: %s'), d2h($rec->Title));
 $buttonText = $isNew ? _('Save Song') : _('Save Changes');
 
-header1($pageTitle);
+pageheader($pageTitle, 1);
 ?>
-<link rel="stylesheet" href="css/jquery-ui.css">
 <style>
 .edit-form-grid {
   display: grid;
@@ -142,7 +141,6 @@ header1($pageTitle);
   .form-group-lyrics textarea { min-height: 250px !important; }
 }
 </style>
-<?php header2(1); ?>
 
 <h1><?=$pageTitle?></h1>
 
@@ -151,7 +149,7 @@ header1($pageTitle);
   <span class="save-status" style="margin-left: 18px; font-weight: bold"></span>
 </div>
 
-<form id="editform" name="editform" enctype="multipart/form-data" method="POST" action="do_edit.php">
+<form id="editform" name="editform" enctype="multipart/form-data" method="POST" action="ajax_action.php?action=SongSave">
 <input type="hidden" name="sid" value="<?php echo $sid ?? ''; ?>">
 <input type="hidden" name="audio" value="<?php echo $rec->Audio; ?>">
 
@@ -271,8 +269,7 @@ header1($pageTitle);
   <p style="color:var(--secondary-dark);margin-bottom:1em;"><code>---</code></p>
 </div>
 
-<script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
-<script src="js/jquery-ui.min.js" type="text/javascript"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
 <script type="text/javascript">
 var originalBtnText = '<?=addslashes($buttonText)?>';
 var maxUploadSize = <?=intval(ini_get("upload_max_filesize")) * 1024 * 1024?>;
@@ -303,6 +300,17 @@ function validateForm() {
   if (!f.title.value.trim()) {
     alert('<?=_("Please enter the title!")?>');
     f.title.focus();
+    return false;
+  }
+  // The VARCHAR(255) textareas have no maxlength; warn before an over-long value hits the DB.
+  if (f.instruction.value.length > 250) {
+    alert('<?=_('Instructions is too long (maximum 250 characters). Please shorten it.')?>');
+    f.instruction.focus();
+    return false;
+  }
+  if (f.audiocomment.value.length > 250) {
+    alert('<?=_('Audio Comment is too long (maximum 250 characters). Please shorten it.')?>');
+    f.audiocomment.focus();
     return false;
   }
   if (f.audiofile.files.length && !mp3_regexp.test(f.audiofile.files[0].name)) {
@@ -410,10 +418,10 @@ $(document).ready(function() {
     $statuses.text('').css('color', '');
 
     var formData = new FormData(this);
-    formData.append('ajax', '1');
+    formData.append('action', 'SongSave');
 
     $.ajax({
-      url: 'do_edit.php',
+      url: 'ajax_action.php',
       type: 'POST',
       data: formData,
       processData: false,

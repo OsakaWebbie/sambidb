@@ -26,9 +26,8 @@ if (isset($_POST['filter_submit'])) {
 
 $result = sqlquery_checked("SELECT * FROM tag ORDER BY Tag");
 
-header1(_('Filtering for Search'));
+pageheader(_('Filtering for Search'), 1);
 ?>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <style>
 .filter-wrapper {
   display: flex;
@@ -42,7 +41,6 @@ header1(_('Filtering for Search'));
   .filter-wrapper { flex-direction: column; }
 }
 </style>
-<?php header2(1); ?>
 
 <h1><?=_('Search Filtering')?></h1>
 <p><?= sprintf(_('Modify filter criteria as desired, and click "%s".'), _('Apply Filter'))?></p>

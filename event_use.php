@@ -157,9 +157,8 @@ if (!empty($_REQUEST['action'])) {
 }
 
 // Regular page load
-header1(_("Song Use Chart"));
+pageheader(_("Song Use Chart"), 1);
 ?>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <style>
     td.sticky-col { text-align:left !important; }
     #session-dialog-content { overflow-x: auto; }
@@ -195,9 +194,6 @@ header1(_("Song Use Chart"));
     }
     #delete-session-btn:hover { background: var(--secondary-medium); }
 </style>
-<?php
-header2(1);
-?>
 
 <h1><?=_("Song Use Chart")?></h1>
 <form name="eform">

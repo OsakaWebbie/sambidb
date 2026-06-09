@@ -77,13 +77,9 @@ while ($row = mysqli_fetch_object($result)) {
   $song_ids[] = $row->SongID;
 }
 
-header1(_("Search Results"));
+pageheader(_("Search Results"), 1);
 ?>
-  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="css/tablesorter.css">
-<?php
-header2(1);
-?>
 <style>
   /* Center the data cells for the basket checkbox and the short value columns */
   #songlist-table tbody td.inbasket,

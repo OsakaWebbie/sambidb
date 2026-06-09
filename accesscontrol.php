@@ -77,12 +77,8 @@ if (!isset($_SESSION['userid'])) {      // COVERS TWO CASES: FIRST TIME THROUGH 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="/sambidb.ico">
   <title>SambiDB Login</title>
-  <?php
-  //$hostarray = explode(".",$_SERVER['HTTP_HOST']);
-  ?>
-  <link rel="stylesheet" type="text/css" href="css/style.css?v=<?=filemtime('css/style.css')?>">
+  <?php css_bundle(); ?>
   <style>
     #nav-main ul {
       padding-top:6px;

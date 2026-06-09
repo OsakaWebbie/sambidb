@@ -31,9 +31,8 @@ $hasromaji = preg_match('/\[r\]/iu',$song->Lyrics);
 $showChords = isset($_GET['chords']) ? !empty($_GET['chords']) : (!empty($_SESSION['show_chords']) ? true : false);
 $showRomaji = isset($_GET['romaji']) ? !empty($_GET['romaji']) : (!empty($_SESSION['show_romaji']) ? true : false);
 
-header1("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'));
+pageheader("Song: ".htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8'), 1);
 ?>
-<link rel="stylesheet" href="css/jquery-ui.css">
 <style>
 /* Main layout grid */
 .song-header {
@@ -200,7 +199,6 @@ label.tag {
   }
 }
 </style>
-<?php header2(1); ?>
 
 <div class="song-header">
   <h1><?=d2h($song->Title)?></h1>
@@ -380,8 +378,7 @@ if (!$result) {
   </section>
 <?php } ?>
 
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
 <script>
 $(document).ready(function(){
   // Audio player context menu prevention

@@ -11,6 +11,13 @@ if (!isset($_SESSION['userid'])) {
   die(json_encode(array('alert' => 'NOSESSION')));
 }
 
+// An oversized upload makes PHP drop the entire POST (incl. the action param);
+// surface that as a clean error for the edit.php save handler.
+if (!empty($_SERVER['CONTENT_LENGTH']) && empty($_POST) && empty($_FILES)) {
+  die(json_encode(array('success' => false,
+    'error' => sprintf(_('The uploaded file was too large. You must upload a file smaller than %s.'), ini_get('upload_max_filesize')))));
+}
+
 switch ($_REQUEST['action'] ?? '') {
 
   case 'TagSave':
@@ -188,6 +195,54 @@ switch ($_REQUEST['action'] ?? '') {
                             'message' => _('User successfully deleted.'))));
     }
     die(json_encode(array('success' => false, 'error' => _('User not found.'))));
+    break;
+
+  case 'SongSave':
+    if ($_SESSION['access'] < 1) {
+      die(json_encode(array('success' => false, 'error' => _('Access denied.'))));
+    }
+    set_time_limit(0);  // allow time for a possible audio upload
+    if (!empty($_POST['sid'])) {
+      $sid = intval($_POST['sid']);
+      sqlquery_checked("UPDATE song SET ".
+        "Title='".h2d(str_replace("\n"," ",jtrim($_POST['title'])))."',".
+        "OrigTitle='".h2d(str_replace("\n"," ",jtrim($_POST['origtitle'])))."',".
+        "Composer='".h2d(str_replace("\n"," ",jtrim($_POST['composer'])))."',".
+        "Copyright='".h2d(str_replace("\n"," ",jtrim($_POST['copyright'])))."',".
+        "SongKey='".h2d(jtrim($_POST['songkey']))."',".
+        "Tempo='".h2d(jtrim($_POST['tempo']))."',".
+        "Source='".h2d(jtrim($_POST['source']))."',".
+        "Lyrics='".h2d(str_replace(chr(0x2019),"'",rtrim($_POST['lyrics']," \n\r\t\v\x00　")))."',".
+        "Pattern='".h2d(str_replace("\n"," ",jtrim($_POST['pattern'])))."',".
+        "Instruction='".h2d(jtrim($_POST['instruction']))."',".
+        "AudioComment='".h2d(str_replace("\n"," ",jtrim($_POST['audiocomment'])))."'".
+        " WHERE SongID=$sid LIMIT 1");
+    } else {
+      sqlquery_checked("INSERT INTO song (Title,OrigTitle,Composer,Copyright,SongKey,Tempo,Source,Lyrics,Pattern,Instruction,AudioComment) VALUES (".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['title'])))."',".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['origtitle'])))."',".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['composer'])))."',".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['copyright'])))."',".
+        "'".h2d(jtrim($_POST['songkey']))."',".
+        "'".h2d(jtrim($_POST['tempo']))."',".
+        "'".h2d(jtrim($_POST['source']))."',".
+        "'".h2d(str_replace(chr(0x2019),"'",jtrim($_POST['lyrics'])))."',".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['pattern'])))."',".
+        "'".h2d(jtrim($_POST['instruction']))."',".
+        "'".h2d(str_replace("\n"," ",jtrim($_POST['audiocomment'])))."')");
+      if (mysqli_affected_rows($db) < 1) {
+        die(json_encode(array('success' => false, 'error' => _('The song was not added for some reason.'))));
+      }
+      $sid = mysqli_insert_id($db);
+    }
+    if (is_uploaded_file($_FILES['audiofile']['tmp_name'] ?? '')) {
+      if (move_uploaded_file($_FILES['audiofile']['tmp_name'], CLIENT_PATH."/audio/s".$sid.".mp3")) {
+        sqlquery_checked("UPDATE song SET Audio=1 WHERE SongID=$sid LIMIT 1");
+      } else {
+        die(json_encode(array('success' => false, 'error' => _('File upload failed.'))));
+      }
+    }
+    die(json_encode(array('success' => true, 'sid' => $sid)));
     break;
 
   default:
