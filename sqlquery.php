@@ -3,7 +3,7 @@
  include("accesscontrol.php");
 
 pageheader(_('SQL Query'), 1);
-$query = !empty($_POST['query']) ? stripslashes($_POST['query']) : '';
+$query = !empty($_POST['query']) ? $_POST['query'] : '';
 ?>
 
   <h1>Freeform SQL Query</h1>

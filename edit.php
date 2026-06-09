@@ -295,6 +295,41 @@ function autoGrow(el) {
   el.style.height = Math.max(minH, scrollH + borders) + 'px';
 }
 
+// Scan [chord] brackets: returns null if balanced and non-nested, else {line, snippet, type}.
+// One pass catches every structural mistake: stray ] (], or ]...]), and unclosed [ ([ at end, or [...[).
+function checkChordBrackets(text) {
+  var open = false, openPos = 0;
+  for (var i = 0; i < text.length; i++) {
+    if (text[i] === '[') {
+      if (open) return bracketProblem(text, openPos, 'unclosed');
+      open = true; openPos = i;
+    } else if (text[i] === ']') {
+      if (!open) return bracketProblem(text, i, 'stray');
+      open = false;
+    }
+  }
+  if (open) return bracketProblem(text, openPos, 'unclosed');
+  return null;
+}
+
+function bracketProblem(text, pos, type) {
+  var line = text.substring(0, pos).split('\n').length;
+  return { line: line, snippet: text.split('\n')[line - 1].trim(), type: type };
+}
+
+function checkChords(field, label) {
+  var p = checkChordBrackets(field.value);
+  if (!p) return true;
+  var reason = p.type === 'unclosed'
+    ? '<?=_('A "[" bracket is opened but never closed.')?>'
+    : '<?=_('A closing "]" has no matching "[".')?>';
+  alert('<?=sprintf(_('Problem with the brackets in %1$s, line %2$s:'), '{FIELD}', '{LINE}')?>'
+      .replace('{FIELD}', label).replace('{LINE}', p.line)
+      + '\n\n' + p.snippet + '\n\n' + reason);
+  field.focus();
+  return false;
+}
+
 function validateForm() {
   var f = document.editform;
   if (!f.title.value.trim()) {
@@ -302,6 +337,8 @@ function validateForm() {
     f.title.focus();
     return false;
   }
+  if (!checkChords(f.lyrics, '<?=_("Lyrics & Chords")?>')) return false;
+  if (!checkChords(f.instruction, '<?=_("Instructions")?>')) return false;
   // The VARCHAR(255) textareas have no maxlength; warn before an over-long value hits the DB.
   if (f.instruction.value.length > 250) {
     alert('<?=_('Instructions is too long (maximum 250 characters). Please shorten it.')?>');
