@@ -15,11 +15,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'PdfFormatData') {
   exit;
 }
 
-header1(_("Layout Prep for PDF or Powerpoint"));
-?>
-  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-<?php
-header2(1);
+pageheader(_("Layout Prep for PDF or Powerpoint"), 1);
 
 
 $sql = "SELECT * from song WHERE SongID IN ($sid_list) ORDER BY FIELD(SongID,$sid_list)";
@@ -329,9 +325,8 @@ while ($row = mysqli_fetch_object($result)) {
   </div>
 </form>
 
-<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>
-<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>
-<script type="text/JavaScript" src="js/jquery.ui.touch-punch.min.js"></script>
+<?php load_scripts(['jquery', 'jqueryui']); ?>
+<script type="text/JavaScript" src="js/jquery.ui.touch-punch.min.js?v=<?=filemtime('js/jquery.ui.touch-punch.min.js')?>"></script>
 
 <script type="text/JavaScript">
   $(document).ready(function(){

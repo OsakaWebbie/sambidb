@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-27 21:38+0900\n"
-"PO-Revision-Date: 2026-05-27 21:39+0900\n"
+"POT-Creation-Date: 2026-06-09 09:46+0900\n"
+"PO-Revision-Date: 2026-06-09 11:11+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -25,106 +25,122 @@ msgstr "ログイン情報の確認中にデータベースエラーが発生し
 msgid "If this error persists, please contact the webservant."
 msgstr "このエラーが続く場合は、管理者にお問い合わせください。"
 
-#: accesscontrol.php:111 accesscontrol.php:113
+#: accesscontrol.php:107 accesscontrol.php:109
 msgid "Login Required"
 msgstr "ログインしてください"
 
-#: ajax_action.php:18 ajax_action.php:40 ajax_action.php:59 ajax_action.php:83
-#: ajax_action.php:102 ajax_action.php:175 do_edit.php:11 event_use.php:145
-#: task.php:19 task.php:156
+#: ajax_action.php:18
+#, php-format
+msgid ""
+"The uploaded file was too large. You must upload a file smaller than %s."
+msgstr ""
+"アップロードされたファイルが大きすぎます。%s未満のファイルをアップロードする"
+"必要があります。"
+
+#: ajax_action.php:25 ajax_action.php:47 ajax_action.php:66 ajax_action.php:90
+#: ajax_action.php:109 ajax_action.php:182 ajax_action.php:202
+#: event_use.php:145 task.php:19 task.php:156
 msgid "Access denied."
 msgstr "アクセスが拒否されました。"
 
-#: ajax_action.php:22 db_settings.php:430 task.php:238
+#: ajax_action.php:29 db_settings.php:428 task.php:238
 msgid "Tag name cannot be blank."
 msgstr "タグ名を入力してください。"
 
-#: ajax_action.php:29 task.php:168
+#: ajax_action.php:36 task.php:168
 msgid "New tag successfully added."
 msgstr "新規タグが正常に追加されました。"
 
-#: ajax_action.php:34
+#: ajax_action.php:41
 msgid "Tag successfully renamed."
 msgstr "タグ名が正常に変更されました。"
 
-#: ajax_action.php:44
+#: ajax_action.php:51
 msgid "Invalid tag ID"
 msgstr "無効なタグID"
 
-#: ajax_action.php:52
+#: ajax_action.php:59
 msgid "Tag successfully deleted."
 msgstr "タグが正常に削除されました。"
 
-#: ajax_action.php:54
+#: ajax_action.php:61
 msgid "Tag not found."
 msgstr "タグが見つかりません。"
 
-#: ajax_action.php:63 db_settings.php:436
+#: ajax_action.php:70 db_settings.php:434
 msgid "Event name cannot be blank."
 msgstr "イベント名を入力してください。"
 
-#: ajax_action.php:72
+#: ajax_action.php:79
 msgid "New event successfully added."
 msgstr "新規イベントが正常に追加されました。"
 
-#: ajax_action.php:77
+#: ajax_action.php:84
 msgid "Event information successfully updated."
 msgstr "イベント情報が正常に更新されました。"
 
-#: ajax_action.php:87
+#: ajax_action.php:94
 msgid "Invalid event ID"
 msgstr "無効なイベントID"
 
-#: ajax_action.php:95
+#: ajax_action.php:102
 msgid "Event successfully deleted."
 msgstr "イベントが正常に削除されました。"
 
-#: ajax_action.php:97
+#: ajax_action.php:104
 msgid "Event not found."
 msgstr "イベントが見つかりません。"
 
-#: ajax_action.php:107 db_settings.php:442
+#: ajax_action.php:114 db_settings.php:440
 msgid "User Name cannot be blank."
 msgstr "ユーザー名を入力してください。"
 
-#: ajax_action.php:110 db_settings.php:445
+#: ajax_action.php:117 db_settings.php:443
 msgid "UserID cannot be blank."
 msgstr "ユーザーIDを入力してください。"
 
-#: ajax_action.php:120 db_settings.php:448
+#: ajax_action.php:127 db_settings.php:446
 msgid "You must enter a password for a new user."
 msgstr "新規ユーザーのために、パスワードの入力は必要です。"
 
-#: ajax_action.php:126 ajax_action.php:142
+#: ajax_action.php:133 ajax_action.php:149
 #, php-format
 msgid "UserID '%s' is already in use by %s. Please choose a different UserID."
 msgstr ""
 "ユーザーID「%s」はすでに%sに使用されています。別のユーザーIDを選択してくださ"
 "い。"
 
-#: ajax_action.php:133
+#: ajax_action.php:140
 msgid "New user successfully added."
 msgstr "ユーザーを作成しました。"
 
-#: ajax_action.php:167
+#: ajax_action.php:174
 msgid "User information successfully updated."
 msgstr "ユーザー情報を変更しました。"
 
-#: ajax_action.php:179
+#: ajax_action.php:186
 msgid "Invalid user ID"
 msgstr "無効なユーザーID"
 
-#: ajax_action.php:182
+#: ajax_action.php:189
 msgid "You cannot delete your own user."
 msgstr "自分のユーザーを削除できません。"
 
-#: ajax_action.php:188
+#: ajax_action.php:195
 msgid "User successfully deleted."
 msgstr "ユーザーを削除しました。"
 
-#: ajax_action.php:190
+#: ajax_action.php:197
 msgid "User not found."
 msgstr "ユーザーは見つかりませんでした。"
+
+#: ajax_action.php:234
+msgid "The song was not added for some reason."
+msgstr "何らかの理由で曲が追加されませんでした。"
+
+#: ajax_action.php:242
+msgid "File upload failed."
+msgstr "ファイルのアップロードが失敗しました。"
 
 #: ajax_request.php:83
 msgid "Never logged in"
@@ -140,15 +156,15 @@ msgstr "最後のログイン：%s"
 msgid "Total: %d"
 msgstr "合計：%d回"
 
-#: db_settings.php:5 db_settings.php:16
+#: db_settings.php:5 db_settings.php:14
 msgid "Database Settings"
 msgstr "基本データ設定"
 
-#: db_settings.php:22
+#: db_settings.php:20
 msgid "Tag Management"
 msgstr "タグ管理"
 
-#: db_settings.php:23
+#: db_settings.php:21
 msgid ""
 "Select a tag to rename, and type its new name.&nbsp; Or select &quot;New "
 "Tag&quot; and type a new tag name.  Or select a tag to delete, and press "
@@ -158,27 +174,27 @@ msgstr ""
 "を選択して、新しいタグ名を入力してください。または削除するタグを選択して、"
 "「削除」を押してください。"
 
-#: db_settings.php:25
+#: db_settings.php:23
 msgid "New Tag..."
 msgstr "新規タグ..."
 
-#: db_settings.php:31
+#: db_settings.php:29
 msgid "Tag Name:"
 msgstr "タグ名："
 
-#: db_settings.php:34
+#: db_settings.php:32
 msgid "Add or Rename"
 msgstr "追加または名前変更"
 
-#: db_settings.php:35 db_settings.php:57 db_settings.php:103
+#: db_settings.php:33 db_settings.php:56 db_settings.php:102
 msgid "Delete"
 msgstr "削除"
 
-#: db_settings.php:42
+#: db_settings.php:40
 msgid "Event Management"
 msgstr "イベント管理"
 
-#: db_settings.php:43
+#: db_settings.php:41
 msgid ""
 "Fill in the information to add a new event.  Or select an event, and modify "
 "its info (name, remarks, and/or active status).  Or select an event to "
@@ -188,35 +204,35 @@ msgstr ""
 "て、その情報（名前、備考、現在開催中かどうか）を変更してください。または削除"
 "するイベントを選択して「削除」をクリックしてください。"
 
-#: db_settings.php:45
+#: db_settings.php:43
 msgid "New Event..."
 msgstr "新規イベント..."
 
-#: db_settings.php:52 event_use.php:205 task.php:90
+#: db_settings.php:50 event_use.php:201 task.php:90
 msgid "Event:"
 msgstr "イベント："
 
-#: db_settings.php:53
+#: db_settings.php:51
 msgid "Currently Occurring Event"
 msgstr "現在開催中のイベント"
 
-#: db_settings.php:54
+#: db_settings.php:52
 msgid "Description:"
 msgstr "説明："
 
-#: db_settings.php:56 db_settings.php:102
+#: db_settings.php:55 db_settings.php:101
 msgid "Add or Update"
 msgstr "追加または更新"
 
-#: db_settings.php:61
+#: db_settings.php:60
 msgid "Caution"
 msgstr "注意"
 
-#: db_settings.php:71
+#: db_settings.php:70
 msgid "User Management"
 msgstr "ユーザー（ログイン）管理"
 
-#: db_settings.php:72
+#: db_settings.php:71
 msgid ""
 "Fill in the information to add a new user. Or select an existing user to "
 "make changes or delete. NOTE: You cannot see the existing password, but you "
@@ -227,78 +243,78 @@ msgstr ""
 "れませんが、ユーザーがパスワードを忘れた場合は新しいパスワードを入力できま"
 "す。"
 
-#: db_settings.php:74
+#: db_settings.php:73
 msgid "New User..."
 msgstr "新規ユーザー…"
 
-#: db_settings.php:81
+#: db_settings.php:80
 msgid "Name"
 msgstr "名前"
 
-#: db_settings.php:83
+#: db_settings.php:82
 msgid "UserID (to log in)"
 msgstr "UserID （ログインする時に使う）"
 
-#: db_settings.php:85
+#: db_settings.php:84
 msgid "(max. 16 characters, no spaces)"
 msgstr "（最大16文字、スペースなし）"
 
-#: db_settings.php:86
+#: db_settings.php:85
 msgid "Language for Interface"
 msgstr "インタフェースの言語"
 
-#: db_settings.php:87 user_settings.php:47
+#: db_settings.php:86 user_settings.php:45
 msgid "English"
 msgstr "英語"
 
-#: db_settings.php:88 user_settings.php:48
+#: db_settings.php:87 user_settings.php:46
 msgid "Japanese"
 msgstr "日本語"
 
-#: db_settings.php:90
+#: db_settings.php:89
 msgid "Access Level"
 msgstr "アクセス権限"
 
-#: db_settings.php:91
+#: db_settings.php:90
 msgid "Read-only"
 msgstr "読み取り専用"
 
-#: db_settings.php:92
+#: db_settings.php:91
 msgid "Standard (can edit)"
 msgstr "標準（編集可能）"
 
-#: db_settings.php:93
+#: db_settings.php:92
 msgid "Admin"
 msgstr "管理者"
 
-#: db_settings.php:95
+#: db_settings.php:94
 msgid "New Password"
 msgstr "新しいパスワード"
 
-#: db_settings.php:97
+#: db_settings.php:96
 msgid "(leave blank if not changing password)"
 msgstr "（パスワード変更しない場合、空けておいてください。）"
 
-#: db_settings.php:98
+#: db_settings.php:97
 msgid "New Password again"
 msgstr "新しいパスワード（確認用）"
 
-#: db_settings.php:237
+#: db_settings.php:235
 #, php-format
 msgid "Are you sure you want to delete tag \"%s\"?"
 msgstr "タグ「%s」を削除してよろしいですか。"
 
-#: db_settings.php:238
+#: db_settings.php:236
 #, php-format
 msgid "It is currently applied to %d songs, which will also lose this tag."
 msgstr "現在このタグは%d曲に付いており、それらの曲からもタグが外れます。"
 
-#: db_settings.php:289 db_settings.php:297
+#: db_settings.php:287 db_settings.php:295
 #, php-format
 msgid "Are you sure you want to delete event \"%s\"?"
 msgstr "イベント「%s」を削除してよろしいですか。"
 
-#: db_settings.php:291
+#: db_settings.php:289
 #, php-format
 msgid ""
 "This event has usage records for %1$d dates (%2$s), for a total of %3$d song "
@@ -307,77 +323,29 @@ msgstr ""
 "このイベントには%1$dの日付（%2$s）の使用記録があり、曲の使用合計は%3$d回で"
 "す。"
 
-#: db_settings.php:325
+#: db_settings.php:323
 msgid "Yes, delete the event and all usage history"
 msgstr "はい、イベントと使用履歴データを削除します"
 
-#: db_settings.php:334
+#: db_settings.php:332
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: db_settings.php:406
+#: db_settings.php:404
 #, php-format
 msgid "Are you sure you want to delete user \"%1$s\" (UserID: %2$s)?"
 msgstr "ユーザー「%1$s」（ユーザーID：%2$s）を削除してよろしいですか。"
 
-#: db_settings.php:451
+#: db_settings.php:449
 msgid "The two password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
-
-#: do_edit.php:18 do_edit.php:20 edit.php:409
-msgid "Saving..."
-msgstr "保存中..."
-
-#: do_edit.php:27
-#, php-format
-msgid ""
-"The uploaded file was too large. You must upload a file smaller than %s."
-msgstr ""
-"アップロードされたファイルが大きすぎます。%s未満のファイルをアップロードする"
-"必要があります。"
-
-#: do_edit.php:28
-msgid ""
-"Sorry, but you will have to redo any other edits (or new song data) that you "
-"entered at the same time as the file upload."
-msgstr ""
-"申し訳ありませんが、ファイルアップロードと同時に入力した他の編集（または新規"
-"曲データ）をやり直す必要があります。"
-
-#: do_edit.php:29
-msgid "To edit again, hit your browser's Back button."
-msgstr "再度編集するには、ブラウザの戻るボタンを押してください。"
-
-#: do_edit.php:54
-msgid "The song was updated."
-msgstr "曲が更新されました。"
-
-#: do_edit.php:78
-msgid "The song was added."
-msgstr "曲が追加されました。"
-
-#: do_edit.php:80 do_edit.php:81
-msgid "The song was not added for some reason."
-msgstr "何らかの理由で曲が追加されませんでした。"
-
-#: do_edit.php:88
-msgid "File is valid, and was successfully uploaded."
-msgstr "ファイルは有効で、正常にアップロードされました。"
-
-#: do_edit.php:97
-msgid "File upload failed."
-msgstr "ファイルのアップロードが失敗しました。"
-
-#: do_edit.php:98
-msgid "File upload failed.  Here's some debugging info:"
-msgstr "ファイルのアップロードに失敗しました。デバッグ情報："
 
 #: edit.php:22 song.php:25
 #, php-format
 msgid "Song not found (ID: %s)."
 msgstr "曲が見つかりません。（ID: %s）"
 
-#: edit.php:44 functions.php:36
+#: edit.php:44 functions.php:56
 msgid "New Song"
 msgstr "新規の曲"
 
@@ -390,66 +358,66 @@ msgstr "「%s」を編集"
 msgid "Save Song"
 msgstr "新規曲を保存"
 
-#: edit.php:45 user_settings.php:50
+#: edit.php:45 user_settings.php:48
 msgid "Save Changes"
 msgstr "変更を保存"
 
-#: edit.php:162 event_use.php:120 event_use.php:227 list.php:141
+#: edit.php:160 event_use.php:120 event_use.php:223 list.php:137
 msgid "Title"
 msgstr "曲名"
 
-#: edit.php:167 event_use.php:226 list.php:148
+#: edit.php:165 event_use.php:222 list.php:144
 msgid "Original Title"
 msgstr "原曲名"
 
-#: edit.php:168
+#: edit.php:166
 msgid "Fill in if the song is a translation from another language."
 msgstr "歌詞が他の言語から翻訳された場合は記入します。"
 
-#: edit.php:176 event_use.php:122 index.php:127 list.php:174 pdflayout.php:68
+#: edit.php:174 event_use.php:122 index.php:123 list.php:170 pdflayout.php:64
 msgid "Key"
 msgstr "調"
 
-#: edit.php:182 event_use.php:122 index.php:119 list.php:167
+#: edit.php:180 event_use.php:122 index.php:115 list.php:163
 msgid "Tempo"
 msgstr "テンポ"
 
-#: edit.php:185 index.php:122
+#: edit.php:183 index.php:118
 msgid "Fast"
 msgstr "早い"
 
-#: edit.php:186 index.php:123
+#: edit.php:184 index.php:119
 msgid "Medium"
 msgstr "中"
 
-#: edit.php:187 index.php:124
+#: edit.php:185 index.php:120
 msgid "Slow"
 msgstr "ゆっくり"
 
-#: edit.php:198 list.php:205
+#: edit.php:196 list.php:201
 msgid "Composer"
 msgstr "作曲家"
 
-#: edit.php:203 list.php:212
+#: edit.php:201 list.php:208
 msgid "Copyright"
 msgstr "著作権"
 
-#: edit.php:214
+#: edit.php:212
 msgid "Pattern"
 msgstr "パターン"
 
-#: edit.php:215
+#: edit.php:213
 msgid ""
 "Pattern for PDF/Powerpoint output, e.g. ABABB. Sections in the lyrics are "
 "divided by blank lines."
 msgstr ""
 "PDF・Powerpoint出力用のパターン（例：ABABB、セクションは空行で区切られます）"
 
-#: edit.php:221 pdflayout.php:251 pdflayout.php:451
+#: edit.php:219 pdflayout.php:260 pdflayout.php:470
 msgid "Instructions"
 msgstr "指示"
 
-#: edit.php:222
+#: edit.php:220
 msgid ""
 "Notes for playing (intro, etc.). Put [brackets] around pattern descriptions "
 "and other text not needed when generating the full arrangement."
@@ -457,24 +425,24 @@ msgstr ""
 "イントロなど。フルパターンで出力する時に不要なパターン指示やその他のテキスト"
 "は［角括弧］で囲んでください。"
 
-#: edit.php:227
+#: edit.php:225
 msgid "Sources"
 msgstr "参照"
 
-#: edit.php:228
+#: edit.php:226
 msgid "Albums, videos, sheet music, web pages, etc. used as references"
 msgstr "アルバム、動画、楽譜、ウェブページなどの参照資料"
 
-#: edit.php:233
+#: edit.php:231
 msgid "Upload Audio"
 msgstr "オーディオファイルをアップロード"
 
-#: edit.php:234
+#: edit.php:232
 #, php-format
 msgid "MP3 format only. Maximum file size: %s."
 msgstr "MP3形式のみ、%s 以下のファイルサイズ。"
 
-#: edit.php:240
+#: edit.php:238
 msgid ""
 "(This song already has audio uploaded, but you can replace it with a new "
 "file if you want.)"
@@ -482,19 +450,19 @@ msgstr ""
 "（この曲にはすでにオーディオがアップロードされていますが、必要に応じて新しい"
 "ファイルに置き換えることができます。）"
 
-#: edit.php:243
+#: edit.php:241
 msgid "Audio Comment"
 msgstr "オーディオについての備考"
 
-#: edit.php:251
+#: edit.php:249
 msgid "Lyrics & Chords"
 msgstr "歌詞とコード"
 
-#: edit.php:263
+#: edit.php:261
 msgid "Chord Formatting Help"
 msgstr "コード記法ヘルプ"
 
-#: edit.php:264
+#: edit.php:262
 msgid ""
 "Chords go in [square brackets] just before the syllable where the chord is "
 "played:"
@@ -502,7 +470,7 @@ msgstr ""
 "コードを入力するには、一緒に歌う最初の音節の直前に入れて［角括弧］で囲んでく"
 "ださい。例："
 
-#: edit.php:266
+#: edit.php:264
 msgid ""
 "If a kanji character represents multiple syllables and the chord is not "
 "played with the first one, you can use spaces to control the location:"
@@ -510,12 +478,12 @@ msgstr ""
 "漢字が複数の音節を表す場合で、コードが最初の音節ではないときは、スペースで位"
 "置を調整できます。例："
 
-#: edit.php:268
+#: edit.php:266
 msgid "To indicate Japanese lyrics written in romaji, start the line with [r]:"
 msgstr ""
 "日本語の歌詞をローマ字で書く場合は、行の先頭に[r]を入れてください。例："
 
-#: edit.php:270
+#: edit.php:268
 msgid ""
 "To mark a section that the \"Main sections only\" option leaves out (e.g. a "
 "chorus with a repeated last line for the ending), precede it with a line "
@@ -524,15 +492,23 @@ msgstr ""
 "「本編のみ」オプションで除外されるセクション（例：曲の終わりにコーラスの最後"
 "の行を繰り返す部分）を示すには、その前にハイフンのみの行を置いてください："
 
-#: edit.php:304
+#: edit.php:301
 msgid "Please enter the title!"
 msgstr "タイトルを入力してください！"
 
-#: edit.php:309
+#: edit.php:307
+msgid "Instructions is too long (maximum 250 characters). Please shorten it."
+msgstr "指示が長すぎます。250文字以内にしてください。"
+
+#: edit.php:312
+msgid "Audio Comment is too long (maximum 250 characters). Please shorten it."
+msgstr "オーディオについての備考が長すぎます。250文字以内にしてください。"
+
+#: edit.php:317
 msgid "Only MP3 files can be accepted for audio."
 msgstr "オーディオファイルはMP3形式のみ受け付けます。"
 
-#: edit.php:314 edit.php:368
+#: edit.php:322 edit.php:376
 #, php-format
 msgid ""
 "The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
@@ -541,13 +517,13 @@ msgstr ""
 "選択されたファイルが大きすぎます（%1$s、上限：%2$s）。より小さいファイルを選"
 "んでください。"
 
-#: edit.php:322
+#: edit.php:330
 msgid "Audio comments only make sense if there is an audio file to comment on."
 msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:334
+#: edit.php:342
 msgid ""
 "Pattern letter {LETTER} (and any higher letters) refers to a section that "
 "doesn't exist. The Lyrics have only {COUNT} section(s) (separated by blank "
@@ -557,78 +533,82 @@ msgstr ""
 "ています。歌詞にはセクションが {COUNT} 個しかありません（空行またはダッシュで"
 "区切られます）。パターンを修正するか、セクションを追加してください。"
 
-#: edit.php:425
+#: edit.php:417
+msgid "Saving..."
+msgstr "保存中..."
+
+#: edit.php:433
 msgid "Saved."
 msgstr "保存しました。"
 
-#: edit.php:438
+#: edit.php:446
 #, php-format
 msgid "Upload failed. The file may exceed the %s limit."
 msgstr ""
 "アップロードに失敗しました。ファイルが%sの上限を超えている可能性があります。"
 
-#: edit.php:439
+#: edit.php:447
 msgid "Save failed. Please try again or check with the administrator."
 msgstr ""
 "保存に失敗しました。もう一度お試しいただくか、管理者にお問い合わせください。"
 
-#: event_use.php:121 list.php:251
+#: event_use.php:121 list.php:247
 msgid "Check/uncheck all"
 msgstr "全部にチェックを付ける"
 
-#: event_use.php:122 index.php:128 list.php:219
+#: event_use.php:122 index.php:124 list.php:215
 msgid "Source"
 msgstr "参照"
 
-#: event_use.php:160 event_use.php:202 functions.php:44
+#: event_use.php:160 event_use.php:198 functions.php:64
 msgid "Song Use Chart"
 msgstr "曲使用の表"
 
-#: event_use.php:207
+#: event_use.php:203
 msgid "Select an event..."
 msgstr "イベントを選択..."
 
-#: event_use.php:215 list.php:112
+#: event_use.php:211 list.php:108
 msgid "archive"
 msgstr "過去"
 
-#: event_use.php:225
+#: event_use.php:221
 msgid "Sort by:"
 msgstr "並び順："
 
-#: event_use.php:228
+#: event_use.php:224
 msgid "Usage Count"
 msgstr "使用数"
 
-#: event_use.php:230 event_use.php:378
+#: event_use.php:226 event_use.php:374
 msgid "Load Earlier Dates"
 msgstr "以前の日付を読み込む"
 
-#: event_use.php:247 event_use.php:349 task.php:372
+#: event_use.php:243 event_use.php:345 task.php:381
 msgid "Loading..."
 msgstr "読み込み中..."
 
-#: event_use.php:431
+#: event_use.php:427
 msgid "Song (Count)"
 msgstr "曲名（使用数）"
 
-#: event_use.php:510 list.php:259
+#: event_use.php:506 list.php:255
 msgid "Update basket according to checkboxes"
 msgstr "チェックボックスに合わせてかごを更新する"
 
-#: event_use.php:526
+#: event_use.php:522
 msgid "Go to task page with this session"
 msgstr "作業ページへ移動"
 
-#: event_use.php:535
+#: event_use.php:531
 msgid "Remove this session from usage history"
 msgstr "この使用記録を削除"
 
-#: event_use.php:538
+#: event_use.php:534
 msgid "Remove all usage records for \"%event%\" on %date%?"
 msgstr "%date% の「%event%」の使用記録をすべて削除しますか？"
 
-#: event_use.php:549
+#: event_use.php:545
 msgid "Could not delete the session."
 msgstr "記録を削除できませんでした。"
 
@@ -636,32 +616,32 @@ msgstr "記録を削除できませんでした。"
 msgid "Filtering for Search"
 msgstr "検索用のフィルター"
 
-#: filter.php:47
+#: filter.php:45
 msgid "Search Filtering"
 msgstr "検索のフィルター設定"
 
-#: filter.php:48
+#: filter.php:46
 #, php-format
 msgid "Modify filter criteria as desired, and click \"%s\"."
 msgstr "必要に応じてフィルター条件を変更し、「%s」をクリックしてください。"
 
-#: filter.php:48 filter.php:50 filter.php:73
+#: filter.php:46 filter.php:48 filter.php:71
 msgid "Apply Filter"
 msgstr "フィルとーを適用"
 
-#: filter.php:55 task.php:209
+#: filter.php:53 task.php:209
 msgid "Tag"
 msgstr "タグ"
 
-#: filter.php:56
+#: filter.php:54
 msgid "Filter<br>Off"
 msgstr "フィルター<br>なし"
 
-#: filter.php:57
+#: filter.php:55
 msgid "Must<br>Include"
 msgstr "含む必要"
 
-#: filter.php:58
+#: filter.php:56
 msgid "Must Not<br>Include"
 msgstr "含んでは<br>ならない"
 
@@ -669,7 +649,7 @@ msgstr "含んでは<br>ならない"
 msgid "Column Selector"
 msgstr "表示する列の選択"
 
-#: flextable.php:633 list.php:250
+#: flextable.php:633 list.php:246
 msgid "Basket"
 msgstr "かご"
 
@@ -721,51 +701,51 @@ msgstr "[閉じる]"
 msgid "Show Fewer Records"
 msgstr "表示を減らす"
 
-#: functions.php:33 index.php:29 index.php:62 index.php:103 index.php:165
+#: functions.php:53 index.php:29 index.php:58 index.php:99 index.php:161
 msgid "Search"
 msgstr "検索"
 
-#: functions.php:34
+#: functions.php:54
 msgid "(quick search)"
 msgstr "(クイック検索)"
 
-#: functions.php:38
+#: functions.php:58
 msgid "Basket/Tasks"
 msgstr "かご/作業"
 
-#: functions.php:40
+#: functions.php:60
 msgid "List Basket"
 msgstr "かごを表示"
 
-#: functions.php:41 task.php:248 task.php:289
+#: functions.php:61 task.php:249 task.php:254 task.php:297
 msgid "Tasks"
 msgstr "曲の作業"
 
-#: functions.php:42
+#: functions.php:62
 msgid "Empty Basket"
 msgstr "かごを空にする"
 
-#: functions.php:46
+#: functions.php:66
 msgid "DB Settings"
 msgstr "基本データ設定"
 
-#: functions.php:48
+#: functions.php:68
 msgid "(Raw SQL)"
 msgstr "(SQL直接実行)"
 
-#: functions.php:53
+#: functions.php:73
 msgid "User"
 msgstr "ユーザー"
 
-#: functions.php:55 user_settings.php:33 user_settings.php:37
+#: functions.php:75 user_settings.php:33 user_settings.php:35
 msgid "User Settings"
 msgstr "私のユーザー設定"
 
-#: functions.php:56
+#: functions.php:76
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: index.php:58
+#: index.php:54
 msgid ""
 "Note: This database is only a tool for convenience; existence of copyrighted "
 "material (lyrics, recordings, etc.) in it does not give you permission to "
@@ -777,7 +757,7 @@ msgstr ""
 "ありません。利用者は、ここに格納された情報をどのように利用するかについて、自"
 "己の責任を負うものとします。"
 
-#: index.php:64
+#: index.php:60
 msgid ""
 "Your user status is \"read-only\"; if you need editing privileges, ask the "
 "administrator."
@@ -785,71 +765,71 @@ msgstr ""
 "あなたのユーザーステータスは「読み取り専用」なので、編集権限が必要な場合は、"
 "管理者に問い合わせてください。"
 
-#: index.php:72 index.php:190
+#: index.php:68 index.php:186
 msgid "You are not currently filtering data (you are seeing all songs)."
 msgstr "現在、フィルターは適用されていません（すべての曲が表示されます）。"
 
-#: index.php:74
+#: index.php:70
 msgid "You are currently filtering to see only songs whose tags..."
 msgstr "表示される曲はフィルターされています。条件は…"
 
-#: index.php:80
+#: index.php:76
 msgid "Include: "
 msgstr "含むキーワード：　"
 
-#: index.php:87
+#: index.php:83
 msgid "Do not include: "
 msgstr "含まないキーワード：　"
 
-#: index.php:93
+#: index.php:89
 msgid "Modify filter criteria"
 msgstr "フィルターを変更"
 
-#: index.php:95
+#: index.php:91
 msgid "Clear filters"
 msgstr "フィルターを解除"
 
-#: index.php:105
+#: index.php:101
 msgid "Title/Original Title"
 msgstr "曲名／原曲名"
 
-#: index.php:106
+#: index.php:102
 msgid "Lyrics"
 msgstr "歌詞"
 
-#: index.php:108 song.php:316
+#: index.php:104 song.php:314
 msgid "Tags"
 msgstr "タグ"
 
-#: index.php:129
+#: index.php:125
 msgid "Composer/Copyright"
 msgstr "作曲家・著作権"
 
-#: index.php:142
+#: index.php:138
 msgid "in Basket only"
 msgstr "かご内のみ"
 
-#: index.php:144
+#: index.php:140
 msgid "Search!"
 msgstr "検索！"
 
-#: index.php:160 pdflayout.php:218
+#: index.php:156 pdflayout.php:227
 msgid "Select..."
 msgstr "選択…"
 
-#: index.php:161
+#: index.php:157
 msgid "# selected"
 msgstr "# 選択された"
 
-#: index.php:162
+#: index.php:158
 msgid "Check all"
 msgstr "全部にチェックを付ける"
 
-#: index.php:163
+#: index.php:159
 msgid "Uncheck all"
 msgstr "全部にチェックを外す"
 
-#: index.php:198
+#: index.php:194
 msgid "Filters cleared."
 msgstr "フィルターを解除しました。"
 
@@ -896,46 +876,46 @@ msgstr "この検索では曲が見つかりませんでした。"
 msgid "Search Results"
 msgstr "検索の結果"
 
-#: list.php:101
+#: list.php:97
 #, php-format
 msgid "%d songs in Basket"
 msgstr "かごに入っている%d曲"
 
-#: list.php:103
+#: list.php:99
 #, php-format
 msgid "%d songs of these criteria:"
 msgstr "この条件の結果（%d曲）："
 
-#: list.php:115
+#: list.php:111
 #, php-format
 msgid "Show usage history for: %s"
 msgstr "%sの使用履歴を表示"
 
-#: list.php:156 song.php:212
+#: list.php:152 song.php:210
 msgid "In Basket"
 msgstr "かごに入っている"
 
-#: list.php:181
+#: list.php:177
 msgid "First Line"
 msgstr "最初の行"
 
-#: list.php:188
+#: list.php:184
 msgid "Last Use"
 msgstr "最新の使用"
 
-#: list.php:196
+#: list.php:192
 msgid "Uses"
 msgstr "使用数"
 
-#: list.php:226
+#: list.php:222
 msgid "Audio"
 msgstr "オーディオ"
 
-#: list.php:233
+#: list.php:229
 msgid "Go to task page with this list in this order"
 msgstr "この順番で作業ページへ移動"
 
-#: list.php:287 song.php:417
+#: list.php:283 song.php:414
 msgid "Error updating basket."
 msgstr "かごの更新中にエラーが発生しました。"
 
@@ -943,24 +923,24 @@ msgstr "かごの更新中にエラーが発生しました。"
 msgid "Layout Prep for PDF or Powerpoint"
 msgstr "PDF・Powerpointのレイアウト準備"
 
-#: pdflayout.php:74 pdflayout.php:91 task.php:307
+#: pdflayout.php:70 pdflayout.php:87 task.php:315
 msgid "Duplicate"
 msgstr "複製"
 
-#: pdflayout.php:75 pdflayout.php:91 pdflayout.php:452 pdflayout.php:470
-#: task.php:308
+#: pdflayout.php:71 pdflayout.php:87 pdflayout.php:471 pdflayout.php:489
+#: task.php:316
 msgid "Remove"
 msgstr "削除"
 
-#: pdflayout.php:87 pdflayout.php:451 pdflayout.php:469
+#: pdflayout.php:83 pdflayout.php:470 pdflayout.php:488
 msgid "Turn output on or off"
 msgstr "出力のオン・オフを切り替え"
 
-#: pdflayout.php:88
+#: pdflayout.php:84
 msgid "Turn chords on or off"
 msgstr "コードのオン・オフを切り替え"
 
-#: pdflayout.php:99
+#: pdflayout.php:95
 msgid ""
 "These song(s) have a Pattern that references more sections than exist in the "
 "Lyrics (likely because the Lyrics were edited without updating the Pattern):"
@@ -968,7 +948,7 @@ msgstr ""
 "次の曲は、歌詞に存在する数より多くのセクションをパターンが参照しています（お"
 "そらく、パターンを更新せずに歌詞を編集したためです）："
 
-#: pdflayout.php:101
+#: pdflayout.php:97
 msgid ""
 "The output will skip the missing parts but may look wrong. You can edit the "
 "song(s) in another tab and then refresh this page."
@@ -976,15 +956,15 @@ msgstr ""
 "出力では不足している部分は飛ばされますが、表示が崩れる場合があります。別のタ"
 "ブで曲を編集してから、このページを再読み込みできます。"
 
-#: pdflayout.php:148
+#: pdflayout.php:157
 msgid "How to make a PDF for printing or tablet"
 msgstr "印刷やタブレット用のPDFの作り方"
 
-#: pdflayout.php:149 pdflayout.php:171
+#: pdflayout.php:158 pdflayout.php:180
 msgid "Sections and order"
 msgstr "セクションと順番"
 
-#: pdflayout.php:150 pdflayout.php:172
+#: pdflayout.php:159 pdflayout.php:181
 msgid ""
 "Drag sections (or even whole songs) into the order you want. Hover over any "
 "section to see the complete content."
@@ -992,7 +972,7 @@ msgstr ""
 "セクション（または曲全体）をお好みの順番にドラッグしてください。どのセクショ"
 "ンでもカーソルを合わせると全内容が表示されます。"
 
-#: pdflayout.php:152 pdflayout.php:174
+#: pdflayout.php:161 pdflayout.php:183
 #, php-format
 msgid ""
 "Click %1$s to duplicate an item, %2$s to delete it, or %3$s to disable an "
@@ -1001,11 +981,11 @@ msgstr ""
 "%1$s をクリックすると項目を複製、%2$s をクリックすると削除、%3$s をクリックす"
 "ると削除せずに一時的に無効にできます。"
 
-#: pdflayout.php:157 song.php:226
+#: pdflayout.php:166 song.php:224
 msgid "Chords"
 msgstr "コード"
 
-#: pdflayout.php:159
+#: pdflayout.php:168
 #, php-format
 msgid ""
 "Selecting a layout preset will enable or disable all chords, but after that, "
@@ -1014,18 +994,18 @@ msgstr ""
 "レイアウトプリセットを選択するとコードの表示・非表示が一括で切り替わります"
 "が、その後 %s をクリックすれば個別に切り替えることもできます。"
 
-#: pdflayout.php:162
+#: pdflayout.php:171
 msgid ""
 "Next to the song title and key is a menu you can use to transpose the chords "
 "of that song in the PDF."
 msgstr ""
 "曲名と調の横にあるメニューを使えば、その曲のコードをPDFで移調できます。"
 
-#: pdflayout.php:163
+#: pdflayout.php:172
 msgid "Preset and options"
 msgstr "プリセットとオプション"
 
-#: pdflayout.php:164
+#: pdflayout.php:173
 msgid ""
 "First select a PDF Layout Preset. Then you can optionally click on \"PDF "
 "Layout Options\" and change any of those settings to customize your output."
@@ -1034,11 +1014,11 @@ msgstr ""
 "レイアウトオプション」をクリックし、設定を変更して出力をカスタマイズできま"
 "す。"
 
-#: pdflayout.php:166 pdflayout.php:187
+#: pdflayout.php:175 pdflayout.php:196
 msgid "How to use"
 msgstr "使い方"
 
-#: pdflayout.php:167
+#: pdflayout.php:176
 msgid ""
 "When printing the PDF, for best results, turn off any setting that \"fits\" "
 "to the page - set to \"actual size\"."
@@ -1046,24 +1026,24 @@ msgstr ""
 "PDFを印刷する際は、より良い結果のために、ページに「合わせる」設定をオフにし、"
 "「実際のサイズ」に設定してください。"
 
-#: pdflayout.php:168
+#: pdflayout.php:177
 msgid "Contact Karen if you need new/different layout presets."
 msgstr ""
 "レイアウトプリセットの変更や新規作成が必要な場合はカレンにご連絡ください。"
 
-#: pdflayout.php:170
+#: pdflayout.php:179
 msgid "How to make Powerpoint slides"
 msgstr "Powerpointスライドの作り方"
 
-#: pdflayout.php:179
+#: pdflayout.php:188
 msgid "(Chords are never used for Powerpoint.)"
 msgstr "（Powerpointではコードは使用されません。）"
 
-#: pdflayout.php:180
+#: pdflayout.php:189
 msgid "Options"
 msgstr "オプション"
 
-#: pdflayout.php:181
+#: pdflayout.php:190
 msgid ""
 "You can optionally click on \"Powerpoint Text Options\" and change any of "
 "those settings to customize your output. The \"max lines\" setting controls "
@@ -1077,7 +1057,7 @@ msgstr ""
 "ライドにまたがって分割されることはないため、非常に長いセクションは単独でスラ"
 "イドからはみ出すことがあります。）"
 
-#: pdflayout.php:185
+#: pdflayout.php:194
 msgid ""
 "The combatibility defaults are the best settings for Windows. Powerpoint on "
 "Mac might need different settings (I cannot test that, so I'm not sure)."
@@ -1085,7 +1065,7 @@ msgstr ""
 "互換性のデフォルト設定はWindowsに最適です。Mac版のPowerpointでは別の設定が必"
 "要かもしれません（私は確認できないため不明です）。"
 
-#: pdflayout.php:188
+#: pdflayout.php:197
 msgid ""
 "Save the text file. Open Powerpoint, preferably with a template that has "
 "been prepared for your usage. With a slide of the desired layout selected, "
@@ -1105,7 +1085,7 @@ msgstr ""
 "枠に入ります。歌詞本文はアウトラインレベル1、ローマ字はレベル2、作曲家・著作"
 "権はレベル3になります。"
 
-#: pdflayout.php:195
+#: pdflayout.php:204
 #, php-format
 msgid ""
 "%1$sClick here%2$s to download a starter template you can modify for your "
@@ -1114,240 +1094,240 @@ msgstr ""
 "用途に合わせて改変できるサンプルテンプレートは %1$sこちら%2$s からダウンロー"
 "ドできます。"
 
-#: pdflayout.php:200
+#: pdflayout.php:209
 msgid "Floating Guide for PDFs"
 msgstr "PDF作成のガイドを表示する"
 
-#: pdflayout.php:201
+#: pdflayout.php:210
 msgid "Floating Guide for Powerpoint"
 msgstr "Powerpoint作成のガイドを表示する"
 
-#: pdflayout.php:216
+#: pdflayout.php:225
 msgid "PDF Layout Preset"
 msgstr "PDFレイアウトプリセット"
 
-#: pdflayout.php:229
+#: pdflayout.php:238
 msgid "PDF Layout Options"
 msgstr "PDFレイアウトオプション"
 
-#: pdflayout.php:232 pdflayout.php:295
+#: pdflayout.php:241 pdflayout.php:304
 msgid "Content Settings"
 msgstr "コンテンツ設定"
 
-#: pdflayout.php:235
+#: pdflayout.php:244
 msgid "Song numbering"
 msgstr "曲の通し番号"
 
-#: pdflayout.php:236 pdflayout.php:254 pdflayout.php:262
+#: pdflayout.php:245 pdflayout.php:263 pdflayout.php:271
 msgid "None"
 msgstr "なし"
 
-#: pdflayout.php:239
+#: pdflayout.php:248
 msgid "Include \"[key]\" after titles"
 msgstr "曲名の後に [調] を含む"
 
-#: pdflayout.php:242 pdflayout.php:299
+#: pdflayout.php:251 pdflayout.php:308
 msgid "Romaji (lines prefaced with \"[r]\")"
 msgstr "ローマ字（[r]で始まる行）"
 
-#: pdflayout.php:243
+#: pdflayout.php:252
 msgid "Show all lines, but omit chords on romaji"
 msgstr "全行を表示するが、ローマ字行に付くコードは省略"
 
-#: pdflayout.php:244 pdflayout.php:301
+#: pdflayout.php:253 pdflayout.php:310
 msgid "Hide romaji"
 msgstr "ローマ字を非表示"
 
-#: pdflayout.php:245 pdflayout.php:302
+#: pdflayout.php:254 pdflayout.php:311
 msgid "Show <em>only</em> romaji (in sections that have it)"
 msgstr "ローマ字<strong>のみ</strong>を表示（ローマ字があるセクションのみ）"
 
-#: pdflayout.php:246
+#: pdflayout.php:255
 msgid "Show all content"
 msgstr "すべての内容を表示"
 
-#: pdflayout.php:252
+#: pdflayout.php:261
 msgid "Short (omit \"[text in brackets]\")"
 msgstr "簡略版（[角括弧内のテキスト]を省略）"
 
-#: pdflayout.php:253
+#: pdflayout.php:262
 msgid "Long (include \"[text]\")"
 msgstr "完全版（[角括弧内のテキスト]も含む）"
 
-#: pdflayout.php:257 pdflayout.php:469
+#: pdflayout.php:266 pdflayout.php:488
 msgid "Copyright info"
 msgstr "作曲者・著作権"
 
-#: pdflayout.php:258
+#: pdflayout.php:267
 msgid "Before lyrics, one line"
 msgstr "歌詞の前、一行"
 
-#: pdflayout.php:259
+#: pdflayout.php:268
 msgid "Before lyrics, two lines"
 msgstr "歌詞の前、二行"
 
-#: pdflayout.php:260
+#: pdflayout.php:269
 msgid "After lyrics, one line"
 msgstr "歌詞の後、一行"
 
-#: pdflayout.php:261
+#: pdflayout.php:270
 msgid "After lyrics, two lines"
 msgstr "歌詞の後、二行"
 
-#: pdflayout.php:265
+#: pdflayout.php:274
 msgid "All-section actions"
 msgstr "全セクションへの一括操作"
 
-#: pdflayout.php:267
+#: pdflayout.php:276
 msgid "Disable all chords"
 msgstr "コードすべて無効"
 
-#: pdflayout.php:268
+#: pdflayout.php:277
 msgid "Enable all chords"
 msgstr "コードすべて有効"
 
-#: pdflayout.php:269
+#: pdflayout.php:278
 msgid "Re-enable all output"
 msgstr "すべての出力を有効に戻す"
 
-#: pdflayout.php:273
+#: pdflayout.php:282
 msgid "PDF Settings"
 msgstr "PDF設定"
 
-#: pdflayout.php:274
+#: pdflayout.php:283
 msgid "Override paper size (optional)"
 msgstr "プリセットの用紙サイズを上書き（任意）"
 
-#: pdflayout.php:280
+#: pdflayout.php:289
 msgid "Use Color"
 msgstr "カラーを使用"
 
-#: pdflayout.php:285
+#: pdflayout.php:294
 msgid "Generate PDF"
 msgstr "PDFを作成"
 
-#: pdflayout.php:292
+#: pdflayout.php:301
 msgid "Powerpoint Text Options"
 msgstr "Powerpointテキストオプション"
 
-#: pdflayout.php:296
+#: pdflayout.php:305
 msgid "Max lines per slide"
 msgstr "1スライドの最大行数"
 
-#: pdflayout.php:297
+#: pdflayout.php:306
 msgid "Trim leading spaces"
 msgstr "行頭のスペースを削除"
 
-#: pdflayout.php:298
+#: pdflayout.php:307
 msgid "Include slide # (\"[2/4]\") after song title"
 msgstr "曲名の後にスライド番号（「[2/4]」）を含む"
 
-#: pdflayout.php:300
+#: pdflayout.php:309
 msgid "Show all"
 msgstr "すべて表示"
 
-#: pdflayout.php:305
+#: pdflayout.php:314
 msgid "Compatibility Settings"
 msgstr "互換性設定"
 
-#: pdflayout.php:306
+#: pdflayout.php:315
 msgid "Windows line endings"
 msgstr "Windows形式の改行"
 
-#: pdflayout.php:307
+#: pdflayout.php:316
 msgid "Convert to UTF-16 LE (Microsoft)"
 msgstr "UTF-16 LE（Microsoft）に変換"
 
-#: pdflayout.php:312
+#: pdflayout.php:321
 msgid "Generate Text for PP"
 msgstr "Powerpoint用テキストを作成"
 
-#: pdflayout.php:392 pdflayout.php:527
+#: pdflayout.php:411 pdflayout.php:546
 msgid "Please select a layout preset first."
 msgstr "まず「PDFレイアウトプリセット」を選択してください。"
 
-#: song.php:213
+#: song.php:211
 msgid "Not in Basket"
 msgstr "かごに入っていない"
 
-#: song.php:216
+#: song.php:214
 msgid "Click to toggle"
 msgstr "クリックで切り替え"
 
-#: song.php:224
+#: song.php:222
 msgid "Show:"
 msgstr "表示："
 
-#: song.php:229
+#: song.php:227
 msgid "Romaji"
 msgstr "ローマ字"
 
-#: song.php:257
+#: song.php:255
 msgid "Original Title:"
 msgstr "原曲名："
 
-#: song.php:260
+#: song.php:258
 msgid "Key:"
 msgstr "調："
 
-#: song.php:262
+#: song.php:260
 msgid "Tempo:"
 msgstr "テンポ："
 
-#: song.php:268
+#: song.php:266
 msgid "Composer:"
 msgstr "作曲家："
 
-#: song.php:272
+#: song.php:270
 msgid "Copyright:"
 msgstr "著作権："
 
-#: song.php:276
+#: song.php:274
 msgid "Source(s):"
 msgstr "参照："
 
-#: song.php:282
+#: song.php:280
 msgid "Pattern of Sections:"
 msgstr "セクションのパターン："
 
-#: song.php:286
+#: song.php:284
 msgid "Instruction (intro, etc.):"
 msgstr "指示（イントロなど）："
 
-#: song.php:290
+#: song.php:288
 msgid "Audio for learning:"
 msgstr "練習用オーディオ："
 
-#: song.php:295 song.php:460
+#: song.php:293 song.php:457
 msgid "Play in loop"
 msgstr "ループ再生"
 
-#: song.php:299
+#: song.php:297
 msgid "Comment about audio recording:"
 msgstr "オーディオ録音についての備考："
 
-#: song.php:306
+#: song.php:304
 msgid "Edit This Song"
 msgstr "この曲を編集"
 
-#: song.php:318
+#: song.php:316
 msgid "Save Tag Changes"
 msgstr "タグの変更を保存"
 
-#: song.php:360
+#: song.php:358
 msgid "No history records."
 msgstr "使用記録はありません。"
 
-#: song.php:364
+#: song.php:362
 msgid "Usage History"
 msgstr "使用履歴"
 
-#: song.php:373
+#: song.php:371
 #, php-format
 msgid "%s to<br>%s (%sx)"
 msgstr "%s〜<br>%s（%s回）"
 
-#: song.php:460
+#: song.php:457
 msgid "Disable looping"
 msgstr "ループ再生をオフにする"
 
@@ -1457,7 +1437,7 @@ msgstr "新規タグ名："
 msgid "Add This Tag to These Songs"
 msgstr "このタグをこれらの曲に付ける"
 
-#: task.php:254
+#: task.php:250
 msgid ""
 "Your basket is empty.  Add songs to your basket from the Search page or a "
 "song detail page, then return here to put them in order and do tasks."
@@ -1465,7 +1445,7 @@ msgstr ""
 "かごは空です。検索ページや曲の詳細ページからかごに曲を追加し、ここに戻って並"
 "べ替えや作業を実行してください。"
 
-#: task.php:290
+#: task.php:298
 msgid ""
 "Drag songs to reorder; click the Duplicate or Remove icons as needed. Then "
 "choose tasks from the buttons."
@@ -1473,23 +1453,23 @@ msgstr ""
 "曲をドラッグして並べ替え、必要に応じて「複製」または「削除」アイコンをクリッ"
 "クしてください。その後、希望の作業のボタンをクリックしてください。"
 
-#: task.php:320
+#: task.php:328
 msgid "Choose a task:"
 msgstr "作業を選択："
 
-#: task.php:322
+#: task.php:330
 msgid "Save as song usage"
 msgstr "曲の使用記録を保存"
 
-#: task.php:324
+#: task.php:332
 msgid "Create PDF/Powerpoint"
 msgstr "PDF・Powerpointのレイアウト準備"
 
-#: task.php:326
+#: task.php:334
 msgid "Add a Tag to all"
 msgstr "すべてにタグを付ける"
 
-#: task.php:370
+#: task.php:379
 msgid "Your list is empty."
 msgstr "リストは空です。"
 
@@ -1511,41 +1491,63 @@ msgstr ""
 msgid "Password successfully changed."
 msgstr "パスワードを変更しました。"
 
-#: user_settings.php:45
+#: user_settings.php:43
 msgid "My User Settings"
 msgstr "私のユーザー設定"
 
-#: user_settings.php:46
+#: user_settings.php:44
 msgid "Default Language"
 msgstr "初期の言語"
 
-#: user_settings.php:56
+#: user_settings.php:54
 msgid "Change My Password"
 msgstr "私のパスワードを変更"
 
-#: user_settings.php:57
+#: user_settings.php:55
 msgid "Old:"
 msgstr "現在のパスワード："
 
-#: user_settings.php:58
+#: user_settings.php:56
 msgid "New:"
 msgstr "新しいパスワード："
 
-#: user_settings.php:59
+#: user_settings.php:57
 msgid "New again:"
 msgstr "新しいパスワード（確認用）："
 
-#: user_settings.php:60
+#: user_settings.php:58
 msgid "Change Password"
 msgstr "パスワードを変更"
 
-#: user_settings.php:68
+#: user_settings.php:66
 msgid "You must enter your current password for validation."
 msgstr "確証のため、現在のパスワードを入力してください。"
 
-#: user_settings.php:72
+#: user_settings.php:70
 msgid "The two new password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
+
+#~ msgid ""
+#~ "Sorry, but you will have to redo any other edits (or new song data) that "
+#~ "you entered at the same time as the file upload."
+#~ msgstr ""
+#~ "申し訳ありませんが、ファイルアップロードと同時に入力した他の編集（または新"
+#~ "規曲データ）をやり直す必要があります。"
+
+#~ msgid "To edit again, hit your browser's Back button."
+#~ msgstr "再度編集するには、ブラウザの戻るボタンを押してください。"
+
+#~ msgid "The song was updated."
+#~ msgstr "曲が更新されました。"
+
+#~ msgid "The song was added."
+#~ msgstr "曲が追加されました。"
+
+#~ msgid "File is valid, and was successfully uploaded."
+#~ msgstr "ファイルは有効で、正常にアップロードされました。"
+
+#~ msgid "File upload failed.  Here's some debugging info:"
+#~ msgstr "ファイルのアップロードに失敗しました。デバッグ情報："
 
 #~ msgid ""
 #~ "No new records added, as list was empty.<br>You must have just wanted to "

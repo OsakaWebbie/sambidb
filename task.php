@@ -245,17 +245,13 @@ function task_tag() {
   <?php
 }
 
-header1(_("Tasks"));
-?>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-<?php
 if (empty($sid_list) && empty($_SESSION['basket'])) {
-  header2(1);
+  pageheader(_("Tasks"), 1);
   echo '<p><b>'._('Your basket is empty.  Add songs to your basket from the Search page or a song detail page, then return here to put them in order and do tasks.').'</b></p>';
   footer();
   exit;
 }
-header2(1);
+pageheader(_("Tasks"), 1);
 ?>
 <style>
   #task-container { display:flex; flex-wrap:wrap; gap:1em; align-items:flex-start; }
@@ -342,7 +338,7 @@ while ($song = mysqli_fetch_object($result)) {
 <div id="ResultFrame"></div>
 
 <?php load_scripts(['jquery', 'jqueryui']); ?>
-<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js?v=<?=filemtime('js/jquery.ui.touch-punch.min.js')?>"></script>
 <script>
 $(document).ready(function(){
 

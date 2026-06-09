@@ -26,9 +26,8 @@ while ($row = mysqli_fetch_object($result)) {
   $tag[$row->TagID] = $row->Tag;
 }
 
-header1(_('Search'));
+pageheader(_('Search'), 1);
 ?>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.multiselect.filter.css">
 <style>
@@ -44,9 +43,6 @@ header1(_('Search'));
     box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 10000; display: none;
   }
 </style>
-<?php
-header2(1); ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css">
 <style>
   #submit-row { display:flex; flex-wrap:wrap; gap:1em; align-items:center; margin-top:0.5em; }
   #basket-only-label { white-space:nowrap; }

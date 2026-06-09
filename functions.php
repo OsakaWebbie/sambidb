@@ -1,28 +1,48 @@
 <?php
 error_reporting(E_ERROR);
 
-// Newer version in two parts - this first part takes title
-function header1($title='') {
-?>
-<!DOCTYPE html>
-<html><head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Script-Type" content="text/javascript">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <title><?=$title.(isset($_SESSION['dbtitle']) ? ' ('.$_SESSION['dbtitle'].')' : '')?></title>
-  <link rel="stylesheet" type="text/css" href="css/reset.css?v=<?=filemtime('css/reset.css')?>">
-<?php
+/*** css_bundle: favicon (client-aware) + the standard stylesheet bundle. ***/
+/*** Called by pageheader() and (for the login screen) accesscontrol.php. ***/
+/*** jquery-ui is emitted BEFORE style.css so style.css / page <style> win the cascade. ***/
+function css_bundle() {
+  $client = explode(".", $_SERVER['HTTP_HOST'])[0];
+  $dir = __DIR__;                       // filesystem base (public/) for filemtime/is_file
+  $customfs  = "$dir/css/custom/$client";
+  $customurl = "css/custom/$client";    // webroot-relative for hrefs
+  $favfs  = is_file("$customfs/favicon.ico") ? "$customfs/favicon.ico" : "$dir/favicon.ico";
+  $favurl = is_file("$customfs/favicon.ico") ? "$customurl/favicon.ico" : "favicon.ico";
+  echo '<link rel="icon" type="image/x-icon" href="'.$favurl.'?v='.filemtime($favfs).'">'."\n";
+  echo '<link rel="stylesheet" type="text/css" href="css/reset.css">'."\n";
+  echo '<link rel="stylesheet" type="text/css" href="css/jquery-ui-14.css">'."\n";
+  if (is_file("$customfs/jquery-ui-theme.css"))   // a client's own ThemeRoller theme
+    echo '<link rel="stylesheet" type="text/css" href="'.$customurl.'/jquery-ui-theme.css?v='.filemtime("$customfs/jquery-ui-theme.css").'">'."\n";
+  echo '<link rel="stylesheet" type="text/css" href="css/style.css?v='.filemtime("$dir/css/style.css").'">'."\n";
+  if (is_file("$customfs/colors.css"))            // per-client palette overrides, win over style.css
+    echo '<link rel="stylesheet" type="text/css" href="'.$customurl.'/colors.css?v='.filemtime("$customfs/colors.css").'">'."\n";
 }
 
-function header2($nav=0) {
+/*** pageheader: single-call replacement for header1()+header2(). ***/
+/*** (Can't be named header() — that's a built-in PHP function.) ***/
+function pageheader($title, $nav=0) {
   global $_nav_shown;
   $_nav_shown = $nav;
-  echo '<link rel="stylesheet" type="text/css" href="css/style.css?v='.filemtime('css/style.css').'">'."\n";
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="android-icon-192x192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ffffff">
+<title><?=$title.(isset($_SESSION['dbtitle']) ? ' ('.$_SESSION['dbtitle'].')' : '')?></title>
+<?php if (!empty($_GET['debug'])): // eruda = on-screen JS console for debugging on phones ?>
+<script src="js/eruda.min.js?v=<?=filemtime('js/eruda.min.js')?>"></script>
+<script>eruda.init();</script>
+<?php endif; ?>
+<?php
+  css_bundle();
   echo "</head>\n";
   $fileroot = substr($_SERVER['PHP_SELF'],(strrpos($_SERVER['PHP_SELF'],"/")+1),(strrpos($_SERVER['PHP_SELF'],".")-strrpos($_SERVER['PHP_SELF'],"/")-1));
   echo "<body class='".$fileroot.($nav?" full":" simple")."'>\n";
@@ -157,19 +177,6 @@ function footer($nav=0) {
 <?php
 }
 
-//DEPRECATED
-function print_header($title,$color,$nav) {
-  header1($title);
-  header2($nav);
-  echo "<table border='0' cellspacing='0' cellpadding='0' bgcolor='white'><tr><td>";
-}
-
-//DEPRECATED
-function print_footer($nav=0) {
-  echo "</td></tr></table>";
-  footer($nav);
-}
-
 // function sqlquery_checked: shorten the repeated checks for SQL errors
 function sqlquery_checked($sql) {
   global $db;
@@ -211,33 +218,33 @@ function load_scripts($scripts) {
           echo '<script type="text/JavaScript" src="js/jquery-3.6.0.min.js"></script>'."\n";
           break;
         case 'jqueryui':
-          echo '<script type="text/JavaScript" src="js/jquery-ui.min.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery-ui-14.min.js"></script>'."\n";
           break;
         case 'tablesorter':
-          echo '<script type="text/JavaScript" src="js/jquery.tablesorter.min.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.tablesorter.min.js?v='.filemtime('js/jquery.tablesorter.min.js').'"></script>'."\n";
           break;
         case 'table2csv':
-          echo '<script type="text/JavaScript" src="js/table2CSV.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/table2CSV.js?v='.filemtime('js/table2CSV.js').'"></script>'."\n";
           break;
         case 'expanding':
-          echo '<script type="text/JavaScript" src="js/expanding.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/expanding.js?v='.filemtime('js/expanding.js').'"></script>'."\n";
           break;
         case 'multiselect':
-          echo '<script type="text/JavaScript" src="js/jquery.multiselect.js"></script>'."\n";
-          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.js?v='.filemtime('js/jquery.multiselect.js').'"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js?v='.filemtime('js/jquery.multiselect.filter.js').'"></script>'."\n";
           break;
         case 'multiselect-classes':
-          echo '<script type="text/JavaScript" src="js/jquery.multiselect-classes.js"></script>'."\n";
-          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect-classes.js?v='.filemtime('js/jquery.multiselect-classes.js').'"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/jquery.multiselect.filter.js?v='.filemtime('js/jquery.multiselect.filter.js').'"></script>'."\n";
           break;
         case 'datepicker-ja':
-          echo '<script type="text/JavaScript" src="js/i18n/datepicker-ja.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/i18n/datepicker-ja.js?v='.filemtime('js/i18n/datepicker-ja.js').'"></script>'."\n";
           break;
         case 'readmore':
-          echo '<script type="text/JavaScript" src="js/readmore.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/readmore.js?v='.filemtime('js/readmore.js').'"></script>'."\n";
           break;
         case 'functions':
-          echo '<script type="text/JavaScript" src="js/functions.js"></script>'."\n";
+          echo '<script type="text/JavaScript" src="js/functions.js?v='.filemtime('js/functions.js').'"></script>'."\n";
           break;
       }
       $scripts_loaded[$script] = 1;

@@ -2,10 +2,7 @@
  include("functions.php");
  include("accesscontrol.php");
 
-header1(_('SQL Query'));
-?>
-<link rel="stylesheet" href="css/jquery-ui.css">
-<?php header2(1);
+pageheader(_('SQL Query'), 1);
 $query = !empty($_POST['query']) ? stripslashes($_POST['query']) : '';
 ?>
 

@@ -30,10 +30,8 @@ if (!empty($_POST['user_lang_upd'])) {
 $result = sqlquery_checked("SELECT Language FROM user WHERE UserID='".$_SESSION['userid']."'");
 $row = mysqli_fetch_object($result);
 $default_lang = $row->Language;
-header1(_("User Settings"));
+pageheader(_("User Settings"), 1);
 ?>
-<link rel="stylesheet" href="css/jquery-ui.css">
-<?php header2(1); ?>
 <h1><?=_("User Settings")?></h1>
 <?php if (!empty($_GET['err'])) echo '<h4>'.$_GET['err'].'</h4>';
     elseif (!empty($_GET['msg'])) echo '<h4>'.$_GET['msg'].'</h4>';
