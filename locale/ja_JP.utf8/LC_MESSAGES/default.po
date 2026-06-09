@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 09:46+0900\n"
-"PO-Revision-Date: 2026-06-09 11:11+0900\n"
+"POT-Creation-Date: 2026-06-09 14:36+0900\n"
+"PO-Revision-Date: 2026-06-09 14:44+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -413,7 +413,7 @@ msgid ""
 msgstr ""
 "PDF・Powerpoint出力用のパターン（例：ABABB、セクションは空行で区切られます）"
 
-#: edit.php:219 pdflayout.php:260 pdflayout.php:470
+#: edit.php:219 edit.php:341 pdflayout.php:260 pdflayout.php:470
 msgid "Instructions"
 msgstr "指示"
 
@@ -454,7 +454,7 @@ msgstr ""
 msgid "Audio Comment"
 msgstr "オーディオについての備考"
 
-#: edit.php:249
+#: edit.php:249 edit.php:340
 msgid "Lyrics & Chords"
 msgstr "歌詞とコード"
 
@@ -492,23 +492,36 @@ msgstr ""
 "「本編のみ」オプションで除外されるセクション（例：曲の終わりにコーラスの最後"
 "の行を繰り返す部分）を示すには、その前にハイフンのみの行を置いてください："
 
-#: edit.php:301
+#: edit.php:324
+msgid "A \"[\" bracket is opened but never closed."
+msgstr "「[」に対応する「]」が抜けています。"
+
+#: edit.php:325
+msgid "A closing \"]\" has no matching \"[\"."
+msgstr "「]」に対応する「[」が抜けています。"
+
+#: edit.php:326
+#, php-format
+msgid "Problem with the brackets in %1$s, line %2$s:"
+msgstr "%1$s の %2$s 行目の角括弧に問題があります："
+
+#: edit.php:336
 msgid "Please enter the title!"
 msgstr "タイトルを入力してください！"
 
-#: edit.php:307
+#: edit.php:344
 msgid "Instructions is too long (maximum 250 characters). Please shorten it."
 msgstr "指示が長すぎます。250文字以内にしてください。"
 
-#: edit.php:312
+#: edit.php:349
 msgid "Audio Comment is too long (maximum 250 characters). Please shorten it."
 msgstr "オーディオについての備考が長すぎます。250文字以内にしてください。"
 
-#: edit.php:317
+#: edit.php:354
 msgid "Only MP3 files can be accepted for audio."
 msgstr "オーディオファイルはMP3形式のみ受け付けます。"
 
-#: edit.php:322 edit.php:376
+#: edit.php:359 edit.php:413
 #, php-format
 msgid ""
 "The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
@@ -517,13 +530,13 @@ msgstr ""
 "選択されたファイルが大きすぎます（%1$s、上限：%2$s）。より小さいファイルを選"
 "んでください。"
 
-#: edit.php:330
+#: edit.php:367
 msgid "Audio comments only make sense if there is an audio file to comment on."
 msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:342
+#: edit.php:379
 msgid ""
 "Pattern letter {LETTER} (and any higher letters) refers to a section that "
 "doesn't exist. The Lyrics have only {COUNT} section(s) (separated by blank "
@@ -533,21 +546,21 @@ msgstr ""
 "ています。歌詞にはセクションが {COUNT} 個しかありません（空行またはダッシュで"
 "区切られます）。パターンを修正するか、セクションを追加してください。"
 
-#: edit.php:417
+#: edit.php:454
 msgid "Saving..."
 msgstr "保存中..."
 
-#: edit.php:433
+#: edit.php:470
 msgid "Saved."
 msgstr "保存しました。"
 
-#: edit.php:446
+#: edit.php:483
 #, php-format
 msgid "Upload failed. The file may exceed the %s limit."
 msgstr ""
 "アップロードに失敗しました。ファイルが%sの上限を超えている可能性があります。"
 
-#: edit.php:447
+#: edit.php:484
 msgid "Save failed. Please try again or check with the administrator."
 msgstr ""
 "保存に失敗しました。もう一度お試しいただくか、管理者にお問い合わせください。"

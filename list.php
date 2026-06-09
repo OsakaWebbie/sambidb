@@ -12,29 +12,29 @@ if (!empty($_GET['basket'])) {
   $where .= "song.SongID IN ($basketids)";
 } else {
   if (!empty($_GET['title'])) {
-    $criteria .= "<li>" . sprintf(_('Title contains "%s" (ignoring punctuation)'), stripslashes($_GET['title'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Title contains "%s" (ignoring punctuation)'), d2h($_GET['title'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "(Title LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['title']) . "%' OR OrigTitle LIKE '%" .
         preg_replace('/[\W]+/u', '%', $_GET['title']) . "%')";
   }
   if (!empty($_GET['lyrics'])) {
-    $criteria .= "<li>" . sprintf(_('Lyrics contains "%s" (ignoring punctuation)'), stripslashes($_GET['lyrics'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Lyrics contains "%s" (ignoring punctuation)'), d2h($_GET['lyrics'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "LOWER(stripchord(Lyrics)) LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['lyrics']) . "%'";
   }
   if (!empty($_GET['source'])) {
-    $criteria .= "<li>" . sprintf(_('Source contains "%s" (ignoring punctuation)'), stripslashes($_GET['source'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Source contains "%s" (ignoring punctuation)'), d2h($_GET['source'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "Source LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['source']) . "%'";
   }
   if (!empty($_GET['credit'])) {
-    $criteria .= "<li>" . sprintf(_('Composer/Copyright contains "%s" (ignoring punctuation)'), stripslashes($_GET['credit'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Composer/Copyright contains "%s" (ignoring punctuation)'), d2h($_GET['credit'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "(Composer LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['credit']) . "%' ".
     "OR Copyright LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['credit']) . "%')";
   }
   if (!empty($_GET['tempo'])) {
-    $criteria .= "<li>" . sprintf(_('"%s" tempo'), stripslashes($_GET['tempo'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('"%s" tempo'), $_GET['tempo']) . "</li>\n";
     $where .= ($where ? " AND " : "") . "Tempo='" . $_GET['tempo'] . "'";
   }
   if (!empty($_GET['key'])) {
-    $criteria .= "<li>" . sprintf(_('Key contains "%s"'), stripslashes($_GET['key'])) . "</li>\n";
+    $criteria .= "<li>" . sprintf(_('Key contains "%s"'), d2h($_GET['key'])) . "</li>\n";
     $where .= ($where ? " AND " : "") . "SongKey LIKE '%" . $_GET['key'] . "%'";
   }
   if (!empty($_GET['tagid'])) {

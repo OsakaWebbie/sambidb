@@ -305,7 +305,9 @@ function chordsToRuby($unfmt){
   //Note: Strtok ignores empty sections, so I put the * on the front to make sure it stops at the first chord
   $nonruby = substr(strtok("*".$unfmt,"["),1);  //lyrics text preceding the next <ruby> tag
   while ($rbpair = strtok("[")) {  //keep walking through the rest of the line
-    list($rt, $rb) = explode("]", $rbpair);
+    $parts = explode("]", $rbpair, 2);  //tolerate a malformed "[" with no closing "]"
+    $rt = $parts[0];
+    $rb = $parts[1] ?? "";
     if ($rb=="") $rb="&nbsp;";
     //if ASCII and no spaces on either side of the chord, then treat as inside a word (needs nowrap span)
     if (!$insideword && mb_strlen($rb)==strlen($rb) && mb_substr($rb,0,1)!=" ") {
