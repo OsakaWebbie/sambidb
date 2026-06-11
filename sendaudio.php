@@ -15,13 +15,13 @@ if (!isset($_SESSION['userid'])) exit("no session");
 if (!isset($_GET['sid']))  exit("no sid");
 
 $file = CLIENT_PATH."/audio/s".$_GET['sid'].".mp3";
-if (!file_exists($file)) exit();
+if (!file_exists($file)) { http_response_code(404); exit; }
 $size = filesize($file);
 header("Content-Type: audio/mpeg");
 header("Content-Transfer-Encoding: binary");
 header("Content-Length: ".$size);
 header('Accept-Ranges: bytes');
-@readfile($file);
+readfile($file);
 ?>
 
 

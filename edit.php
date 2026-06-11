@@ -285,6 +285,10 @@ function autoGrow(el) {
   var style = window.getComputedStyle(el);
   var minH = parseInt(style.minHeight) || 350;
   var borders = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth) || 0;
+  // Clearing height collapses the textarea so the document shrinks and the browser
+  // clamps the page scroll. Snapshot scroll first, then restore after resizing.
+  var pageScroll = window.scrollY;
+  var boxScroll = el.scrollTop;
   // Temporarily clear min-height and height so scrollHeight reflects true content size,
   // not the rendered size imposed by min-height
   var savedMin = el.style.minHeight;
@@ -293,6 +297,8 @@ function autoGrow(el) {
   var scrollH = el.scrollHeight;
   el.style.minHeight = savedMin;
   el.style.height = Math.max(minH, scrollH + borders) + 'px';
+  window.scrollTo(window.scrollX, pageScroll);
+  el.scrollTop = boxScroll;
 }
 
 // Scan [chord] brackets: returns null if balanced and non-nested, else {line, snippet, type}.
