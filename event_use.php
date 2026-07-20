@@ -287,53 +287,46 @@ function loadChart() {
 
   chartState.eid = eid;
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'event_use.php?action=loadChart&eid=' + eid, true);
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      var data = JSON.parse(xhr.responseText);
-
-      if (data.error) {
-        alert(data.error);
-        return;
-      }
-
-      // Update state
-      chartState.dates = data.dates;
-      chartState.songs = data.songs;
-      chartState.hasMore = data.hasMore;
-      chartState.earliestLoaded = data.earliestDate;
-
-      // Build songsById lookup
-      chartState.songsById = {};
-      chartState.songs.forEach(function(song) {
-        chartState.songsById[song.id] = song;
-      });
-
-      // Show event description
-      if (data.eventRemarks) {
-        document.getElementById('event-description').textContent = '(' + data.eventRemarks + ')';
-        document.getElementById('event-description').style.display = 'inline';
-      } else {
-        document.getElementById('event-description').style.display = 'none';
-      }
-
-      // Show controls and container
-      document.getElementById('chart-controls').style.display = 'flex';
-      document.getElementById('chart-container').style.display = 'block';
-
-      // Show/hide load more button
-      document.getElementById('load-more-dates').style.display = chartState.hasMore ? 'inline-block' : 'none';
-
-      // Reset sort to default. Clear sortBy first so sortSongs() takes the
-      // "new column" branch (sets asc) rather than toggling the direction.
-      chartState.sortBy = null;
-
-      // Sort and render
-      sortSongs('origTitle');
+  $.getJSON('event_use.php?action=loadChart&eid=' + eid, function(data) {
+    if (data.error) {
+      alert(data.error);
+      return;
     }
-  };
-  xhr.send();
+
+    // Update state
+    chartState.dates = data.dates;
+    chartState.songs = data.songs;
+    chartState.hasMore = data.hasMore;
+    chartState.earliestLoaded = data.earliestDate;
+
+    // Build songsById lookup
+    chartState.songsById = {};
+    chartState.songs.forEach(function(song) {
+      chartState.songsById[song.id] = song;
+    });
+
+    // Show event description
+    if (data.eventRemarks) {
+      document.getElementById('event-description').textContent = '(' + data.eventRemarks + ')';
+      document.getElementById('event-description').style.display = 'inline';
+    } else {
+      document.getElementById('event-description').style.display = 'none';
+    }
+
+    // Show controls and container
+    document.getElementById('chart-controls').style.display = 'flex';
+    document.getElementById('chart-container').style.display = 'block';
+
+    // Show/hide load more button
+    document.getElementById('load-more-dates').style.display = chartState.hasMore ? 'inline-block' : 'none';
+
+    // Reset sort to default. Clear sortBy first so sortSongs() takes the
+    // "new column" branch (sets asc) rather than toggling the direction.
+    chartState.sortBy = null;
+
+    // Sort and render
+    sortSongs('origTitle');
+  });
 }
 
 // Load more dates
@@ -344,38 +337,31 @@ function loadMoreDates() {
   btn.disabled = true;
   btn.textContent = '<?= _("Loading...") ?>';
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'event_use.php?action=loadMore&eid=' + chartState.eid +
-    '&earliest=' + encodeURIComponent(chartState.earliestLoaded), true);
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      var data = JSON.parse(xhr.responseText);
+  $.getJSON('event_use.php?action=loadMore&eid=' + chartState.eid +
+    '&earliest=' + encodeURIComponent(chartState.earliestLoaded), function(data) {
+    // Add new dates
+    chartState.dates = chartState.dates.concat(data.dates);
 
-      // Add new dates
-      chartState.dates = chartState.dates.concat(data.dates);
-
-      // Update song usages
-      for (var sid in data.usages) {
-        if (chartState.songsById[sid]) {
-          chartState.songsById[sid].usages = chartState.songsById[sid].usages.concat(data.usages[sid]);
-        }
-      }
-
-      chartState.hasMore = data.hasMore;
-      chartState.earliestLoaded = data.earliestDate;
-
-      // Re-render
-      renderTable();
-
-      if (!chartState.hasMore) {
-        btn.style.display = 'none';
-      } else {
-        btn.disabled = false;
-        btn.textContent = '<?= _("Load Earlier Dates") ?>';
+    // Update song usages
+    for (var sid in data.usages) {
+      if (chartState.songsById[sid]) {
+        chartState.songsById[sid].usages = chartState.songsById[sid].usages.concat(data.usages[sid]);
       }
     }
-  };
-  xhr.send();
+
+    chartState.hasMore = data.hasMore;
+    chartState.earliestLoaded = data.earliestDate;
+
+    // Re-render
+    renderTable();
+
+    if (!chartState.hasMore) {
+      btn.style.display = 'none';
+    } else {
+      btn.disabled = false;
+      btn.textContent = '<?= _("Load Earlier Dates") ?>';
+    }
+  });
 }
 
 // Calculate usage count

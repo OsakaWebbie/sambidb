@@ -169,7 +169,6 @@ pageheader(_("Database Settings"), 1);
             })
             .fail(function(jqxhr, textStatus, error) {
               $('#tag').removeClass('is-loading');
-              alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
     });
@@ -204,7 +203,6 @@ pageheader(_("Database Settings"), 1);
             })
             .fail(function(jqxhr, textStatus, error) {
               $('#event').removeClass('is-loading');
-              alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
     });
@@ -225,7 +223,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $tag.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     });
 
@@ -249,7 +246,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $tag.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     });
 
@@ -272,7 +268,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $event.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     });
 
@@ -310,7 +305,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $event.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     }
 
@@ -364,7 +358,6 @@ pageheader(_("Database Settings"), 1);
             })
             .fail(function(jqxhr, textStatus, error) {
               $('#username').removeClass('is-loading');
-              alert("AJAX Error: " + textStatus + ", " + error + "\n" + jqxhr.responseText);
             });
       }
     });
@@ -395,7 +388,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $username.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     });
     $('#user_del').click(function() {
@@ -415,7 +407,6 @@ pageheader(_("Database Settings"), 1);
         showStatus(data.message);
       }, 'json').fail(function(jqxhr, textStatus, error) {
         $username.removeClass('is-loading');
-        alert('AJAX Error: ' + textStatus + ', ' + error);
       });
     });
     <?php } ?>

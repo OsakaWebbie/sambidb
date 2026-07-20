@@ -57,7 +57,7 @@ strrpos($format->LayoutParams,'paper'))) : $format->LayoutParams?>]{geometry}
 \usepackage{color}
 \usepackage{ulem}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
+\usepackage{sourcesanspro}
 
 \newcommand\Sharp{\ensuremath{^{\sharp}}}
 \newcommand\Flat{\ensuremath{^{\flat}}}

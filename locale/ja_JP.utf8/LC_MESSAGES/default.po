@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SambiDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 14:36+0900\n"
-"PO-Revision-Date: 2026-06-09 14:44+0900\n"
+"POT-Creation-Date: 2026-06-11 18:03+0900\n"
+"PO-Revision-Date: 2026-06-11 18:10+0900\n"
 "Last-Translator: Karen Ellrick <osakawebbie@gmail.com>\n"
 "Language-Team: Karen Ellrick\n"
 "Language: ja\n"
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Access denied."
 msgstr "アクセスが拒否されました。"
 
-#: ajax_action.php:29 db_settings.php:428 task.php:238
+#: ajax_action.php:29 db_settings.php:419 task.php:238
 msgid "Tag name cannot be blank."
 msgstr "タグ名を入力してください。"
 
@@ -67,7 +67,7 @@ msgstr "タグが正常に削除されました。"
 msgid "Tag not found."
 msgstr "タグが見つかりません。"
 
-#: ajax_action.php:70 db_settings.php:434
+#: ajax_action.php:70 db_settings.php:425
 msgid "Event name cannot be blank."
 msgstr "イベント名を入力してください。"
 
@@ -91,15 +91,15 @@ msgstr "イベントが正常に削除されました。"
 msgid "Event not found."
 msgstr "イベントが見つかりません。"
 
-#: ajax_action.php:114 db_settings.php:440
+#: ajax_action.php:114 db_settings.php:431
 msgid "User Name cannot be blank."
 msgstr "ユーザー名を入力してください。"
 
-#: ajax_action.php:117 db_settings.php:443
+#: ajax_action.php:117 db_settings.php:434
 msgid "UserID cannot be blank."
 msgstr "ユーザーIDを入力してください。"
 
-#: ajax_action.php:127 db_settings.php:446
+#: ajax_action.php:127 db_settings.php:437
 msgid "You must enter a password for a new user."
 msgstr "新規ユーザーのために、パスワードの入力は必要です。"
 
@@ -299,22 +299,22 @@ msgstr "（パスワード変更しない場合、空けておいてください
 msgid "New Password again"
 msgstr "新しいパスワード（確認用）"
 
-#: db_settings.php:235
+#: db_settings.php:232
 #, php-format
 msgid "Are you sure you want to delete tag \"%s\"?"
 msgstr "タグ「%s」を削除してよろしいですか。"
 
-#: db_settings.php:236
+#: db_settings.php:233
 #, php-format
 msgid "It is currently applied to %d songs, which will also lose this tag."
 msgstr "現在このタグは%d曲に付いており、それらの曲からもタグが外れます。"
 
-#: db_settings.php:287 db_settings.php:295
+#: db_settings.php:282 db_settings.php:290
 #, php-format
 msgid "Are you sure you want to delete event \"%s\"?"
 msgstr "イベント「%s」を削除してよろしいですか。"
 
-#: db_settings.php:289
+#: db_settings.php:284
 #, php-format
 msgid ""
 "This event has usage records for %1$d dates (%2$s), for a total of %3$d song "
@@ -323,20 +323,20 @@ msgstr ""
 "このイベントには%1$dの日付（%2$s）の使用記録があり、曲の使用合計は%3$d回で"
 "す。"
 
-#: db_settings.php:323
+#: db_settings.php:317
 msgid "Yes, delete the event and all usage history"
 msgstr "はい、イベントと使用履歴データを削除します"
 
-#: db_settings.php:332
+#: db_settings.php:326
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: db_settings.php:404
+#: db_settings.php:396
 #, php-format
 msgid "Are you sure you want to delete user \"%1$s\" (UserID: %2$s)?"
 msgstr "ユーザー「%1$s」（ユーザーID：%2$s）を削除してよろしいですか。"
 
-#: db_settings.php:449
+#: db_settings.php:440
 msgid "The two password entries do not match."
 msgstr "入力された二つのパスワードは異なります。"
 
@@ -345,7 +345,7 @@ msgstr "入力された二つのパスワードは異なります。"
 msgid "Song not found (ID: %s)."
 msgstr "曲が見つかりません。（ID: %s）"
 
-#: edit.php:44 functions.php:56
+#: edit.php:44 functions.php:133
 msgid "New Song"
 msgstr "新規の曲"
 
@@ -413,7 +413,7 @@ msgid ""
 msgstr ""
 "PDF・Powerpoint出力用のパターン（例：ABABB、セクションは空行で区切られます）"
 
-#: edit.php:219 edit.php:341 pdflayout.php:260 pdflayout.php:470
+#: edit.php:219 edit.php:347 pdflayout.php:260 pdflayout.php:470
 msgid "Instructions"
 msgstr "指示"
 
@@ -454,7 +454,7 @@ msgstr ""
 msgid "Audio Comment"
 msgstr "オーディオについての備考"
 
-#: edit.php:249 edit.php:340
+#: edit.php:249 edit.php:346
 msgid "Lyrics & Chords"
 msgstr "歌詞とコード"
 
@@ -492,36 +492,36 @@ msgstr ""
 "「本編のみ」オプションで除外されるセクション（例：曲の終わりにコーラスの最後"
 "の行を繰り返す部分）を示すには、その前にハイフンのみの行を置いてください："
 
-#: edit.php:324
+#: edit.php:330
 msgid "A \"[\" bracket is opened but never closed."
 msgstr "「[」に対応する「]」が抜けています。"
 
-#: edit.php:325
+#: edit.php:331
 msgid "A closing \"]\" has no matching \"[\"."
 msgstr "「]」に対応する「[」が抜けています。"
 
-#: edit.php:326
+#: edit.php:332
 #, php-format
 msgid "Problem with the brackets in %1$s, line %2$s:"
 msgstr "%1$s の %2$s 行目の角括弧に問題があります："
 
-#: edit.php:336
+#: edit.php:342
 msgid "Please enter the title!"
 msgstr "タイトルを入力してください！"
 
-#: edit.php:344
+#: edit.php:350
 msgid "Instructions is too long (maximum 250 characters). Please shorten it."
 msgstr "指示が長すぎます。250文字以内にしてください。"
 
-#: edit.php:349
+#: edit.php:355
 msgid "Audio Comment is too long (maximum 250 characters). Please shorten it."
 msgstr "オーディオについての備考が長すぎます。250文字以内にしてください。"
 
-#: edit.php:354
+#: edit.php:360
 msgid "Only MP3 files can be accepted for audio."
 msgstr "オーディオファイルはMP3形式のみ受け付けます。"
 
-#: edit.php:359 edit.php:413
+#: edit.php:365 edit.php:419
 #, php-format
 msgid ""
 "The selected file is too large (%1$s, limit: %2$s). Please choose a smaller "
@@ -530,13 +530,13 @@ msgstr ""
 "選択されたファイルが大きすぎます（%1$s、上限：%2$s）。より小さいファイルを選"
 "んでください。"
 
-#: edit.php:367
+#: edit.php:373
 msgid "Audio comments only make sense if there is an audio file to comment on."
 msgstr ""
 "オーディオについての備考は、オーディオファイルがある場合にのみ意味がありま"
 "す。"
 
-#: edit.php:379
+#: edit.php:385
 msgid ""
 "Pattern letter {LETTER} (and any higher letters) refers to a section that "
 "doesn't exist. The Lyrics have only {COUNT} section(s) (separated by blank "
@@ -546,21 +546,21 @@ msgstr ""
 "ています。歌詞にはセクションが {COUNT} 個しかありません（空行またはダッシュで"
 "区切られます）。パターンを修正するか、セクションを追加してください。"
 
-#: edit.php:454
+#: edit.php:460
 msgid "Saving..."
 msgstr "保存中..."
 
-#: edit.php:470
+#: edit.php:476
 msgid "Saved."
 msgstr "保存しました。"
 
-#: edit.php:483
+#: edit.php:489
 #, php-format
 msgid "Upload failed. The file may exceed the %s limit."
 msgstr ""
 "アップロードに失敗しました。ファイルが%sの上限を超えている可能性があります。"
 
-#: edit.php:484
+#: edit.php:490
 msgid "Save failed. Please try again or check with the administrator."
 msgstr ""
 "保存に失敗しました。もう一度お試しいただくか、管理者にお問い合わせください。"
@@ -573,7 +573,7 @@ msgstr "全部にチェックを付ける"
 msgid "Source"
 msgstr "参照"
 
-#: event_use.php:160 event_use.php:198 functions.php:64
+#: event_use.php:160 event_use.php:198 functions.php:141
 msgid "Song Use Chart"
 msgstr "曲使用の表"
 
@@ -593,35 +593,35 @@ msgstr "並び順："
 msgid "Usage Count"
 msgstr "使用数"
 
-#: event_use.php:226 event_use.php:374
+#: event_use.php:226 event_use.php:362
 msgid "Load Earlier Dates"
 msgstr "以前の日付を読み込む"
 
-#: event_use.php:243 event_use.php:345 task.php:381
+#: event_use.php:243 event_use.php:338 task.php:381
 msgid "Loading..."
 msgstr "読み込み中..."
 
-#: event_use.php:427
+#: event_use.php:413
 msgid "Song (Count)"
 msgstr "曲名（使用数）"
 
-#: event_use.php:506 list.php:255
+#: event_use.php:492 list.php:255
 msgid "Update basket according to checkboxes"
 msgstr "チェックボックスに合わせてかごを更新する"
 
-#: event_use.php:522
+#: event_use.php:508
 msgid "Go to task page with this session"
 msgstr "作業ページへ移動"
 
-#: event_use.php:531
+#: event_use.php:517
 msgid "Remove this session from usage history"
 msgstr "この使用記録を削除"
 
-#: event_use.php:534
+#: event_use.php:520
 msgid "Remove all usage records for \"%event%\" on %date%?"
 msgstr "%date% の「%event%」の使用記録をすべて削除しますか？"
 
-#: event_use.php:545
+#: event_use.php:531
 msgid "Could not delete the session."
 msgstr "記録を削除できませんでした。"
 
@@ -714,49 +714,72 @@ msgstr "[閉じる]"
 msgid "Show Fewer Records"
 msgstr "表示を減らす"
 
-#: functions.php:53 index.php:29 index.php:58 index.php:99 index.php:161
+#: functions.php:33
+#, php-format
+msgid ""
+"Something broke on my end — not your fault. Please tell the developer what "
+"you were doing (reference: %s)."
+msgstr ""
+"こちら側で問題が発生しました。あなたの操作が原因ではありません。どのような操"
+"作をしていたかを開発者までお知らせください（参照コード: %s）。"
+
+#: functions.php:63
+#, php-format
+msgid ""
+"%sReturn to the home page%s, or press your browser's Back button to try "
+"again."
+msgstr ""
+"%sトップページに戻る%s か、ブラウザの「戻る」ボタンでもう一度お試しください。"
+
+#: functions.php:130 index.php:29 index.php:58 index.php:99 index.php:161
 msgid "Search"
 msgstr "検索"
 
-#: functions.php:54
+#: functions.php:131
 msgid "(quick search)"
 msgstr "(クイック検索)"
 
-#: functions.php:58
+#: functions.php:135
 msgid "Basket/Tasks"
 msgstr "かご/作業"
 
-#: functions.php:60
+#: functions.php:137
 msgid "List Basket"
 msgstr "かごを表示"
 
-#: functions.php:61 task.php:249 task.php:254 task.php:297
+#: functions.php:138 task.php:249 task.php:254 task.php:297
 msgid "Tasks"
 msgstr "曲の作業"
 
-#: functions.php:62
+#: functions.php:139
 msgid "Empty Basket"
 msgstr "かごを空にする"
 
-#: functions.php:66
+#: functions.php:143
 msgid "DB Settings"
 msgstr "基本データ設定"
 
-#: functions.php:68
+#: functions.php:145
 msgid "(Raw SQL)"
 msgstr "(SQL直接実行)"
 
-#: functions.php:73
+#: functions.php:150
 msgid "User"
 msgstr "ユーザー"
 
-#: functions.php:75 user_settings.php:33 user_settings.php:35
+#: functions.php:152 user_settings.php:33 user_settings.php:35
 msgid "User Settings"
 msgstr "私のユーザー設定"
 
-#: functions.php:76
+#: functions.php:153
 msgid "Log Out"
 msgstr "ログアウト"
+
+#: functions.php:186
+msgid ""
+"Something went wrong. Please try again, and let the developer know if it "
+"keeps happening."
+msgstr ""
 
 #: index.php:54
 msgid ""
