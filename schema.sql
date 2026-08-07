@@ -56,6 +56,7 @@ CREATE TABLE `history` (
   `EventID` mediumint(8) NOT NULL DEFAULT 0,
   `UseDate` date NOT NULL DEFAULT '0000-00-00',
   `UseOrder` tinyint(4) NOT NULL DEFAULT 0,
+  `SectionID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '0 = whole-song (legacy); else the section sung',
   PRIMARY KEY (`EventID`,`UseDate`,`UseOrder`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='To record when a song was used';
 
@@ -71,6 +72,17 @@ CREATE TABLE `loginlog` (
   KEY `IPAddress` (`IPAddress`),
   KEY `LoginTime` (`LoginTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin COMMENT='Log of logins to SambiDB';
+
+
+DROP TABLE IF EXISTS `pattern`;
+CREATE TABLE `pattern` (
+  `PatternID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `SongID` int(11) unsigned NOT NULL DEFAULT 0,
+  `Label` varchar(60) NOT NULL DEFAULT '' COMMENT 'e.g. "EN only", "Bilingual (JP primary)"',
+  `Sections` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'Comma-delimited SectionIDs, repeats allowed',
+  PRIMARY KEY (`PatternID`),
+  KEY `SongID` (`SongID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Named section arrangements per song';
 
 
 DROP TABLE IF EXISTS `pdfformat`;
@@ -110,6 +122,43 @@ CREATE TABLE `pdfformat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Layout settings for TeX-generated PDF';
 
 
+DROP TABLE IF EXISTS `section`;
+CREATE TABLE `section` (
+  `SectionID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `SongID` int(11) unsigned NOT NULL DEFAULT 0,
+  `SectionTypeID` varchar(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'FK -> sectiontype',
+  `Language` varchar(5) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '' COMMENT 'en, jp, ...',
+  `Lyrics` text NOT NULL COMMENT 'Section text with inline [chords] / leading [r] lines',
+  `Extra` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '1 = excluded by "main sections only"',
+  PRIMARY KEY (`SectionID`),
+  UNIQUE KEY `SongTypeLang` (`SongID`,`SectionTypeID`,`Language`),
+  KEY `SongID` (`SongID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Song sections (lyrics blocks), per language';
+
+
+DROP TABLE IF EXISTS `sectiontype`;
+CREATE TABLE `sectiontype` (
+  `SectionTypeID` varchar(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+  `Label` varchar(40) NOT NULL DEFAULT '' COMMENT 'English canonical label; translated at display via _()',
+  `ListOrder` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT 'Default order for "(All sections)"',
+  PRIMARY KEY (`SectionTypeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Controlled vocabulary of section types';
+
+INSERT INTO `sectiontype` (`SectionTypeID`, `Label`, `ListOrder`) VALUES
+('i',   'Intro',      10),
+('v1',  'Verse 1',    20),
+('v2',  'Verse 2',    30),
+('v3',  'Verse 3',    40),
+('v4',  'Verse 4',    50),
+('p',   'Pre-Chorus', 60),
+('ch',  'Chorus',     70),
+('ch2', 'Chorus 2',   80),
+('b',   'Bridge',     90),
+('b2',  'Bridge 2',  100),
+('e',   'Ending',    110),
+('x',   'Other',     120);
+
+
 DROP TABLE IF EXISTS `song`;
 CREATE TABLE `song` (
   `SongID` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -125,6 +174,7 @@ CREATE TABLE `song` (
   `Pattern` varchar(80) NOT NULL DEFAULT '',
   `Audio` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `AudioComment` varchar(255) NOT NULL DEFAULT '',
+  `NeedsWork` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'Transitional: 1 = auto-converted section data needs human review',
   PRIMARY KEY (`SongID`),
   KEY `Title` (`Title`,`SongKey`,`Tempo`),
   KEY `OrigTitle` (`OrigTitle`),

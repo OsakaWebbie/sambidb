@@ -35,7 +35,16 @@ while ($song = mysqli_fetch_object($result)) {
   "copyright:'".($song->Copyright!="" && $song->Copyright!="Public Domain"?"©":"").htmlspecialchars($song->Copyright,ENT_QUOTES)."',".
   "instrshort:".json_encode(htmlspecialchars(mb_ereg_replace("\[[^\[]*\]","",$song->Instruction),ENT_QUOTES)).",".
   "instrlong:".json_encode(htmlspecialchars(mb_ereg_replace("\[|]","",$song->Instruction),ENT_QUOTES))."};\n";
-  if ($_GET['pattern']=="basic") {
+  $songpat = $_GET['pat'.$song->SongID] ?? ($_GET['pattern'] ?? 'allparts');
+  $is_conv = song_has_sections($song->SongID);
+  $letterOf = [];   // SectionID => letter (converted songs)
+  if ($is_conv) {
+    $stanzas = [];
+    foreach (get_song_sections($song) as $i => $s) {
+      $stanzas[] = $s->lyrics;
+      $letterOf[$s->id] = chr($i + 65);
+    }
+  } elseif ($songpat=="basic") {
     $tmp = preg_split("/\n-+\s*\n/u",rtrim($song->Lyrics));
     $stanzas = preg_split("/\n\s*\n/u",rtrim($tmp[0]));
   } else {
@@ -51,7 +60,20 @@ while ($song = mysqli_fetch_object($result)) {
     $stripped[] = trim(mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars($nochords,ENT_QUOTES)));
     $stanza = trim(mb_ereg_replace("  ","&nbsp;&nbsp;",htmlspecialchars($stanza,ENT_QUOTES)));
   }
-  if ($_GET['pattern']=="pattern" && $song->Pattern!="") {
+  if ($is_conv) {
+    $patternarray = array();
+    $seq = array();
+    if (substr($songpat,0,1)=="p" && ctype_digit(substr($songpat,1))) {    // a specific stored pattern
+      $pid = intval(substr($songpat,1));
+      foreach (get_song_patterns($song) as $p) if ($p->id == $pid) { $seq = $p->sections; break; }
+    } elseif ($songpat=="pattern") {                                        // the default (first) stored pattern
+      $dp = get_song_patterns($song);
+      if ($dp) $seq = $dp[0]->sections;
+    }
+    foreach ($seq as $secid) if (isset($letterOf[$secid])) $patternarray[] = $letterOf[$secid];
+    if (empty($patternarray))                                              // "all"/"allparts"/fallback: each once
+      for ($i=0;$i<count($stanzas);$i++) $patternarray[] = chr($i+65);
+  } elseif ($songpat=="pattern" && $song->Pattern!="") {
     $patternarray = str_split(mb_ereg_replace("[^A-Z]","",$song->Pattern));
   } else {
     $patternarray = array();

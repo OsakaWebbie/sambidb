@@ -443,6 +443,95 @@ function chordsToRuby($unfmt){
   return $fmt;
 }
 
+// ---- Section model helpers ------------------------------------------------
+// A song has rows in `section` once it has been given them; songs without
+// section rows fall back to the `song.Lyrics` blob. That covers unconverted
+// songs during migration AND some permanent placeholder songs, so it is a
+// lasting structural distinction, not a temporary migration check. These read
+// helpers are the single home for the section-rows-vs-blob branch.
+
+function song_has_sections($songid) {
+  return (bool) sql_single("SELECT EXISTS(SELECT 1 FROM section WHERE SongID=".intval($songid).")");
+}
+
+// Ordered pool of a song's sections (each once). Element: id, type, label_en,
+// label_jp, language, lyrics, code. From `section` rows if the song has them,
+// otherwise split from song.Lyrics (blob sections carry id=0, empty
+// type/labels/language, and a positional letter A/B/C... as their code).
+// Order follows the song's default pattern (the arrangement marked IsDefault,
+// reflecting blob/entry order), then any leftover sections by SectionID.
+// sectiontype.ListOrder is only for the Type <select>, NOT this order.
+// Pass the full song row (needs ->SongID, and ->Lyrics for the blob fallback).
+function get_song_sections($song) {
+  $songid = intval($song->SongID);
+
+  $res = sqlquery_checked(
+    "SELECT s.SectionID, s.SectionTypeID, s.Language, s.Lyrics, ".
+    "COALESCE(t.LabelEN,'') AS LabelEN, COALESCE(t.LabelJP,'') AS LabelJP ".
+    "FROM section s LEFT JOIN sectiontype t ON t.SectionTypeID=s.SectionTypeID ".
+    "WHERE s.SongID=$songid ORDER BY s.SectionID");
+  if (mysqli_num_rows($res)) {
+    $byid = [];
+    while ($r = mysqli_fetch_object($res)) {
+      $byid[(int)$r->SectionID] = (object)[
+        'id'       => (int)$r->SectionID,
+        'type'     => $r->SectionTypeID,
+        'label_en' => $r->LabelEN,
+        'label_jp' => $r->LabelJP,
+        'language' => $r->Language,
+        'lyrics'   => $r->Lyrics,
+        'code'     => (string)(int)$r->SectionID,
+      ];
+    }
+    $ordered = []; $seen = [];
+    $dres = sqlquery_checked("SELECT Sections FROM pattern WHERE SongID=$songid AND IsDefault=1 LIMIT 1");
+    if ($drow = mysqli_fetch_object($dres)) foreach (explode(',', $drow->Sections) as $pid) {
+      $pid = (int)$pid;
+      if (isset($byid[$pid]) && !isset($seen[$pid])) { $seen[$pid] = 1; $ordered[] = $byid[$pid]; }
+    }
+    foreach ($byid as $id => $s) if (!isset($seen[$id])) $ordered[] = $s;
+    return $ordered;
+  }
+
+  $lyrics = rtrim($song->Lyrics ?? '');
+  if ($lyrics === '') return [];
+  $sections = [];
+  foreach (preg_split('/\n-*\s*\n/u', $lyrics) as $i => $text) {
+    $sections[] = (object)[
+      'id'       => 0,
+      'type'     => '',
+      'label_en' => '',
+      'label_jp' => '',
+      'language' => '',
+      'lyrics'   => $text,
+      'code'     => chr($i + 65),
+    ];
+  }
+  return $sections;
+}
+
+// Distinct section-language codes present in a song (empty for blob songs).
+function song_languages($song) {
+  $langs = [];
+  foreach (get_song_sections($song) as $s)
+    if ($s->language !== '' && !in_array($s->language, $langs, true)) $langs[] = $s->language;
+  return $langs;
+}
+
+// A song's stored arrangements, default first. Each: id, label, is_default,
+// sections (int[]). Empty for blob songs (they use the legacy Pattern/mode path).
+function get_song_patterns($song) {
+  $songid = intval($song->SongID);
+  if (!song_has_sections($songid)) return [];
+  $patterns = [];
+  $res = sqlquery_checked("SELECT PatternID, Label, IsDefault, Sections FROM pattern WHERE SongID=$songid ORDER BY IsDefault DESC, Label, PatternID");
+  while ($r = mysqli_fetch_object($res)) {
+    $ids = array_map('intval', array_filter(explode(',', $r->Sections), 'strlen'));
+    $patterns[] = (object)['id' => (int)$r->PatternID, 'label' => $r->Label, 'is_default' => (bool)$r->IsDefault, 'sections' => $ids];
+  }
+  return $patterns;
+}
+
 // STUFF THAT GETS RUN RIGHT AWAY
 
 $hostarray = explode(".",$_SERVER['HTTP_HOST']);

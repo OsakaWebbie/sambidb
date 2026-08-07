@@ -128,23 +128,42 @@ function task_usage() {
 }
 
 function task_pdf() {
-  global $sid_list;
+  global $db, $sid_list;
+  $ids = array_values(array_unique(array_filter(array_map('intval', explode(',', $sid_list)))));
+  if (empty($ids)) { echo '<p class="alert">'._('Your list is empty.').'</p>'; return; }
+  $idcsv = implode(',', $ids);
+  $res = sqlquery_checked("SELECT * FROM song WHERE SongID IN ($idcsv) ORDER BY FIELD(SongID,$idcsv)");
   ?>
-  <h3><?=_('Select your options and click the button to proceed.')?></h3>
+  <h3><?=_('Choose an arrangement for each song, then go to the layout page.')?></h3>
   <form action="pdflayout.php" method="get" name="optionsform" target="_blank">
-    <input type="hidden" name="sid_list" value="<?=$sid_list?>">
-    <div style="display:flex; flex-wrap:wrap; gap:1em 3em; align-items:center;">
-      <div>
-        <label style="display:block; margin:0.3em 0;"><input type="radio" name="pattern" value="basic"> <?=_('Main sections only (no extras)')?></label>
-        <label style="display:block; margin:0.3em 0;"><input type="radio" name="pattern" value="allparts" checked> <?=_('All sections, once each')?></label>
-        <label style="display:block; margin:0.3em 0;"><input type="radio" name="pattern" value="pattern"> <?=_('Full arrangement according to Pattern')?></label>
-      </div>
-      <div>
-        <label><input type="checkbox" name="multilingual" value="yes" checked> <?=_('Combine multilingual songs')?></label>
-      </div>
-      <div>
-        <input type="submit" name="submit" class="ui-button ui-corner-all" value="<?=_('Go to Layout Page')?>">
-      </div>
+    <input type="hidden" name="sid_list" value="<?=htmlspecialchars($sid_list, ENT_QUOTES)?>">
+    <table class="pat-picker">
+<?php
+  while ($song = mysqli_fetch_object($res)) {
+    $sid = (int)$song->SongID;
+    $opts = '';
+    if (song_has_sections($sid)) {
+      $first = true;
+      foreach (get_song_patterns($song) as $p) {   // stored arrangements, default first
+        $opts .= '<option value="p'.$p->id.'"'.($first ? ' selected' : '').'>'.htmlspecialchars($p->label, ENT_QUOTES).'</option>';
+        $first = false;
+      }
+      if ($first)   // no stored arrangements yet
+        $opts .= '<option value="all" selected>'._('All sections, once each').'</option>';
+    } else {
+      $opts .= '<option value="allparts" selected>'._('All sections, once each').'</option>';
+      if ($song->Pattern != '')
+        $opts .= '<option value="pattern">'.sprintf(_('Full arrangement (%s)'), htmlspecialchars($song->Pattern, ENT_QUOTES)).'</option>';
+    }
+    echo '      <tr><td class="pat-title">'.htmlspecialchars($song->Title, ENT_QUOTES, 'UTF-8').
+         ($song->NeedsWork ? ' <span title="'._('Needs review').'">&#9888;</span>' : '').
+         '</td><td><select name="pat'.$sid.'">'.$opts."</select></td></tr>\n";
+  }
+?>
+    </table>
+    <div style="margin-top:1em; display:flex; flex-wrap:wrap; gap:1em 2em; align-items:center;">
+      <label><input type="checkbox" name="multilingual" value="yes" checked> <?=_('Combine multilingual songs')?></label>
+      <input type="submit" name="submit" class="ui-button ui-corner-all" value="<?=_('Go to Layout Page')?>">
     </div>
   </form>
   <?php
@@ -287,6 +306,8 @@ pageheader(_("Tasks"), 1);
     padding: 1em;
     margin-top: 1em;
   }
+  .pat-picker td { padding:3px 12px 3px 0; vertical-align:middle; }
+  .pat-picker td.pat-title { font-weight:bold; }
   @media (max-width: 899px) {
     #task-list-side, #tagged { min-width: 0; max-width: 100%; }
     #tagged li { white-space: normal; }

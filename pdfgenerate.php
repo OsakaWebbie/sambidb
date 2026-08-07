@@ -31,10 +31,9 @@ while ($song = mysqli_fetch_object($result)) {
   (($song->Composer && $song->Copyright) ? ($_GET['copy2']?'\\\\*\n':'; ') : '').
   (($song->Copyright!='' && $song->Copyright!='Public Domain') ? '©' : '').escape_all($song->Copyright);
   $songs['s'.$song->SongID.'k'] = preg_replace('/^([A-G][#b]?m?).*$/','$1',$song->SongKey);
-  $stanzas = preg_split('/\n-*\s*\n/u',$song->Lyrics);
   $i = 0;
-  foreach ($stanzas as $stanza) {
-    $songs['s'.$song->SongID.chr($i+65)] = $stanza;
+  foreach (get_song_sections($song) as $s) {
+    $songs['s'.$song->SongID.chr($i+65)] = $s->lyrics;
     $i++;
   }
 }

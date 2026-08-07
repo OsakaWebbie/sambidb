@@ -18,7 +18,11 @@ if (!empty($_GET['basket'])) {
   }
   if (!empty($_GET['lyrics'])) {
     $criteria .= "<li>" . sprintf(_('Lyrics contains "%s" (ignoring punctuation)'), d2h($_GET['lyrics'])) . "</li>\n";
-    $where .= ($where ? " AND " : "") . "LOWER(stripchord(Lyrics)) LIKE '%" . preg_replace('/[\W]+/u', '%', $_GET['lyrics']) . "%'";
+    $lyr = preg_replace('/[\W]+/u', '%', $_GET['lyrics']);
+    $where .= ($where ? " AND " : "") .
+      "(CASE WHEN EXISTS (SELECT 1 FROM section WHERE section.SongID=song.SongID) " .
+      "THEN EXISTS (SELECT 1 FROM section WHERE section.SongID=song.SongID AND LOWER(stripchord(section.Lyrics)) LIKE '%$lyr%') " .
+      "ELSE LOWER(stripchord(song.Lyrics)) LIKE '%$lyr%' END)";
   }
   if (!empty($_GET['source'])) {
     $criteria .= "<li>" . sprintf(_('Source contains "%s" (ignoring punctuation)'), d2h($_GET['source'])) . "</li>\n";
@@ -133,7 +137,11 @@ $tableopt->cols[] = (object)[
   'key'   => 'title',
   'sel'   => "CONCAT('<a href=\"song.php?sid=',song.SongID,'\">',song.Title,'</a>'"
            . ",IF(song.Audio=1,' <img src=\"graphics/audio.gif\" height=16 width=16>','')"
-           . ",IF(Lyrics REGEXP '\\\\[[^rR]',' <img src=\"graphics/guitar.gif\" height=16 width=16>',''))",
+           . ",IF(IF(EXISTS(SELECT 1 FROM section s2 WHERE s2.SongID=song.SongID)"
+           . ",EXISTS(SELECT 1 FROM section s2 WHERE s2.SongID=song.SongID AND s2.Lyrics REGEXP '\\\\[[^rR]')"
+           . ",song.Lyrics REGEXP '\\\\[[^rR]')"
+           . ",' <img src=\"graphics/guitar.gif\" height=16 width=16>','')"
+           . ")",
   'label' => _('Title'),
   'show'  => (stripos($showcols, ',title,') !== false)
 ];
@@ -173,7 +181,11 @@ $tableopt->cols[] = (object)[
 
 $tableopt->cols[] = (object)[
   'key'   => 'firstline',
-  'sel'   => "stripchord(LEFT(Lyrics,INSTR(Lyrics,'\\n')-1))",
+  'sel'   => "IF(EXISTS(SELECT 1 FROM section s3 WHERE s3.SongID=song.SongID)"
+           . ",(SELECT stripchord(SUBSTRING_INDEX(s3.Lyrics,'\\n',1)) FROM section s3"
+           . " LEFT JOIN sectiontype st ON st.SectionTypeID=s3.SectionTypeID"
+           . " WHERE s3.SongID=song.SongID ORDER BY st.ListOrder,s3.Language,s3.SectionID LIMIT 1)"
+           . ",stripchord(LEFT(Lyrics,INSTR(Lyrics,'\\n')-1)))",
   'label' => _('First Line'),
   'show'  => (stripos($showcols, ',firstline,') !== false)
 ];

@@ -274,7 +274,7 @@ nav#nav-mobile a:hover, nav#nav-mobile a:active {
 
 /* general purpose typography */
 
-body { font-family: Arial,"ＭＳ Ｐゴシック",sans-serif; }
+body { font-family: Arial,sans-serif; }
 button, input, select, textarea { font-family: inherit; font-size: inherit; }
 
 h1 {

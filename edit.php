@@ -36,6 +36,7 @@ if (!empty($sid)) {  // SongID was passed, so we're editing an existing record
     'Instruction' => '',
     'Audio' => '',
     'AudioComment' => '',
+    'NeedsWork' => 0,
     'Lyrics' => ''
   ];
 }
@@ -43,6 +44,59 @@ if (!empty($sid)) {  // SongID was passed, so we're editing an existing record
 $isNew = empty($sid);
 $pageTitle = $isNew ? _('New Song') : sprintf(_('Edit: %s'), d2h($rec->Title));
 $buttonText = $isNew ? _('Save Song') : _('Save Changes');
+
+// A new song is born with sections; an existing song uses them once converted.
+// Existing songs that still hold only a Lyrics blob keep the (transitional) blob
+// editor until they're converted.
+$useSections = $isNew || song_has_sections($sid);
+if ($useSections) {
+  $sectionTypes = array();
+  $tr = sqlquery_checked("SELECT SectionTypeID, LabelEN, LabelJP FROM sectiontype ORDER BY ListOrder");
+  while ($t = mysqli_fetch_object($tr)) $sectionTypes[] = $t;
+  $sectionRows = $isNew ? array() : get_song_sections($rec);
+  $sectionJP   = ($_SESSION['lang'] ?? '') === 'ja_JP';
+}
+
+function section_type_options($types, $jp, $selected) {
+  $out = '';
+  if ($selected === '')
+    $out .= '<option value="" selected>'._('Select…').'</option>';
+  foreach ($types as $t) {
+    $label = $jp ? ($t->LabelJP ?: $t->LabelEN) : ($t->LabelEN ?: $t->LabelJP);
+    $out .= '<option value="'.htmlspecialchars($t->SectionTypeID, ENT_QUOTES).'"'.
+            ($t->SectionTypeID === $selected ? ' selected' : '').'>'.htmlspecialchars($label, ENT_QUOTES).'</option>';
+  }
+  return $out;
+}
+
+// One section editor row (controls above the textarea). Used for existing
+// sections and, with __IDX__, as the add/split template.
+function section_row($idx, $sec, $types, $jp) {
+  $id     = $sec ? (int)$sec->id : 0;
+  $type   = $sec ? $sec->type : '';
+  $lang   = $sec ? $sec->language : 'en';
+  $lyrics = $sec ? $sec->lyrics : '';
+  ob_start(); ?>
+  <div class="sec-row" data-idx="<?=$idx?>">
+    <input type="hidden" name="sec[<?=$idx?>][id]" value="<?=$id?>" class="sec-id">
+    <input type="hidden" name="sec[<?=$idx?>][delete]" value="0" class="sec-del-flag">
+    <input type="hidden" name="sec[<?=$idx?>][split_parent]" value="" class="sec-split-parent">
+    <div class="sec-controls">
+      <label><?=_('Type')?><select name="sec[<?=$idx?>][type]"><?=section_type_options($types, $jp, $type)?></select></label>
+      <label><?=_('Language')?><select name="sec[<?=$idx?>][lang]">
+          <option value="en"<?=$lang==='en'?' selected':''?>><?=_('English')?></option>
+          <option value="jp"<?=$lang==='jp'?' selected':''?>><?=_('Japanese')?></option>
+        </select></label>
+      <div class="sec-btns">
+        <button type="button" class="sec-split ui-button ui-corner-all" title="<?=_('Split into two sections at the cursor')?>"><?=_('Split at cursor')?></button>
+        <button type="button" class="sec-combine ui-button ui-corner-all" title="<?=_('Merge this section into the one above it')?>"><?=_('Combine with Previous')?></button>
+        <button type="button" class="sec-remove ui-button ui-corner-all"><?=_('Remove')?></button>
+      </div>
+    </div>
+    <textarea name="sec[<?=$idx?>][lyrics]" class="sec-lyrics"><?=htmlspecialchars($lyrics, ENT_QUOTES, 'UTF-8')?></textarea>
+  </div>
+  <?php return ob_get_clean();
+}
 
 pageheader($pageTitle, 1);
 ?>
@@ -135,9 +189,45 @@ pageheader($pageTitle, 1);
   border-radius: 3px;
 }
 
+/* section editor (converted / new songs) */
+#sections-list { display: flex; flex-direction: column; gap: 12px; }
+.sec-row {
+  border: 2px solid var(--primary-medium);
+  border-radius: 5px;
+  padding: 8px;
+  background: #fff;
+}
+.sec-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: flex-end;
+  margin-bottom: 6px;
+}
+.sec-controls label {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: bold;
+}
+.sec-controls select { font-weight: normal; margin-top: 2px; }
+.sec-btns { display: flex; gap: 4px; margin-left: auto; }
+.sec-btns button { font-size: 12px; }
+.sec-lyrics {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 2.6em;
+  overflow: hidden;
+  resize: vertical;
+  font-family: 'Courier New','メイリオ','Meiryo','ヒラギノ角ゴシック',monospace;
+  font-size: 14px;
+  line-height: 1.3em;
+}
+#add-section { margin-top: 10px; }
+
 @media screen and (max-width: 900px) {
   .edit-form-grid { grid-template-columns: 1fr !important; }
-  .form-group-lyrics { order: -1; }
+  .form-group-lyrics, .form-group-sections { order: -1; }
   .form-group-lyrics textarea { min-height: 250px !important; }
 }
 </style>
@@ -146,6 +236,9 @@ pageheader($pageTitle, 1);
 
 <div style="margin: 12px 0">
   <button type="submit" form="editform" class="edit-save-btn ui-button ui-corner-all"><?=$buttonText?></button>
+  <label style="margin-left: 18px; font-weight: bold; color: var(--inline-label)">
+    <input type="checkbox" name="needswork" form="editform" value="1"<?=(!empty($rec->NeedsWork) ? ' checked' : '')?>> <?=_('Needs review')?>
+  </label>
   <span class="save-status" style="margin-left: 18px; font-weight: bold"></span>
 </div>
 
@@ -209,12 +302,14 @@ pageheader($pageTitle, 1);
 <div class="edit-form-grid" style="grid-template-columns: minmax(200px,1fr) minmax(300px,1.6fr); margin-top: 16px">
 
   <div class="form-group form-group-sidebar">
+    <?php if (!$useSections): ?>
     <label for="pattern"><?=_('Pattern')?>
       <span class="help-icon" data-help="<?=htmlspecialchars(_('Pattern for PDF/Powerpoint output, e.g. ABABB. Sections in the lyrics are divided by blank lines.'),
           ENT_QUOTES, 'UTF-8')?>">?</span>
     </label>
     <input type="text" name="pattern" id="pattern" maxlength="80"
       value="<?php echo htmlspecialchars($rec->Pattern, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
 
     <label for="instruction" style="margin-top:10px"><?=_('Instructions')?>
       <span class="help-icon" data-help="<?=htmlspecialchars(_('Notes for playing (intro, etc.). Put [brackets] around pattern descriptions '.
@@ -245,6 +340,24 @@ pageheader($pageTitle, 1);
     <button type="submit" form="editform" class="edit-save-btn ui-button ui-corner-all" style="align-self: center; margin-top: 16px"><?=$buttonText?></button>
   </div>
 
+  <?php if ($useSections): ?>
+  <div class="form-group form-group-sections">
+    <label><?=_('Sections')?>
+      <span class="help-icon help-modal" data-dialog="lyrics-help">?</span>
+    </label>
+    <div id="sections-list">
+      <?php
+      if ($isNew) {
+        echo section_row(0, null, $sectionTypes, $sectionJP);
+      } else {
+        foreach ($sectionRows as $i => $s) echo section_row($i, $s, $sectionTypes, $sectionJP);
+      }
+      ?>
+    </div>
+    <button type="button" id="add-section" class="ui-button ui-corner-all"><?=_('Add Section')?></button>
+    <template id="sec-template"><?=section_row('__IDX__', null, $sectionTypes, $sectionJP)?></template>
+  </div>
+  <?php else: ?>
   <div class="form-group form-group-lyrics">
     <label for="lyrics"><?=_('Lyrics & Chords')?>
       <span class="help-icon help-modal" data-dialog="lyrics-help">?</span>
@@ -253,6 +366,7 @@ pageheader($pageTitle, 1);
         style="min-height:350px; resize:vertical; font-family:'Courier New','メイリオ','Meiryo','ヒラギノ角ゴシック',monospace;
         line-height:1.3em"><?php echo htmlspecialchars($rec->Lyrics, ENT_QUOTES, 'UTF-8'); ?></textarea>
   </div>
+  <?php endif; ?>
 
 </div><!-- end main grid -->
 </form>
@@ -275,6 +389,8 @@ var originalBtnText = '<?=addslashes($buttonText)?>';
 var maxUploadSize = <?=intval(ini_get("upload_max_filesize")) * 1024 * 1024?>;
 var formChanged = false;
 var mp3_regexp = /\.[Mm][Pp]3$/;
+var sectionsMode = <?= $useSections ? 'true' : 'false' ?>;
+var newCounter = 0;
 
 function formatBytes(bytes) {
   if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
@@ -336,6 +452,24 @@ function checkChords(field, label) {
   return false;
 }
 
+// Each kept section must have a type and balanced chord brackets.
+function validateSections() {
+  var rows = document.querySelectorAll('#sections-list .sec-row');
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].querySelector('.sec-del-flag').value === '1') continue;
+    var ta = rows[i].querySelector('.sec-lyrics');
+    if (ta.value.trim() === '') continue;
+    var typeSel = rows[i].querySelector('select[name$="[type]"]');
+    if (!typeSel.value) {
+      alert('<?=_('Please choose a type for every section.')?>');
+      typeSel.focus();
+      return false;
+    }
+    if (!checkChords(ta, '<?=_("Sections")?>')) return false;
+  }
+  return true;
+}
+
 function validateForm() {
   var f = document.editform;
   if (!f.title.value.trim()) {
@@ -343,7 +477,11 @@ function validateForm() {
     f.title.focus();
     return false;
   }
-  if (!checkChords(f.lyrics, '<?=_("Lyrics & Chords")?>')) return false;
+  if (sectionsMode) {
+    if (!validateSections()) return false;
+  } else {
+    if (!checkChords(f.lyrics, '<?=_("Lyrics & Chords")?>')) return false;
+  }
   if (!checkChords(f.instruction, '<?=_("Instructions")?>')) return false;
   // The VARCHAR(255) textareas have no maxlength; warn before an over-long value hits the DB.
   if (f.instruction.value.length > 250) {
@@ -375,18 +513,20 @@ function validateForm() {
     return false;
   }
   <?php endif; ?>
-  // Pattern letters must reference sections that exist in Lyrics.
+  // Pattern letters must reference sections that exist in Lyrics (blob mode only).
   // Section regex matches pdflayout.php: blank line optionally containing dashes.
-  var patternLetters = f.pattern.value.replace(/[^A-Z]/g, '').split('');
-  if (patternLetters.length > 0) {
-    var stanzaCount = f.lyrics.value.replace(/\s+$/, '').split(/\n-*\s*\n/).length;
-    for (var i = 0; i < patternLetters.length; i++) {
-      if (patternLetters[i].charCodeAt(0) - 65 >= stanzaCount) {
-        alert('<?=addslashes(_("Pattern letter {LETTER} (and any higher letters) refers to a section that doesn't exist. ".
-            "The Lyrics have only {COUNT} section(s) (separated by blank lines or dashes). Please update the Pattern or add more sections."))?>'
-          .replace('{LETTER}', patternLetters[i]).replace('{COUNT}', stanzaCount));
-        f.pattern.focus();
-        return false;
+  if (!sectionsMode) {
+    var patternLetters = f.pattern.value.replace(/[^A-Z]/g, '').split('');
+    if (patternLetters.length > 0) {
+      var stanzaCount = f.lyrics.value.replace(/\s+$/, '').split(/\n-*\s*\n/).length;
+      for (var i = 0; i < patternLetters.length; i++) {
+        if (patternLetters[i].charCodeAt(0) - 65 >= stanzaCount) {
+          alert('<?=addslashes(_("Pattern letter {LETTER} (and any higher letters) refers to a section that doesn't exist. ".
+              "The Lyrics have only {COUNT} section(s) (separated by blank lines or dashes). Please update the Pattern or add more sections."))?>'
+            .replace('{LETTER}', patternLetters[i]).replace('{COUNT}', stanzaCount));
+          f.pattern.focus();
+          return false;
+        }
       }
     }
   }
@@ -398,14 +538,96 @@ function validateForm() {
 
 $(document).ready(function() {
 
-  // --- Auto-grow lyrics textarea ---
-  autoGrow(document.getElementById('lyrics'));
-  $('#lyrics').on('input', function() { autoGrow(this); });
+  // --- Auto-grow lyrics textarea (blob mode only) ---
+  var lyricsEl = document.getElementById('lyrics');
+  if (lyricsEl) {
+    autoGrow(lyricsEl);
+    $('#lyrics').on('input', function() { autoGrow(this); });
+  }
+
+  // --- Section editor (converted / new songs) ---
+  if (sectionsMode) {
+    var secAutoGrow = function(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight + 2) + 'px'; };
+    var prevKeptRow = function($row) {
+      return $row.prevAll('.sec-row').filter(function() {
+        return $(this).find('.sec-del-flag').val() !== '1';
+      }).first();
+    };
+
+    $('.sec-lyrics').each(function() { secAutoGrow(this); });
+    $('#sections-list').on('input', '.sec-lyrics', function() { secAutoGrow(this); });
+
+    $('#add-section').on('click', function() {
+      var idx = 'n' + (newCounter++);
+      $('#sections-list').append($('#sec-template').html().replace(/__IDX__/g, idx));
+      var $ta = $('#sections-list .sec-row').last().find('.sec-lyrics');
+      $ta.each(function() { secAutoGrow(this); });
+      $ta.focus();
+      formChanged = true;
+    });
+
+    $('#sections-list').on('click', '.sec-remove', function() {
+      var $row = $(this).closest('.sec-row');
+      if (parseInt($row.find('.sec-id').val(), 10) > 0) {
+        $row.find('.sec-del-flag').val('1');   // existing row: mark for deletion, keep in POST
+        $row.slideUp(150);
+      } else {
+        $row.remove();                          // never-saved row: just drop it
+      }
+      formChanged = true;
+    });
+
+    // Merge a section up into the one above (blank line between); the merged-away
+    // section is removed, and its id is scrubbed from patterns server-side.
+    $('#sections-list').on('click', '.sec-combine', function() {
+      var $row  = $(this).closest('.sec-row');
+      var $prev = prevKeptRow($row);
+      if (!$prev.length) return;   // nothing above to merge into
+      var $prevTa = $prev.find('.sec-lyrics');
+      var top    = $prevTa.val().replace(/\n+$/, '');
+      var bottom = $row.find('.sec-lyrics').val().replace(/^\n+/, '');
+      $prevTa.val(top + (top !== '' ? '\n\n' : '') + bottom);
+      secAutoGrow($prevTa[0]);
+      if (parseInt($row.find('.sec-id').val(), 10) > 0) {
+        $row.find('.sec-del-flag').val('1');
+        $row.slideUp(150);
+      } else {
+        $row.remove();
+      }
+      $prevTa.focus();
+      formChanged = true;
+    });
+
+    // Divide a section at the cursor: text before stays, text after becomes a new
+    // section right below. On save it's inserted just after its parent in every
+    // pattern (parent -> parent,child), so repeats and display order are kept.
+    $('#sections-list').on('click', '.sec-split', function() {
+      var $row = $(this).closest('.sec-row');
+      var ta   = $row.find('.sec-lyrics')[0];
+      var pos  = (ta.selectionStart == null) ? ta.value.length : ta.selectionStart;
+      var top    = ta.value.slice(0, pos).replace(/\n+$/, '');
+      var bottom = ta.value.slice(pos).replace(/^\n+/, '');
+      if (top === '' || bottom === '') return;   // cursor at an edge: nothing to split off
+      ta.value = top;
+      secAutoGrow(ta);
+
+      var idx = 'n' + (newCounter++);
+      var $new = $($('#sec-template').html().replace(/__IDX__/g, idx));
+      $new.find('.sec-lyrics').val(bottom);
+      $new.find('select[name$="[lang]"]').val($row.find('select[name$="[lang]"]').val());
+      $new.find('.sec-split-parent').val($row.attr('data-idx'));
+      $new.insertAfter($row);
+      secAutoGrow($new.find('.sec-lyrics')[0]);
+      $new.find('select[name$="[type]"]').focus();   // its type is unset — prompt for one
+      formChanged = true;
+    });
+  }
 
   // --- Track changes for beforeunload warning ---
   $('#editform').on('change input', 'input, textarea, select', function() {
     formChanged = true;
   });
+  $('input[name="needswork"]').on('change', function() { formChanged = true; });
   window.addEventListener('beforeunload', function(e) {
     if (formChanged) {
       e.preventDefault();
@@ -462,6 +684,8 @@ $(document).ready(function() {
 
     var formData = new FormData(this);
     formData.append('action', 'SongSave');
+    // Send the review flag explicitly (it lives outside the <form>, tied by form=).
+    formData.set('needswork', document.querySelector('input[name="needswork"]').checked ? '1' : '0');
 
     $.ajax({
       url: 'ajax_action.php',
