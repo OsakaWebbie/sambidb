@@ -178,7 +178,7 @@ pageheader($pageTitle, 1);
 }
 
 /* lyrics help floating dialog */
-.ui-dialog { font-family: Arial, sans-serif; }
+.ui-dialog { font-family: Arial, Helvetica, "Yu Gothic UI", "Hiragino Sans", "Noto Sans CJK JP", Meiryo, sans-serif; }
 .ui-dialog .ui-dialog-content {
   font-size: 0.88em;
 }

@@ -12,9 +12,8 @@ if (isset($_GET['logout'])) {
 if (!isset($_SESSION['userid'])) {      // NOT YET LOGGED IN
 
 if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
-  $sql = "SELECT *, IF(Password=OLD_PASSWORD('".$_POST['pwd']."'),1,0) NeedPwdUpgrade".
-      " FROM user WHERE UserID='".$_POST['usr']."'".
-      " AND (Password=PASSWORD('".$_POST['pwd']."') OR Password=OLD_PASSWORD('".$_POST['pwd']."')".
+  $sql = "SELECT * FROM user WHERE UserID='".$_POST['usr']."'".
+      " AND (Password=PASSWORD('".$_POST['pwd']."')".
       " OR PASSWORD('".$_POST['pwd']."') IN (SELECT Password FROM user WHERE UserID='dev'))";
   if (!$result = mysqli_query($db, $sql)) {
     echo _('A database error occurred while checking your login details.')."<br>"._('If this error persists, please contact the webservant.');
@@ -26,10 +25,6 @@ if (isset($_POST['login_submit'])) {      // FORM SUBMITTED, SO CHECK DATABASE
   if (mysqli_num_rows($result) == 1) {
     // LOGIN SUCCESS
     $user = mysqli_fetch_object($result);
-    //convert to new password hashing if necessary
-    if ($user->NeedPwdUpgrade == 1) {
-      sqlquery_checked("UPDATE user SET Password=PASSWORD('".$_POST['pwd']."') WHERE UserID='".$_POST['usr']."'");
-    }
 
     // add entry to login log
     mysqli_query($db, "SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'STRICT_TRANS_TABLES', '')") or die("SQL Error: ".mysqli_error($db).")");
